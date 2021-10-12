@@ -1,0 +1,212 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "jellyfin player",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent"
+        },
+        {
+          "name": "AMAZON.HelpIntent"
+        },
+        {
+          "name": "AMAZON.StopIntent"
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent"
+        },
+        {
+          "name": "AMAZON.FallbackIntent"
+        },
+        {
+          "name": "AMAZON.PauseIntent"
+        },
+        {
+          "name": "AMAZON.ResumeIntent"
+        },
+        {
+          "name": "AMAZON.NextIntent"
+        },
+        {
+          "name": "AMAZON.PreviousIntent"
+        },
+        {
+          "name": "LoopAllOffIntent",
+          "samples": [
+            "Wiederholung aus"
+          ]
+        },
+        {
+          "name": "LoopAllOnIntent",
+          "samples": [
+            "Wiederholung an"
+          ]
+        },
+        {
+          "name": "RepeatSingleOnIntent",
+          "samples": [
+            "Wiederhole den Song",
+            "Wiederhole das Lied",
+            "Wiederhole das Video"
+          ]
+        },
+        {
+          "name": "AMAZON.ShuffleOnIntent"
+        },
+        {
+          "name": "AMAZON.ShuffleOffIntent"
+        },
+        {
+          "name": "AMAZON.StartOverIntent",
+          "samples": [
+            "Starte von vorne",
+            "Beginne erneut"
+          ]
+        },
+        {
+          "name": "PlaySongIntent",
+          "samples": [
+            "Spiele den Song {song}",
+            "Spiele das Lied {song}",
+            "Spiele den Song {song} von {musician}",
+            "Spiele das Lied {song} von {musician}"
+          ],
+          "slots": [
+            {
+              "name": "song",
+              "type": "AMAZON.MusicRecording"
+            },
+            {
+              "name": "musician",
+              "type": "AMAZON.Musician"
+            }
+          ]
+        },
+        {
+          "name": "PlayVideoIntent",
+          "samples": [
+            "Spiele das Video {title}"
+          ],
+          "slots": [
+            {
+              "name": "title",
+              "type": "AMAZON.SearchQuery"
+            }
+          ]
+        },
+        {
+          "name": "PlaySongsArtistIntent",
+          "samples": [
+            "Spiele Songs von {musician}",
+            "Spiele Musik von {musician}"
+          ],
+          "slots": [
+            {
+              "name": "musician",
+              "type": "AMAZON.Musician"
+            }
+          ]
+        },
+        {
+          "name": "PlayVideosArtistIntent",
+          "samples": [
+            "Spiele Videos von {artist}"
+          ],
+          "slots": [
+            {
+              "name": "artist",
+              "type": "AMAZON.SearchQuery"
+            }
+          ]
+        },
+        {
+          "name": "PlayFavoritesIntent",
+          "samples": [
+            "Spiele meine Favoriten"
+          ]
+        },
+        {
+          "name": "PlayFavoriteSongsIntent",
+          "samples": [
+            "Spiele meine Lieblingssongs",
+            "Spiele meine Lieblingsmusik"
+          ]
+        },
+        {
+          "name": "PlayFavoriteVideosIntent",
+          "samples": [
+            "Spiele meine Lieblingsvideos"
+          ]
+        },
+        {
+          "name": "PlayLastAddedIntent",
+          "samples": [
+            "Spiele zuletzt hinzugefügte Medien",
+            "Spiele neu hinzugefügte Medien",
+            "Spiele neue Medien"
+          ]
+        },
+        {
+          "name": "PlayLastAddedVideosIntent",
+          "samples": [
+            "Spiele zuletzt hinzugefügte Videos",
+            "Spiele neu hinzugefügte Videos",
+            "Spiele neue Videos"
+          ]
+        },
+        {
+          "name": "PlayLastAddedSongsIntent",
+          "samples": [
+            "Spiele zuletzt hinzugefügte Songs",
+            "Spiele neu hinzugefügte Songs",
+            "Spiele neue Songs"
+          ]
+        },
+        {
+          "name": "PlayPlaylistIntent",
+          "samples": [
+            "Spiele die Playlist {playlist}",
+            "Spiele meine Playlist {playlist}"
+          ],
+          "slots": [
+            {
+              "name": "playlist",
+              "type": "AMAZON.SearchQuery"
+            }
+          ]
+        },
+        {
+          "name": "MarkFavoriteIntent",
+          "samples": [
+            "Ich mag das",
+            "Ich mag das Video",
+            "Ich mag den Song",
+            "Ich mag die Musik",
+            "Füge das Video zu meinen Favoriten hinzu",
+            "Füge den Song zu meinen Favoriten hinzu"
+          ]
+        },
+        {
+          "name": "UnmarkFavoriteIntent",
+          "samples": [
+            "Ich mag das nicht",
+            "Ich mag das Video nicht",
+            "Ich mag den Song nicht",
+            "Ich mag die Musik nicht",
+            "Entferne den Song von meinen Favoriten",
+            "Entferne das Video von meinen Favoriten"
+          ]
+        },
+        {
+          "name": "MediaInfoIntent",
+          "samples": [
+            "Wie heißt das Lied",
+            "Wie heißt das Video",
+            "Was ist der Titel des Songs",
+            "Was ist der Titel des Videos"
+          ]
+        }
+      ]
+    }
+  }
+}

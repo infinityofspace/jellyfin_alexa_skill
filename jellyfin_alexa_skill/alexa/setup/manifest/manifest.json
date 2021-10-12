@@ -1,0 +1,49 @@
+{
+  "manifest": {
+    "apis": {
+      "custom": {
+        "interfaces": [
+          {
+            "type": "AUDIO_PLAYER"
+          }
+        ]
+      }
+    },
+    "manifestVersion": "1.0",
+    "privacyAndCompliance": {
+      "locales": {
+        "en-US": {},
+        "de-DE": {}
+      }
+    },
+    "publishingInformation": {
+      "name": "jellyfin_0.1",
+      "category": "STREAMING_SERVICE",
+      "distributionCountries": [],
+      "isAvailableWorldwide": false,
+      "locales": {
+        "en-US": {
+          "name": "Jellyfin Player",
+          "summary": "Play media from your Jellyfin server",
+          "examplePhrases": [
+            "Alexa ask Jellyfin Player play my favorite music",
+            "Alexa ask Jellyfin Player play songs from 'Artist'",
+            "Alexa ask Jellyfin Player play my playlist 'Best Music'"
+          ],
+          "description": "Play media from your Jellyfin server.\n\nSource: https://github.com/infinityofspace/jellyfin_alexa_skill"
+        },
+        "de-DE": {
+          "name": "Jellyfin Player",
+          "summary": "Spiele Medien von deinem Jellyfin Server",
+          "examplePhrases": [
+            "Alexa sage Jellyfin Player spiele meine Lieblingsmusik",
+            "Alexa sage Jellyfin Player spiele Songs von 'Interpret'",
+            "Alexa sage Jellyfin Player spiele meine Playlist 'Beste Musik'"
+          ],
+          "description": "Spiele Medien von deinem Jellyfin Server.\n\nQuellcode: https://github.com/infinityofspace/jellyfin_alexa_skill"
+        }
+      },
+      "testingInstructions": ""
+    }
+  }
+}

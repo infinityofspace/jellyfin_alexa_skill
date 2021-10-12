@@ -1,0 +1,8 @@
+flask-ask-sdk>=1.0.0
+jellyfin-apiclient-python>=1.7.2
+pyngrok>=5.1.0
+ask-smapi-sdk>=1.0.0
+ask-smapi-model>=1.13.1
+rapidfuzz>=1.7.0
+peewee>=3.14.4
+gunicorn>=20.1.0
