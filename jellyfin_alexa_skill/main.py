@@ -49,8 +49,9 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=textwrap.dedent("""
                                     License:
-                                        MIT - Copyright (c) 2021 Marvin Heptner
-
+                                        GPL-3.0
+                                    Source:
+                                        https://github.com/infinityofspace/jellyfin_alexa_skill
                                 """)
     )
 
