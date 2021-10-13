@@ -1,9 +1,11 @@
 FROM python:3.9-slim AS build-image
 
-RUN apt-get update && apt-get install -y \
-    gcc \
+RUN apt update && apt install -y \
+    build-essential \
     libssl-dev \
-    && rm -rf /var/lib/apt/lists/*
+    libffi-dev \
+    python3-dev \
+    cargo
 
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
@@ -11,7 +13,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip3 install wheel && pip3 install -r requirements.txt
+RUN pip3 install --upgrade pip wheel && pip3 install -r requirements.txt
 
 COPY . .
 RUN pip3 install .
