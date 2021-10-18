@@ -1,29 +1,16 @@
-FROM python:3.9-slim AS build-image
+FROM python:3.9-slim
 
 RUN apt update && apt install -y \
-    build-essential \
-    libssl-dev \
-    libffi-dev \
-    python3-dev \
-    cargo
-
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+    python3-cryptography \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip3 install --upgrade pip wheel && pip3 install -r requirements.txt
+RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
 COPY . .
 RUN pip3 install .
-
-
-FROM python:3.9-slim
-
-COPY --from=build-image /opt/venv /opt/venv
-
-ENV PATH="/opt/venv/bin:$PATH"
 
 RUN useradd -ms /bin/bash skill
 
