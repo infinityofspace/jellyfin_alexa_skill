@@ -1,8 +1,8 @@
 import configparser
 from pathlib import Path
 
-DEFAULT_ALEXA_SKILL_CONFIG_PATH = "/var/lib/jellyfin_alexa_skill/config/skill.conf"
-DEFAULT_ALEXA_SKILL_DATA_PATH = "/var/lib/jellyfin_alexa_skill/data"
+DEFAULT_ALEXA_SKILL_CONFIG_PATH = str(Path.home() / ".jellyfin_alexa_skill/config/skill.conf")
+DEFAULT_ALEXA_SKILL_DATA_PATH = str(Path.home() / ".jellyfin_alexa_skill/data")
 
 APP_NAME = "jellyfin_alexa_skill"
 

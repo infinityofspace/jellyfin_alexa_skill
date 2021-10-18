@@ -20,11 +20,11 @@ services:
     ports:
       - "1456:1456"
     volumes:
-      - "skill_data:/var/lib/jellyfin_alexa_skill/data"
-      - "./skill.conf:/var/lib/jellyfin_alexa_skill/config/skill.conf"
+      - "skill_data:/skill/data"
+      - "./skill.conf:/skill/config/skill.conf"
     environment:
-      - JELLYFIN_ALEXA_SKILL_CONFIG=/var/lib/jellyfin_alexa_skill/config/skill.conf
-      - JELLYFIN_ALEXA_SKILL_DATA=/var/lib/jellyfin_alexa_skill/data
+      - JELLYFIN_ALEXA_SKILL_CONFIG=/skill/config/skill.conf
+      - JELLYFIN_ALEXA_SKILL_DATA=/skill/data
 
 volumes:
   jellyfin_config:

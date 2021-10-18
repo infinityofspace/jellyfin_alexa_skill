@@ -4,7 +4,7 @@ Selfhosted Alexa media player skill for Jellyfin
 
 ---
 
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/jellyfin_alexa_skill?style=for-the-badge) ![GitHub](https://img.shields.io/github/license/infinityofspace/jellyfin_alexa_skill?style=for-the-badge)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/jellyfin_alexa_skill?style=for-the-badge)
 
 ![PyPI](https://img.shields.io/pypi/v/jellyfin_alexa_skill?style=for-the-badge) ![PyPI - Downloads](https://img.shields.io/pypi/dm/jellyfin_alexa_skill?style=for-the-badge) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/infinityofspace/jellyfin_alexa_skill/pypi%20release?style=for-the-badge)
 
@@ -127,10 +127,11 @@ OR
           ```
     - start the skill: `jellyfin_alexa_skill --config /path/to/skill.conf --data /path/to/skill/data/`
 
-_Note: The default path for the skill.conf file is `/var/lib/jellyfin_alexa_skill/config/skill.conf` and for the skill
-data path it is `/var/lib/jellyfin_alexa_skill/data`._
+_Note: The default path for the skill.conf file is `/home/user/.jellyfin_alexa_skill/config/skill.conf` and for the
+skill data path it is `/home/user/.jellyfin_alexa_skill/data`._ You can adjust the paths with the `config` and `data` or
+as environment variables `JELLYFIN_ALEXA_SKILL_CONFIG` and `JELLYFIN_ALEXA_SKILL_DATA`.
 
-Now activate a skill in your Alexa app, then you can use the skill with your Alexa enabled devices.
+Now activate the skill in your Alexa app, then you can use the skill with your Alexa enabled devices.
 
 ## Supported languages
 
