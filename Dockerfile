@@ -1,8 +1,16 @@
-FROM python:3.9-slim
+FROM python:3.10-alpine3.14 AS build-image
 
-RUN apt update && apt install -y \
-    python3-cryptography \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache \
+    gcc \
+    musl-dev \
+    python3-dev \
+    libffi-dev \
+    openssl-dev \
+    cargo \
+    g++
+
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /app
 
@@ -12,7 +20,16 @@ RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 COPY . .
 RUN pip3 install .
 
-RUN useradd -ms /bin/bash skill
+
+FROM python:3.10-alpine3.14
+
+COPY --from=build-image /opt/venv /opt/venv
+
+ENV PATH="/opt/venv/bin:$PATH"
+
+RUN apk add --no-cache binutils openssl-dev
+
+RUN addgroup -S skill && adduser -S skill -G skill
 
 RUN mkdir -p /skill/config \
     && mkdir -p /skill/data \
