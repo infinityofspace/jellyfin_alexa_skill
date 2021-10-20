@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - dev
+    paths-ignore:
+      - '**/Readme.md'
+      - '**/docker-compose.yml'
+      - '**/skill.conf'
 
 jobs:
   build:
