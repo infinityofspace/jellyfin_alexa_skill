@@ -4,7 +4,7 @@ Selfhosted Alexa media player skill for Jellyfin
 
 ---
 
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/jellyfin_alexa_skill?style=for-the-badge)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/jellyfin_alexa_skill?style=for-the-badge) ![GitHub](https://img.shields.io/github/license/infinityofspace/jellyfin_alexa_skill?style=for-the-badge)
 
 ![PyPI](https://img.shields.io/pypi/v/jellyfin_alexa_skill?style=for-the-badge) ![PyPI - Downloads](https://img.shields.io/pypi/dm/jellyfin_alexa_skill?style=for-the-badge) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/infinityofspace/jellyfin_alexa_skill/pypi%20release?style=for-the-badge)
 
@@ -171,4 +171,4 @@ Furthermore, this readme file contains embeddings of [Shields.io](https://github
 
 ## License
 
-[GPL-3.0](License)
+[GPL-3.0](https://github.com/infinityofspace/jellyfin_alexa_skill/blob/main/LICENSE)
