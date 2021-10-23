@@ -6,13 +6,14 @@ from peewee import DoesNotExist
 from jellyfin_alexa_skill.alexa.util import set_shuffle_queue_idxs
 from jellyfin_alexa_skill.database.model.base import db
 from jellyfin_alexa_skill.database.model.playback import Playback, PlaybackItem
+from jellyfin_alexa_skill.database.model.user import User
 
 
 def connect_db(path: Path):
     db.init(str(path))
     db.connect()
 
-    db.create_tables([Playback])
+    db.create_tables([Playback, User])
 
 
 def get_playback(user_id: str) -> Optional[Playback]:

@@ -13,9 +13,6 @@
           "name": "AMAZON.StopIntent"
         },
         {
-          "name": "AMAZON.NavigateHomeIntent"
-        },
-        {
           "name": "AMAZON.FallbackIntent"
         },
         {
@@ -95,10 +92,11 @@
           ]
         },
         {
-          "name": "PlaySongsArtistIntent",
+          "name": "PlayArtistSongsIntent",
           "samples": [
+            "Spiele Musik von {musician}",
             "Spiele Songs von {musician}",
-            "Spiele Musik von {musician}"
+            "Spiele Lieder von {musician}"
           ],
           "slots": [
             {
@@ -108,58 +106,17 @@
           ]
         },
         {
-          "name": "PlayVideosArtistIntent",
+          "name": "PlayLastAddedIntent",
           "samples": [
-            "Spiele Videos von {artist}"
+            "Spiele zuletzt hinzugefügte {media_type}",
+            "Spiele neu hinzugefügte {media_type}",
+            "Spiele neue {media_type}"
           ],
           "slots": [
             {
-              "name": "artist",
-              "type": "AMAZON.SearchQuery"
+              "name": "media_type",
+              "type": "MediaType"
             }
-          ]
-        },
-        {
-          "name": "PlayFavoritesIntent",
-          "samples": [
-            "Spiele meine Favoriten"
-          ]
-        },
-        {
-          "name": "PlayFavoriteSongsIntent",
-          "samples": [
-            "Spiele meine Lieblingssongs",
-            "Spiele meine Lieblingsmusik"
-          ]
-        },
-        {
-          "name": "PlayFavoriteVideosIntent",
-          "samples": [
-            "Spiele meine Lieblingsvideos"
-          ]
-        },
-        {
-          "name": "PlayLastAddedIntent",
-          "samples": [
-            "Spiele zuletzt hinzugefügte Medien",
-            "Spiele neu hinzugefügte Medien",
-            "Spiele neue Medien"
-          ]
-        },
-        {
-          "name": "PlayLastAddedVideosIntent",
-          "samples": [
-            "Spiele zuletzt hinzugefügte Videos",
-            "Spiele neu hinzugefügte Videos",
-            "Spiele neue Videos"
-          ]
-        },
-        {
-          "name": "PlayLastAddedSongsIntent",
-          "samples": [
-            "Spiele zuletzt hinzugefügte Songs",
-            "Spiele neu hinzugefügte Songs",
-            "Spiele neue Songs"
           ]
         },
         {
@@ -176,6 +133,20 @@
           ]
         },
         {
+          "name": "PlayFavoritesIntent",
+          "samples": [
+            "Spiele meine lieblings {media_type}",
+            "Spiele meine Favoriten",
+            "Spiele meine {media_type} Favoriten"
+          ],
+          "slots": [
+            {
+              "name": "media_type",
+              "type": "MediaType"
+            }
+          ]
+        },
+        {
           "name": "MarkFavoriteIntent",
           "samples": [
             "Ich mag das",
@@ -183,7 +154,8 @@
             "Ich mag den Song",
             "Ich mag die Musik",
             "Füge das Video zu meinen Favoriten hinzu",
-            "Füge den Song zu meinen Favoriten hinzu"
+            "Füge den Song zu meinen Favoriten hinzu",
+            "Füge die Musik zu meinen Favoriten hinzu"
           ]
         },
         {
@@ -193,17 +165,49 @@
             "Ich mag das Video nicht",
             "Ich mag den Song nicht",
             "Ich mag die Musik nicht",
+            "Entferne das Video von meinen Favoriten",
             "Entferne den Song von meinen Favoriten",
-            "Entferne das Video von meinen Favoriten"
+            "Entferne die Musik von meinen Favoriten"
           ]
         },
         {
           "name": "MediaInfoIntent",
           "samples": [
             "Wie heißt das Lied",
+            "Wie heißt die Musik",
             "Wie heißt das Video",
             "Was ist der Titel des Songs",
-            "Was ist der Titel des Videos"
+            "Was ist der Titel der Musik",
+            "Was ist der Titel des Videos",
+            "Was spielt gerade"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "name": "MediaType",
+          "values": [
+            {
+              "id": "media",
+              "name": {
+                "value": "Media"
+              }
+            },
+            {
+              "id": "video",
+              "name": {
+                "value": "Video"
+              }
+            },
+            {
+              "id": "audio",
+              "name": {
+                "value": "Audio",
+                "synonyms": [
+                  "Musik, Song, Lied"
+                ]
+              }
+            }
           ]
         }
       ]

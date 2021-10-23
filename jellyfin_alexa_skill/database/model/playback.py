@@ -8,8 +8,8 @@ from jellyfin_alexa_skill.database.model.base import BaseModel
 
 
 class PlaybackItem(dict):
-    def __init__(self, id: str, title: str, artists: List[str]):
-        super().__init__(id=id, title=title, artists=artists)
+    def __init__(self, media_id: str, title: str, artists: List[str]):
+        super().__init__(id=media_id, title=title, artists=artists)
 
 
 def json_dumps(value):

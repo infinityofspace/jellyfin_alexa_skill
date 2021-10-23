@@ -1,30 +1,39 @@
-from ask_sdk_core.dispatch_components import AbstractRequestHandler
+from gettext import GNUTranslations
+
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
 from ask_sdk_model.interfaces.audioplayer import StopDirective
 from rapidfuzz import fuzz
 
-from jellyfin_alexa_skill.alexa.util import set_shuffle_queue_idxs, build_audio_stream_response
+from jellyfin_alexa_skill.alexa.handler.base import BaseHandler
+from jellyfin_alexa_skill.alexa.util import set_shuffle_queue_idxs, build_stream_response, MediaTypeSlot, translate
 from jellyfin_alexa_skill.config import ARTISTS_PARTIAL_RATIO_THRESHOLD, SONG_PARTIAL_RATIO_THRESHOLD, \
     TITLE_PARTIAL_RATIO_THRESHOLD
 from jellyfin_alexa_skill.database.db import set_playback_queue, get_playback
 from jellyfin_alexa_skill.database.model.playback import PlaybackItem
-from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient, MediaType
+from jellyfin_alexa_skill.database.model.user import User
+from jellyfin_alexa_skill.jellyfin.api.client import MediaType, JellyfinClient
 
 
-class PlaySongIntentHandler(AbstractRequestHandler):
+class PlaySongIntentHandler(BaseHandler):
     def __init__(self, jellyfin_client: JellyfinClient):
         self.jellyfin_client = jellyfin_client
 
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("PlaySongIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput) -> Response:
+    @translate
+    def handle_func(self,
+                    user: User,
+                    handler_input: HandlerInput,
+                    translation: GNUTranslations,
+                    *args,
+                    **kwargs) -> Response:
         song = handler_input.request_envelope.request.intent.slots["song"].value
         musician = handler_input.request_envelope.request.intent.slots["musician"].value
 
-        no_result_response_text = "Sorry I can't find any songs for this search. Please try again."
+        no_result_response_text = translation.gettext("Sorry, I can't find any songs for this search. Please try again.")
 
         if not song:
             handler_input.response_builder.speak(no_result_response_text)
@@ -32,14 +41,18 @@ class PlaySongIntentHandler(AbstractRequestHandler):
 
         song = song.lower()
 
-        song_search_results = self.jellyfin_client.search_media_items(term=song,
+        song_search_results = self.jellyfin_client.search_media_items(user_id=user.jellyfin_user_id,
+                                                                      token=user.jellyfin_token,
+                                                                      term=song,
                                                                       media=MediaType.AUDIO,
                                                                       Filters="IsNotFolder")
 
         if musician:
             musician = musician.lower()
             # filter song search results with the searched musician
-            artists_search_results = self.jellyfin_client.search_artist(term=musician)
+            artists_search_results = self.jellyfin_client.search_artist(user_id=user.jellyfin_user_id,
+                                                                        token=user.jellyfin_token,
+                                                                        term=musician)
             artists_ids = set([artists["Id"] for artists in artists_search_results])
 
             song_search_results = [song for song in song_search_results if
@@ -61,23 +74,34 @@ class PlaySongIntentHandler(AbstractRequestHandler):
         user_id = handler_input.request_envelope.context.system.user.user_id
         playback = set_playback_queue(user_id, [PlaybackItem(item["Id"], item["Name"], item["Artists"])])
 
-        build_audio_stream_response(self.jellyfin_client, handler_input, playback, 0)
+        build_stream_response(jellyfin_client=self.jellyfin_client,
+                              jellyfin_user_id=user.jellyfin_user_id,
+                              jellyfin_token=user.jellyfin_token,
+                              handler_input=handler_input,
+                              playback=playback,
+                              idx=0)
 
         return handler_input.response_builder.response
 
 
-class PlayVideoIntentHandler(AbstractRequestHandler):
+class PlayVideoIntentHandler(BaseHandler):
     def __init__(self, jellyfin_client: JellyfinClient):
         self.jellyfin_client = jellyfin_client
 
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("PlayVideoIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput) -> Response:
+    @translate
+    def handle_func(self,
+                    user: User,
+                    handler_input: HandlerInput,
+                    translation: GNUTranslations,
+                    *args,
+                    **kwargs) -> Response:
         title = handler_input.request_envelope.request.intent.slots["title"].value
-        artist = handler_input.request_envelope.request.intent.slots["artist"].value
 
-        no_result_response_text = "Sorry I can't find any videos for this search. Please try again."
+        no_result_response_text = translation.gettext(
+            "Sorry, I can't find any videos for this search. Please try again.")
 
         if not title:
             handler_input.response_builder.speak(no_result_response_text)
@@ -85,18 +109,11 @@ class PlayVideoIntentHandler(AbstractRequestHandler):
 
         title = title.lower()
 
-        video_search_results = self.jellyfin_client.search_media_items(term=title,
+        video_search_results = self.jellyfin_client.search_media_items(user_id=user.jellyfin_user_id,
+                                                                       token=user.jellyfin_token,
+                                                                       term=title,
                                                                        media=MediaType.VIDEO,
                                                                        Filters="IsNotFolder")
-
-        if artist:
-            artist = artist.lower()
-            # filter video search results with the searched artist
-            artists_search_results = self.jellyfin_client.search_artist(term=artist)
-            artists_ids = set([artists["Id"] for artists in artists_search_results])
-
-            video_search_results = [song for song in video_search_results if
-                                    set(artist["Id"] for artist in song["ArtistItems"]).intersection(artists_ids)]
 
         video_match_scores = [fuzz.partial_ratio(item["Name"].lower(), title) for item in video_search_results]
 
@@ -112,24 +129,36 @@ class PlayVideoIntentHandler(AbstractRequestHandler):
             return handler_input.response_builder.response
 
         user_id = handler_input.request_envelope.context.system.user.user_id
-        playback = set_playback_queue(user_id, [PlaybackItem(item["Id"], item["Name"], item["Artists"])])
+        playback = set_playback_queue(user_id, [PlaybackItem(item["Id"], item["Name"], [])])
 
-        build_audio_stream_response(self.jellyfin_client, handler_input, playback, 0)
+        build_stream_response(jellyfin_client=self.jellyfin_client,
+                              jellyfin_user_id=user.jellyfin_user_id,
+                              jellyfin_token=user.jellyfin_token,
+                              handler_input=handler_input,
+                              playback=playback,
+                              idx=0)
 
         return handler_input.response_builder.response
 
 
-class PlaySongsArtistIntentHandler(AbstractRequestHandler):
+class PlayArtistSongsIntentHandler(BaseHandler):
     def __init__(self, jellyfin_client: JellyfinClient):
         self.jellyfin_client = jellyfin_client
 
     def can_handle(self, handler_input: HandlerInput) -> bool:
-        return is_intent_name("PlaySongsArtistIntent")(handler_input)
+        return is_intent_name("PlayArtistSongsIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput) -> Response:
+    @translate
+    def handle_func(self,
+                    user: User,
+                    handler_input: HandlerInput,
+                    translation: GNUTranslations,
+                    *args,
+                    **kwargs) -> Response:
         musician = handler_input.request_envelope.request.intent.slots["musician"].value
 
-        no_result_response_text = "Sorry I can't find any songs with this artist. Please try again."
+        no_result_response_text = translation.gettext(
+            "Sorry, I can't find any songs with this artist. Please try again.")
 
         if not musician:
             handler_input.response_builder.speak(no_result_response_text)
@@ -137,7 +166,9 @@ class PlaySongsArtistIntentHandler(AbstractRequestHandler):
 
         musician = musician.lower()
 
-        search_results = self.jellyfin_client.search_artist(term=musician)
+        search_results = self.jellyfin_client.search_artist(user_id=user.jellyfin_user_id,
+                                                            token=user.jellyfin_token,
+                                                            term=musician)
 
         song_match_scores = [fuzz.partial_ratio(item["Name"].lower(), musician) for item in search_results]
 
@@ -149,7 +180,10 @@ class PlaySongsArtistIntentHandler(AbstractRequestHandler):
         artist_item = search_results[song_match_scores.index(best_score)]
         artist_id = artist_item["Id"]
 
-        items = self.jellyfin_client.get_artist_items(artist_id, media=MediaType.AUDIO)
+        items = self.jellyfin_client.get_artist_items(user_id=user.jellyfin_user_id,
+                                                      token=user.jellyfin_token,
+                                                      artist_id=artist_id,
+                                                      media=MediaType.AUDIO)
 
         playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
                           for item in items]
@@ -157,136 +191,71 @@ class PlaySongsArtistIntentHandler(AbstractRequestHandler):
         user_id = handler_input.request_envelope.context.system.user.user_id
         playback = set_playback_queue(user_id, playback_items)
 
-        build_audio_stream_response(self.jellyfin_client, handler_input, playback, 0)
+        build_stream_response(jellyfin_client=self.jellyfin_client,
+                              jellyfin_user_id=user.jellyfin_user_id,
+                              jellyfin_token=user.jellyfin_token,
+                              handler_input=handler_input,
+                              playback=playback,
+                              idx=0)
 
         return handler_input.response_builder.response
 
 
-class PlayVideosArtistIntentHandler(AbstractRequestHandler):
-    def __init__(self, jellyfin_client: JellyfinClient):
-        self.jellyfin_client = jellyfin_client
-
-    def can_handle(self, handler_input: HandlerInput) -> bool:
-        return is_intent_name("PlayVideosArtistIntent")(handler_input)
-
-    def handle(self, handler_input: HandlerInput) -> Response:
-        artist = handler_input.request_envelope.request.intent.slots["artist"].value
-
-        no_result_response_text = "Sorry I can't find any videos with this artist. Please try again."
-
-        if not artist:
-            handler_input.response_builder.speak(no_result_response_text)
-            return handler_input.response_builder.response
-
-        artist = artist.lower()
-
-        search_results = self.jellyfin_client.search_artist(term=artist)
-
-        song_match_scores = [fuzz.partial_ratio(item["Name"].lower(), artist) for item in search_results]
-
-        best_score = max(song_match_scores)
-        if best_score < ARTISTS_PARTIAL_RATIO_THRESHOLD:
-            handler_input.response_builder.speak(no_result_response_text)
-            return handler_input.response_builder.response
-
-        artist_item = search_results[song_match_scores.index(best_score)]
-        artist_id = artist_item["Id"]
-
-        items = self.jellyfin_client.get_artist_items(artist_id, media=MediaType.VIDEO)
-
-        playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
-                          for item in items]
-
-        user_id = handler_input.request_envelope.context.system.user.user_id
-        playback = set_playback_queue(user_id, playback_items)
-
-        build_audio_stream_response(self.jellyfin_client, handler_input, playback, 0)
-
-        return handler_input.response_builder.response
-
-
-class PlayLastAddedIntentHandler(AbstractRequestHandler):
+class PlayLastAddedIntentHandler(BaseHandler):
     def __init__(self, jellyfin_client: JellyfinClient):
         self.jellyfin_client = jellyfin_client
 
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("PlayLastAddedIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput) -> Response:
-        recently_added_items = self.jellyfin_client.jellyfin.get_recently_added(limit=50)
+    @translate
+    def handle_func(self,
+                    user: User,
+                    handler_input: HandlerInput,
+                    translation: GNUTranslations,
+                    *args,
+                    **kwargs) -> Response:
+        media_type = handler_input.request_envelope.request.intent.slots["media_type"] \
+            .resolutions.resolutions_per_authority[0].values[0].value.id
+
+        if media_type == MediaTypeSlot.AUDIO:
+            filter_media_type = MediaType.AUDIO
+        elif media_type == MediaTypeSlot.VIDEO:
+            filter_media_type = MediaType.VIDEO
+        else:
+            filter_media_type = None
+
+        recently_added_items = self.jellyfin_client.get_recently_added(user_id=user.jellyfin_user_id,
+                                                                       token=user.jellyfin_token,
+                                                                       media=filter_media_type,
+                                                                       limit=50)
 
         if len(recently_added_items) == 0:
-            text = "Sorry, I couldn't find any recently added media."
+            text = translation.gettext("Sorry, I couldn't find any recently added media.")
             handler_input.response_builder.speak(text)
         else:
-            playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
+            playback_items = [PlaybackItem(item["Id"], item["Name"], item.get("Artists", []))
                               for item in recently_added_items]
 
             playback = set_playback_queue(handler_input.request_envelope.session.user.user_id, playback_items)
 
-            build_audio_stream_response(self.jellyfin_client, handler_input, playback, 0)
+            build_stream_response(jellyfin_client=self.jellyfin_client,
+                                  jellyfin_user_id=user.jellyfin_user_id,
+                                  jellyfin_token=user.jellyfin_token,
+                                  handler_input=handler_input,
+                                  playback=playback,
+                                  idx=0)
 
         return handler_input.response_builder.response
 
 
-class PlayLastAddedVideosIntentHandler(AbstractRequestHandler):
-    def __init__(self, jellyfin_client: JellyfinClient):
-        self.jellyfin_client = jellyfin_client
-
-    def can_handle(self, handler_input: HandlerInput) -> bool:
-        return is_intent_name("PlayLastAddedVideosIntent")(handler_input)
-
-    def handle(self, handler_input: HandlerInput) -> Response:
-        recently_added_items = self.jellyfin_client.jellyfin.get_recently_added(media="Video", limit=50)
-
-        if len(recently_added_items) == 0:
-            text = "Sorry, I couldn't find any recently added videos."
-            handler_input.response_builder.speak(text)
-        else:
-            playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
-                              for item in recently_added_items]
-
-            playback = set_playback_queue(handler_input.request_envelope.session.user.user_id, playback_items)
-
-            build_audio_stream_response(self.jellyfin_client, handler_input, playback, 0)
-
-        return handler_input.response_builder.response
-
-
-class PlayLastAddedSongsIntentHandler(AbstractRequestHandler):
-    def __init__(self, jellyfin_client: JellyfinClient):
-        self.jellyfin_client = jellyfin_client
-
-    def can_handle(self, handler_input: HandlerInput) -> bool:
-        return is_intent_name("PlayLastAddedSongsIntent")(handler_input)
-
-    def handle(self, handler_input: HandlerInput) -> Response:
-        recently_added_items = self.jellyfin_client.jellyfin.get_recently_added(media="Audio", limit=50)
-
-        if recently_added_items:
-            playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
-                              for item in recently_added_items]
-
-            playback = set_playback_queue(handler_input.request_envelope.session.user.user_id, playback_items)
-
-            build_audio_stream_response(self.jellyfin_client, handler_input, playback, 0)
-        else:
-            text = "Sorry, I couldn't find any recently added songs."
-            handler_input.response_builder.speak(text)
-
-        return handler_input.response_builder.response
-
-
-class PauseIntentHandler(AbstractRequestHandler):
-    def __init__(self, jellyfin_client: JellyfinClient):
-        self.jellyfin_client = jellyfin_client
-
+class PauseIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("AMAZON.PauseIntent")(handler_input) \
                or is_intent_name("AMAZON.StopIntent")(handler_input) \
                or is_intent_name("AMAZON.CancelIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput) -> Response:
+    def handle_func(self, user: User, handler_input: HandlerInput, *args, **kwargs) -> Response:
         user_id = handler_input.request_envelope.context.system.user.user_id
 
         playback = get_playback(user_id)
@@ -299,31 +268,42 @@ class PauseIntentHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
-class ResumeIntentHandler(AbstractRequestHandler):
+class ResumeIntentHandler(BaseHandler):
     def __init__(self, jellyfin_client: JellyfinClient):
         self.jellyfin_client = jellyfin_client
 
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("AMAZON.ResumeIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput) -> Response:
+    @translate
+    def handle_func(self,
+                    user: User,
+                    handler_input: HandlerInput,
+                    translation: GNUTranslations,
+                    *args,
+                    **kwargs) -> Response:
         user_id = handler_input.request_envelope.context.system.user.user_id
 
         playback = get_playback(user_id)
         if playback.current_idx < len(playback.queue):
-            build_audio_stream_response(self.jellyfin_client, handler_input, playback, 0)
+            build_stream_response(jellyfin_client=self.jellyfin_client,
+                                  jellyfin_user_id=user.jellyfin_user_id,
+                                  jellyfin_token=user.jellyfin_token,
+                                  handler_input=handler_input,
+                                  playback=playback,
+                                  idx=playback.current_idx)
         else:
-            text = "What can I play?"
+            text = translation.gettext("What can I play?")
             handler_input.response_builder.add_directive(StopDirective()).speak(text)
 
         return handler_input.response_builder.response
 
 
-class LoopAllOffIntent(AbstractRequestHandler):
+class LoopAllOffIntent(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("LoopAllOffIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput) -> Response:
+    def handle_func(self, user: User, handler_input: HandlerInput, *args, **kwargs) -> Response:
         user_id = handler_input.request_envelope.context.system.user.user_id
 
         playback = get_playback(user_id)
@@ -334,11 +314,11 @@ class LoopAllOffIntent(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
-class LoopAllOnIntent(AbstractRequestHandler):
+class LoopAllOnIntent(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("LoopAllOnIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput) -> Response:
+    def handle_func(self, user: User, handler_input: HandlerInput, *args, **kwargs) -> Response:
         user_id = handler_input.request_envelope.context.system.user.user_id
 
         playback = get_playback(user_id)
@@ -348,14 +328,20 @@ class LoopAllOnIntent(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
-class NextIntentHandler(AbstractRequestHandler):
+class NextIntentHandler(BaseHandler):
     def __init__(self, jellyfin_client: JellyfinClient):
         self.jellyfin_client = jellyfin_client
 
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("AMAZON.NextIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput) -> Response:
+    @translate
+    def handle_func(self,
+                    user: User,
+                    handler_input: HandlerInput,
+                    translation: GNUTranslations,
+                    *args,
+                    **kwargs) -> Response:
         user_id = handler_input.request_envelope.context.system.user.user_id
 
         playback = get_playback(user_id)
@@ -364,10 +350,15 @@ class NextIntentHandler(AbstractRequestHandler):
             playback.current_idx = (playback.current_idx + 1) % len(playback.queue)
             playback.save()
 
-            build_audio_stream_response(self.jellyfin_client, handler_input, playback, playback.current_idx)
+            build_stream_response(jellyfin_client=self.jellyfin_client,
+                                  jellyfin_user_id=user.jellyfin_user_id,
+                                  jellyfin_token=user.jellyfin_token,
+                                  handler_input=handler_input,
+                                  playback=playback,
+                                  idx=playback.current_idx)
         else:
             if playback.current_idx + 1 >= len(playback.queue):
-                text = "You reached the end of the playback queue."
+                text = translation.gettext("You reached the end of the playback queue.")
                 handler_input.response_builder.add_directive(StopDirective()).speak(text)
             else:
                 handler_input.response_builder.add_directive(StopDirective())
@@ -375,14 +366,20 @@ class NextIntentHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
-class PreviousIntentHandler(AbstractRequestHandler):
+class PreviousIntentHandler(BaseHandler):
     def __init__(self, jellyfin_client: JellyfinClient):
         self.jellyfin_client = jellyfin_client
 
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("AMAZON.PreviousIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput) -> Response:
+    @translate
+    def handle_func(self,
+                    user: User,
+                    handler_input: HandlerInput,
+                    translation: GNUTranslations,
+                    *args,
+                    **kwargs) -> Response:
         user_id = handler_input.request_envelope.context.system.user.user_id
 
         playback = get_playback(user_id)
@@ -391,10 +388,15 @@ class PreviousIntentHandler(AbstractRequestHandler):
             playback.current_idx = (playback.current_idx - 1) % len(playback.queue)
             playback.save()
 
-            build_audio_stream_response(self.jellyfin_client, handler_input, playback, playback.current_idx)
+            build_stream_response(jellyfin_client=self.jellyfin_client,
+                                  jellyfin_user_id=user.jellyfin_user_id,
+                                  jellyfin_token=user.jellyfin_token,
+                                  handler_input=handler_input,
+                                  playback=playback,
+                                  idx=playback.current_idx)
         else:
             if playback.current_idx == 0:
-                text = "You reached the start of the playback queue."
+                text = translation.gettext("You reached the start of the playback queue.")
                 handler_input.response_builder.add_directive(StopDirective()).speak(text)
             else:
                 handler_input.response_builder.add_directive(StopDirective())
@@ -402,11 +404,11 @@ class PreviousIntentHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
-class RepeatSingleOnIntent(AbstractRequestHandler):
+class RepeatSingleOnIntent(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("RepeatSingleOnIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput) -> Response:
+    def handle_func(self, user: User, handler_input: HandlerInput, *args, **kwargs) -> Response:
         user_id = handler_input.request_envelope.context.system.user.user_id
 
         playback = get_playback(user_id)
@@ -416,11 +418,11 @@ class RepeatSingleOnIntent(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
-class ShuffleOffIntentHandler(AbstractRequestHandler):
+class ShuffleOffIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("AMAZON.ShuffleOffIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput) -> Response:
+    def handle_func(self, user: User, handler_input: HandlerInput, *args, **kwargs) -> Response:
         user_id = handler_input.request_envelope.context.system.user.user_id
 
         playback = get_playback(user_id)
@@ -431,11 +433,11 @@ class ShuffleOffIntentHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
-class ShuffleOnIntentHandler(AbstractRequestHandler):
+class ShuffleOnIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("AMAZON.ShuffleOnIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput) -> Response:
+    def handle_func(self, user: User, handler_input: HandlerInput, *args, **kwargs) -> Response:
         user_id = handler_input.request_envelope.context.system.user.user_id
 
         playback = get_playback(user_id)
@@ -447,22 +449,33 @@ class ShuffleOnIntentHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
-class StartOverIntentHandler(AbstractRequestHandler):
+class StartOverIntentHandler(BaseHandler):
     def __init__(self, jellyfin_client: JellyfinClient):
         self.jellyfin_client = jellyfin_client
 
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("AMAZON.StartOverIntent")(handler_input)
 
-    def handle(self, handler_input: HandlerInput) -> Response:
+    @translate
+    def handle_func(self,
+                    user: User,
+                    handler_input: HandlerInput,
+                    translation: GNUTranslations,
+                    *args,
+                    **kwargs) -> Response:
         user_id = handler_input.request_envelope.context.system.user.user_id
 
         playback = get_playback(user_id)
 
         if playback.queue:
-            build_audio_stream_response(self.jellyfin_client, handler_input, playback, playback.current_idx)
+            build_stream_response(jellyfin_client=self.jellyfin_client,
+                                  jellyfin_user_id=user.jellyfin_user_id,
+                                  jellyfin_token=user.jellyfin_token,
+                                  handler_input=handler_input,
+                                  playback=playback,
+                                  idx=playback.current_idx)
         else:
-            text = "The playback queue is empty. Please try to add some media and try again."
+            text = translation.gettext("The playback queue is empty. Please try to add some media and try again.")
             handler_input.response_builder.add_directive(StopDirective()).speak(text)
 
         return handler_input.response_builder.response

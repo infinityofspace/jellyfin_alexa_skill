@@ -129,9 +129,11 @@ OR
 
 _Note: The default path for the skill.conf file is `/home/user/.jellyfin_alexa_skill/config/skill.conf` and for the
 skill data path it is `/home/user/.jellyfin_alexa_skill/data`._ You can adjust the paths with the `config` and `data` or
-as environment variables `JELLYFIN_ALEXA_SKILL_CONFIG` and `JELLYFIN_ALEXA_SKILL_DATA`.
+as environment variables `JELLYFIN_ALEXA_SKILL_CONFIG` and `JELLYFIN_ALEXA_SKILL_DATA`. Make sure the `skill.conf` is
+writeable.
 
-Now activate the skill in your Alexa app, then you can use the skill with your Alexa enabled devices.
+Now activate the skill in your Alexa app and link your Jellyfin account. Now you can use the skill with your Alexa
+enabled devices.
 
 ## Supported languages
 
@@ -159,13 +161,14 @@ You can find the FAQ [here](https://github.com/infinityofspace/jellyfin_alexa_sk
 | Module | License | Project |
 |:------:|:------:|:------:|
 | flask-ask-sdk | [License](https://raw.githubusercontent.com/alexa/alexa-skills-kit-sdk-for-python/master/LICENSE) | [Project](https://github.com/alexa/alexa-skills-kit-sdk-for-python) |
-| jellyfin-apiclient-python | [License](https://raw.githubusercontent.com/jellyfin/jellyfin-apiclient-python/master/LICENSE.md) | [Project](https://github.com/jellyfin/jellyfin-apiclient-python) |
 | pyngrok | [License](https://raw.githubusercontent.com/alexdlaird/pyngrok/main/LICENSE) | [Project](https://github.com/alexdlaird/pyngrok) |
 | ask-smapi-sdk | [License](https://raw.githubusercontent.com/alexa/alexa-skills-kit-sdk-for-python/master/LICENSE) | [Project](https://github.com/alexa/alexa-skills-kit-sdk-for-python) |
 | ask-smapi-model | [License](https://raw.githubusercontent.com/alexa/alexa-apis-for-python/master/LICENSE) | [Project](https://github.com/alexa/alexa-apis-for-python) |
 | rapidfuzz | [License](https://raw.githubusercontent.com/maxbachmann/RapidFuzz/main/LICENSE) | [Project](https://github.com/maxbachmann/RapidFuzz) |
 | peewee | [License](https://raw.githubusercontent.com/coleifer/peewee/master/LICENSE) | [Project](https://github.com/coleifer/peewee) |
 | gunicorn | [License](https://raw.githubusercontent.com/benoitc/gunicorn/master/LICENSE) | [Project](https://github.com/benoitc/gunicorn) |
+| Babel | [License](https://raw.githubusercontent.com/python-babel/babel/master/LICENSE) | [Project](https://github.com/python-babel/babel) |
+| Flask-WTF | [License](https://raw.githubusercontent.com/wtforms/wtforms/master/LICENSE.rst) | [Project](https://github.com/wtforms/wtforms) |
 
 Furthermore, this readme file contains embeddings of [Shields.io](https://github.com/badges/shields).
 

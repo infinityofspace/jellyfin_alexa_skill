@@ -1,4 +1,6 @@
 import configparser
+import gettext
+import re
 from pathlib import Path
 
 DEFAULT_ALEXA_SKILL_CONFIG_PATH = str(Path.home() / ".jellyfin_alexa_skill/config/skill.conf")
@@ -32,6 +34,20 @@ CAPABILITIES_VIDEO = {
 ARTISTS_PARTIAL_RATIO_THRESHOLD = 0.7
 SONG_PARTIAL_RATIO_THRESHOLD = 0.5
 TITLE_PARTIAL_RATIO_THRESHOLD = 0.5
+
+VALID_ALEXA_REDIRECT_URLS_REGEX = re.compile(
+    "https://((alexa)|(layla)|(pitangui))\.amazon\.com/spa/skill/account-linking-status\.html\?vendorId=.+"
+)
+
+EN_TRANSLATION = gettext.translation("skill", localedir="jellyfin_alexa_skill/locales", languages=("en",))
+DE_TRANSLATION = gettext.translation("skill", localedir="jellyfin_alexa_skill/locales", languages=("de",))
+
+
+def get_translation(language_code: str) -> gettext.GNUTranslations:
+    if language_code == "de-DE":
+        return DE_TRANSLATION
+    else:
+        return EN_TRANSLATION
 
 
 def get_config(path: Path = DEFAULT_ALEXA_SKILL_DATA_PATH) -> configparser.ConfigParser:

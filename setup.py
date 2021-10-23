@@ -1,9 +1,23 @@
 from setuptools import setup, find_packages
+from setuptools.command.install import install
 
 import jellyfin_alexa_skill
 
 with open("Readme.md") as f:
     long_description = f.read()
+
+
+class CompilePoAndInstall(install):
+    def run(self):
+        from babel.messages.frontend import compile_catalog
+
+        compiler = compile_catalog()
+        compiler.domain = ["skill"]
+        compiler.directory = "jellyfin_alexa_skill/locales"
+        compiler.use_fuzzy = True
+        compiler.run()
+        super().run()
+
 
 setup(
     name="jellyfin_alexa_skill",
@@ -31,19 +45,29 @@ setup(
     python_requires=">=3.6",
     install_requires=[
         "flask-ask-sdk~=1.0.0",
-        "jellyfin-apiclient-python~=1.7.2",
         "pyngrok~=5.1.0",
         "ask-smapi-sdk~=1.0.0",
         "ask_smapi_model~=1.13.1",
         "rapidfuzz~=1.7.0",
         "peewee~=3.14.4",
-        "gunicorn~=20.1.0"
+        "gunicorn~=20.1.0",
+        "Flask-WTF~=0.15.1"
     ],
-    package_data={"jellyfin_alexa_skill": [
-        "alexa/setup/interaction/*.json",
-        "alexa/setup/manifest/*.json"
-    ]},
+    setup_requires=[
+        "Babel~=2.9.1",
+    ],
+    package_data={
+        "jellyfin_alexa_skill": [
+            "alexa/setup/interaction/*.json",
+            "alexa/setup/manifest/*.json",
+            "locales/*/LC_MESSAGES/*.po",
+            "locales/*/LC_MESSAGES/*.mo"
+        ]
+    },
     include_package_data=True,
+    cmdclass={
+        "install": CompilePoAndInstall
+    },
     entry_points={
         "console_scripts": [
             "jellyfin_alexa_skill = jellyfin_alexa_skill.main:main",

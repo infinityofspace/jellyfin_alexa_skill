@@ -1,4 +1,5 @@
 import argparse
+import binascii
 import logging
 import os
 import textwrap
@@ -6,27 +7,35 @@ import time
 import uuid
 from pathlib import Path
 
+import ask_sdk_model_runtime
+from ask_smapi_model.v1.skill.account_linking import AccountLinkingRequest, AccountLinkingRequestPayload, \
+    AccountLinkingType
 from ask_smapi_model.v1.skill.manifest import SSLCertificateType, SkillManifestEndpoint
 from ask_smapi_sdk import StandardSmapiClientBuilder
 from flask import Flask
 from flask_ask_sdk.skill_adapter import SkillAdapter
+from flask_wtf import CSRFProtect
 from gunicorn.app.base import BaseApplication
 from pyngrok import conf, ngrok
 
 from jellyfin_alexa_skill import __version__
 from jellyfin_alexa_skill.alexa.handler import get_skill_builder
 from jellyfin_alexa_skill.alexa.setup.interaction.model import INTERACTION_MODEL_DE_DE, INTERACTION_MODEL_EN_US
-from jellyfin_alexa_skill.alexa.setup.manifest.manifest import SKILL_MANIFEST, get_skill_version
-from jellyfin_alexa_skill.config import get_config, DEFAULT_ALEXA_SKILL_CONFIG_PATH, DEFAULT_ALEXA_SKILL_DATA_PATH
+from jellyfin_alexa_skill.alexa.setup.manifest.manifest import get_skill_version, SKILL_MANIFEST
+from jellyfin_alexa_skill.alexa.web.skill import get_skill_blueprint
+from jellyfin_alexa_skill.config import get_config, DEFAULT_ALEXA_SKILL_CONFIG_PATH, DEFAULT_ALEXA_SKILL_DATA_PATH, \
+    APP_NAME
 from jellyfin_alexa_skill.database.db import connect_db
 from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient
+from jellyfin_alexa_skill.jellyfin.web.login import get_jellyfin_login_blueprint
 
 logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 
-app = Flask(__name__)
-
 
 class GunicornApplication(BaseApplication):
+
+    def init(self, parser, opts, args):
+        pass
 
     def __init__(self, app, options=None):
         self.options = options or {}
@@ -77,6 +86,25 @@ def main():
 
     config = get_config(config_path)
 
+    if "data" not in config:
+        config["data"] = {}
+        with open(str(config_path), "w") as f:
+            config.write(f)
+
+    app = Flask(__name__)
+
+    flask_secret = config["data"].get("flask_secret", None)
+
+    if not flask_secret:
+        flask_secret = binascii.hexlify(os.urandom(32)).decode("utf8")
+        config["data"]["flask_secret"] = flask_secret
+        with open(str(config_path), "w") as f:
+            config.write(f)
+
+    app.secret_key = flask_secret
+
+    csrf = CSRFProtect(app)
+
     skill_endpoint = config["general"]["skill_endpoint"]
     jellyfin_endpoint = config["general"]["jellyfin_endpoint"]
 
@@ -124,7 +152,7 @@ def main():
 
     # update the skill in the could when we are on an older version or force reset to clean manual changes
     if config["general"].getboolean("force_reset_skill") or skill_version != __version__:
-        logging.info("Updating skill")
+        logging.info("Updating skill interaction model...")
 
         smapi_client.set_interaction_model_v1(skill_id=skill_id,
                                               stage_v2=stage,
@@ -136,21 +164,11 @@ def main():
                                               locale="de_DE",
                                               interaction_model=INTERACTION_MODEL_DE_DE)
 
-        # try to keep the previous saved endpoint
-        SKILL_MANIFEST.manifest.apis.custom.endpoint = manifest.manifest.apis.custom.endpoint
-
-        smapi_client.update_skill_manifest_v1(skill_id=skill_id,
-                                              stage_v2=stage,
-                                              update_skill_request=SKILL_MANIFEST)
-
-        manifest = SKILL_MANIFEST
-
-        logging.info("Skill updated")
-
         # wait a few seconds to let the changed build
         wait_time = 30
-        logging.info(f"Waiting {wait_time} seconds for the changes to be completed in the cloud")
+        logging.info(f"Wait {wait_time} seconds for the interactions model to be build in the cloud")
         time.sleep(wait_time)
+        logging.info("Skill interaction model updated")
 
     ssl_cert_type_str = config["general"]["skill_endpoint_ssl_cert_type"]
     if ssl_cert_type_str == "wildcard" or skill_endpoint[-9:] == ".ngrok.io":
@@ -164,49 +182,81 @@ def main():
         raise Exception("Invalid ssl certificate type defined")
 
     # check if the current saved endpoint or ssl cert type requires an update
-    if manifest.manifest.apis.custom.endpoint is None \
+    if config["general"].getboolean("force_reset_skill") \
+            or skill_version != __version__ \
+            or manifest.manifest.apis.custom.endpoint is None \
             or manifest.manifest.apis.custom.endpoint.uri != skill_endpoint \
             or manifest.manifest.apis.custom.endpoint.ssl_certificate_type != ssl_cert_type:
-        logging.info("Updating skill endpoint..")
+        logging.info("Updating skill endpoint...")
 
-        manifest.manifest.apis.custom.endpoint = SkillManifestEndpoint(uri=skill_endpoint,
+        manifest = SKILL_MANIFEST
+
+        manifest.manifest.apis.custom.endpoint = SkillManifestEndpoint(skill_endpoint,
                                                                        ssl_certificate_type=ssl_cert_type)
+
         smapi_client.update_skill_manifest_v1(skill_id=skill_id,
                                               stage_v2=stage,
                                               update_skill_request=manifest)
 
         logging.info("Skill endpoint updated")
 
-    data_path.mkdir(parents=True, exist_ok=True)
-    connect_db(data_path / "data.sqlite")
-
-    jellyfin_username = config["jellyfin"]["username"]
-    jellyfin_password = config["jellyfin"]["password"]
-
-    jellyfin_device_id = config["jellyfin"]["device_id"]
-    if not jellyfin_device_id:
-        jellyfin_device_id = str(uuid.uuid4())
-        config["jellyfin"]["device_id"] = jellyfin_device_id
-
+    if "data" not in config:
+        config["data"] = {}
         with open(str(config_path), "w") as f:
             config.write(f)
 
-    jellfyin_client = JellyfinClient(server_url=jellyfin_endpoint,
-                                     username=jellyfin_username,
-                                     password=jellyfin_password,
-                                     device_name=config["jellyfin"]["device_name"],
-                                     device_id=jellyfin_device_id)
+    account_linking_client_id = config["data"].get("alexa_account_linking_client_id", None)
+    if not account_linking_client_id:
+        account_linking_client_id = str(uuid.uuid4())
+        config["data"]["alexa_account_linking_client_id"] = account_linking_client_id
+        with open(str(config_path), "w") as f:
+            config.write(f)
 
-    if not jellfyin_client.logged_in:
-        raise Exception("Login to Jellyfin server failed.")
+    account_linking_url = skill_endpoint + "/login"
 
-    skill_adapter = SkillAdapter(skill=get_skill_builder(jellfyin_client).create(),
+    try:
+        account_linking_info = smapi_client.get_account_linking_info_v1(skill_id=skill_id,
+                                                                        stage_v2=stage).accountLinkingResponse
+    except ask_sdk_model_runtime.exceptions.ServiceException:
+        # the account linking is disabled
+        account_linking_info = None
+
+    if config["general"].getboolean("force_reset_skill") \
+            or skill_version != __version__ \
+            or account_linking_info is None \
+            or account_linking_info["clientId"] != account_linking_client_id \
+            or account_linking_info["authorizationUrl"] != account_linking_url \
+            or account_linking_info["type"] != AccountLinkingType.IMPLICIT.value:
+        logging.info("Updating account linking settings...")
+
+        account_linking_request = AccountLinkingRequest(
+            AccountLinkingRequestPayload(authorization_url=account_linking_url,
+                                         client_id=account_linking_client_id,
+                                         object_type=AccountLinkingType.IMPLICIT))
+
+        smapi_client.update_account_linking_info_v1(skill_id=skill_id,
+                                                    stage_v2=stage,
+                                                    account_linking_request=account_linking_request)
+
+        logging.info("account linking settings updated")
+
+    data_path.mkdir(parents=True, exist_ok=True)
+    connect_db(data_path / "data.sqlite")
+
+    jellyfin_client = JellyfinClient(server_endpoint=jellyfin_endpoint, client_name=APP_NAME)
+
+    skill_adapter = SkillAdapter(skill=get_skill_builder(jellyfin_client).create(),
                                  skill_id=skill_id,
                                  app=app)
 
-    @app.route("/", methods=["POST"])
-    def invoke_skill():
-        return skill_adapter.dispatch_request()
+    # register skill routes
+    skill_blueprint = get_skill_blueprint(skill_adapter)
+    csrf.exempt(skill_blueprint)
+    app.register_blueprint(skill_blueprint)
+
+    # register login routes
+    login_blueprint = get_jellyfin_login_blueprint(jellyfin_endpoint, account_linking_client_id)
+    app.register_blueprint(login_blueprint)
 
     web_app_port = config["general"]["web_app_port"]
 

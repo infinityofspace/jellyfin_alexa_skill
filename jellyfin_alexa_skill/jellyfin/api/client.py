@@ -1,9 +1,10 @@
+import json
+import urllib.parse
 import urllib.parse
 from enum import Enum
-from typing import Optional
+from typing import Optional, Tuple
 
-from jellyfin_apiclient_python import JellyfinClient as Client
-from jellyfin_apiclient_python.exceptions import HTTPException
+import requests
 
 from jellyfin_alexa_skill import __version__
 from jellyfin_alexa_skill.config import APP_NAME
@@ -14,67 +15,104 @@ class MediaType(Enum):
     VIDEO = "Video"
 
 
-class JellyfinClient(Client):
+class JellyfinClient:
 
-    def __init__(self,
-                 server_url: str,
-                 username: str,
-                 password: str,
-                 device_id: str,
-                 device_name: str):
-        super(JellyfinClient, self).__init__()
-        self.config.app(name=APP_NAME, version=__version__, device_name=device_name, device_id=device_id)
-        self.config.data["auth.ssl"] = True
+    def __init__(self, server_endpoint: str, client_name=APP_NAME):
+        self.server_endpoint = server_endpoint
+        self.client_name = client_name
 
-        self.auth.connect_to_address(address=server_url)
-        self.auth.login(server_url=server_url, username=username, password=password)
-        cred = self.get_credentials()
-        self.authenticate(cred)
+    @staticmethod
+    def _build_emby_auth_header(client_name=APP_NAME,
+                                device_name="NONE",
+                                device_id="NONE",
+                                version=__version__,
+                                token=None):
+        header = f"MediaBrowser Client={client_name}, Device={device_name}, DeviceId={device_id}, Version={version}"
 
-        # def event(event_name, data):
-        #     print(event_name, data)
-        #     # if event_name == "WebSocketDisconnect":
-        #     #     timeout_gen = expo(100)
-        #     #     if server["uuid"] in self.clients:
-        #     #         while not self.is_stopping:
-        #     #             timeout = next(timeout_gen)
-        #     #             logging.info(
-        #     #                 "No connection to server. Next try in {0} second(s)".format(
-        #     #                     timeout
-        #     #                 )
-        #     #             )
-        #     #             self._disconnect_client(server=server)
-        #     #             time.sleep(timeout)
-        #     #             if self.connect_client(server):
-        #     #                 break
-        #     # else:
-        #     #     self.callback(client, event_name, data)
-        #
-        # self.callback = event
-        # self.callback_ws = event
-        # self.start(websocket=True)
-        #
-        # self.jellyfin.post_capabilities(CAPABILITIES_AUDIO)
+        if token:
+            header += ", Token={}".format(token)
+
+        return header
+
+    def public_info(self) -> Optional[dict]:
+        url = self.server_endpoint + "/System/Info/Public"
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header()
+        }
+
+        res = requests.get(url, headers=headers)
+
+        if res:
+            return json.loads(res.content)
+        else:
+            return None
+
+    def get_auth_token(self,
+                       username: str,
+                       password: str) -> Tuple[str, str]:
+        data = {
+            "Username": username,
+            "Pw": password
+        }
+
+        url = self.server_endpoint + "/Users/authenticatebyname"
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header()
+        }
+
+        res = requests.post(url, headers=headers, data=json.dumps(data))
+
+        if res:
+            json_res = json.loads(res.content)
+            return json_res["User"]["Id"], json_res["AccessToken"]
+        else:
+            res.raise_for_status()
 
     def get_stream_url(self,
+                       user_id: str,
+                       token: str,
                        item_id: str,
+                       device_id: str = "NONE",
                        audio_codec: str = "mp3",
                        max_streaming_bitrate: int = 140000000,
+                       start_time_ticks: int = 0,
                        **kwargs) -> str:
         """
         Generate a url which allows streaming the requested media file.
         """
 
-        play_info = self.jellyfin.get_play_info(item_id, profile=None)
+        data = {
+            "UserId": user_id,
+            "StartTimeTicks": start_time_ticks,
+            "AutoOpenLiveStream": True,
+            "IsPlayback": True
+        }
 
-        url = self.config.data["auth.server"]
-        path = f"Audio/{item_id}/universal"
+        url = self.server_endpoint + f"/Items/{item_id}/PlaybackInfo"
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
+
+        res = requests.post(url, headers=headers, data=json.dumps(data))
+        if res:
+            play_info = json.loads(res.content)
+        else:
+            res.raise_for_status()
+
+        url = self.server_endpoint
+        path = f"/Audio/{item_id}/universal"
         params = {
-            'UserId': self.http.config.data["auth.user_id"],
-            'DeviceId': self.http.config.data["app.device_id"],
+            'UserId': user_id,
+            'DeviceId': device_id,
             "MaxStreamingBitrate": max_streaming_bitrate,
             "PlaySessionId": play_info["PlaySessionId"],
-            "api_key": self.config.data["auth.token"],
+            "api_key": token,
             "AudioCodec": audio_codec
         }
         params.update(kwargs)
@@ -86,19 +124,40 @@ class JellyfinClient(Client):
 
         return url
 
-    def get_favorites(self, media_type: Optional[MediaType] = None, **kwargs):
+    def get_favorites(self,
+                      user_id: str,
+                      token: str,
+                      media_type: Optional[MediaType] = None,
+                      **kwargs) -> dict:
         params = {
             "Filters": "IsFavorite",
-            "Recursive": True
+            "Recursive": True,
         }
         params.update(kwargs)
 
         if media_type:
             params["IncludeItemTypes"] = media_type.value
 
-        return self.jellyfin.user_items(params=params)["Items"]
+        url = self.server_endpoint + f"/Users/{user_id}/Items"
 
-    def get_playlist(self, playlist_name: Optional[str] = None, **kwargs):
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
+
+        res = requests.get(url, headers=headers, params=params)
+
+        if res:
+            json_res = json.loads(res.content)
+            return json_res["Items"]
+        else:
+            res.raise_for_status()
+
+    def get_playlist(self,
+                     user_id: str,
+                     token: str,
+                     playlist_name: Optional[str] = None,
+                     **kwargs):
         params = {
             "IncludeItemTypes": "Playlist",
             "Recursive": True
@@ -108,24 +167,53 @@ class JellyfinClient(Client):
         if playlist_name:
             params["searchTerm"] = playlist_name
 
-        return self.jellyfin.user_items(params=params)["Items"]
+        url = self.server_endpoint + f"/Users/{user_id}/Items"
 
-    def get_playlist_items(self, playlist_id: str, **kwargs):
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
+
+        res = requests.get(url, headers=headers, params=params)
+
+        if res:
+            json_res = json.loads(res.content)
+            return json_res["Items"]
+        else:
+            res.raise_for_status()
+
+    def get_playlist_items(self,
+                           user_id: str,
+                           token: str,
+                           playlist_id: str,
+                           **kwargs):
         params = {
-            "UserId": "{UserId}"
+            "UserId": user_id
         }
         params.update(kwargs)
 
-        try:
-            return self.jellyfin._get(f"Playlists/{playlist_id}/Items", params=params)["Items"]
-        except HTTPException as e:
-            if e.status == 400:
-                # the playlist does not exist
-                return None
+        url = self.server_endpoint + f"/Playlists/{playlist_id}/Items"
 
-            raise e
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
 
-    def search_media_items(self, term: str, media: MediaType, limit=20, **kwargs):
+        res = requests.get(url, headers=headers, params=params)
+
+        if res:
+            json_res = json.loads(res.content)
+            return json_res["Items"]
+        else:
+            res.raise_for_status()
+
+    def search_media_items(self,
+                           user_id: str,
+                           token: str,
+                           term: str,
+                           media: MediaType,
+                           limit=20,
+                           **kwargs):
         params = {
             "searchTerm": term,
             "Recursive": True,
@@ -134,19 +222,53 @@ class JellyfinClient(Client):
         }
         params.update(kwargs)
 
-        return self.jellyfin.user_items(params=params)["Items"]
+        url = self.server_endpoint + f"/Users/{user_id}/Items"
 
-    def get_artist_items(self, author_id: str, media: MediaType, **kwargs):
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
+
+        res = requests.get(url, headers=headers, params=params)
+
+        if res:
+            json_res = json.loads(res.content)
+            return json_res["Items"]
+        else:
+            res.raise_for_status()
+
+    def get_artist_items(self,
+                         user_id: str,
+                         token: str,
+                         artist_id: str,
+                         media: MediaType,
+                         **kwargs):
         params = {
-            "ArtistIds": author_id,
+            "ArtistIds": artist_id,
             "Recursive": True,
             "MediaTypes": media.value,
         }
         params.update(kwargs)
 
-        return self.jellyfin.user_items(params=params)["Items"]
+        url = self.server_endpoint + f"/Users/{user_id}/Items"
 
-    def search_artist(self, term, **kwargs):
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
+
+        res = requests.get(url, headers=headers, params=params)
+
+        if res:
+            json_res = json.loads(res.content)
+            return json_res["Items"]
+        else:
+            res.raise_for_status()
+
+    def search_artist(self,
+                      user_id: str,
+                      token: str,
+                      term, **kwargs):
         params = {
             "UserId": "{UserId}",
             "searchTerm": term,
@@ -154,4 +276,70 @@ class JellyfinClient(Client):
         }
         params.update(kwargs)
 
-        return self.jellyfin._get("Artists", params=params)["Items"]
+        url = self.server_endpoint + "/Users/{}/Items".format(user_id)
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
+
+        res = requests.get(url, headers=headers, params=params)
+
+        if res:
+            json_res = json.loads(res.content)
+            return json_res["Items"]
+        else:
+            res.raise_for_status()
+
+    def get_recently_added(self, user_id: str, token=str, media=None, limit=50, **kwargs):
+        params = {
+            "Limit": limit
+        }
+        params.update(kwargs)
+
+        if media:
+            params["IncludeItemTypes"] = media.value
+
+        url = self.server_endpoint + f"/Users/{user_id}/Items/Latest"
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
+
+        res = requests.get(url, headers=headers, params=params)
+
+        if res:
+            return json.loads(res.content)
+        else:
+            res.raise_for_status()
+
+    def favorite(self, user_id: str, token: str, media_id: str):
+        url = self.server_endpoint + f"/Users/{user_id}/FavoriteItems/{media_id}"
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
+
+        res = requests.post(url, headers=headers)
+
+        if res:
+            return json.loads(res.content)
+        else:
+            res.raise_for_status()
+
+    def unfavorite(self, user_id: str, token: str, media_id: str):
+        url = self.server_endpoint + f"/Users/{user_id}/FavoriteItems/{media_id}"
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
+
+        res = requests.delete(url, headers=headers)
+
+        if res:
+            return json.loads(res.content)
+        else:
+            res.raise_for_status()

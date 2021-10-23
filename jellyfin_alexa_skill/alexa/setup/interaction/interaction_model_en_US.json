@@ -13,9 +13,6 @@
           "name": "AMAZON.StopIntent"
         },
         {
-          "name": "AMAZON.NavigateHomeIntent"
-        },
-        {
           "name": "AMAZON.FallbackIntent"
         },
         {
@@ -46,7 +43,8 @@
           "name": "RepeatSingleOnIntent",
           "samples": [
             "Repeat the song",
-            "Repeat the video"
+            "Repeat the video",
+            "Repeat that"
           ]
         },
         {
@@ -92,7 +90,7 @@
           ]
         },
         {
-          "name": "PlaySongsArtistIntent",
+          "name": "PlayArtistSongsIntent",
           "samples": [
             "Play songs from {musician}",
             "Play music from {musician}"
@@ -105,65 +103,18 @@
           ]
         },
         {
-          "name": "PlayVideosArtistIntent",
+          "name": "PlayLastAddedIntent",
           "samples": [
-            "Play videos from {artist}"
+            "Play last added {media_type}",
+            "Play recently added {media_type}",
+            "Play newly added {media_type}",
+            "Play new media"
           ],
           "slots": [
             {
-              "name": "artist",
-              "type": "AMAZON.SearchQuery"
+              "name": "media_type",
+              "type": "MediaType"
             }
-          ]
-        },
-        {
-          "name": "PlayFavoritesIntent",
-          "samples": [
-            "Play my favorites"
-          ]
-        },
-        {
-          "name": "PlayFavoriteSongsIntent",
-          "samples": [
-            "Play my favorite songs",
-            "Play my favorite music"
-          ]
-        },
-        {
-          "name": "PlayFavoriteVideosIntent",
-          "samples": [
-            "Play my favorite videos"
-          ]
-        },
-        {
-          "name": "PlayLastAddedIntent",
-          "samples": [
-            "Play last added media",
-            "Play recently added media",
-            "Play newly added media",
-            "Play new media"
-          ]
-        },
-        {
-          "name": "PlayLastAddedVideosIntent",
-          "samples": [
-            "Play last added videos",
-            "Play recently added videos",
-            "Play newly added videos",
-            "Play new videos"
-          ]
-        },
-        {
-          "name": "PlayLastAddedSongsIntent",
-          "samples": [
-            "Play last added songs",
-            "Play recently added songs",
-            "Play newly added songs",
-            "Play new songs",
-            "Play last added music",
-            "Play recently added music",
-            "Play newly added music",
-            "Play new music"
           ]
         },
         {
@@ -176,6 +127,20 @@
             {
               "name": "playlist",
               "type": "AMAZON.SearchQuery"
+            }
+          ]
+        },
+        {
+          "name": "PlayFavoritesIntent",
+          "samples": [
+            "Play my favorite {media_type}",
+            "Play my {media_type} favorite",
+            "Play my favorites"
+          ],
+          "slots": [
+            {
+              "name": "media_type",
+              "type": "MediaType"
             }
           ]
         },
@@ -206,8 +171,39 @@
           "samples": [
             "What is the name of the song",
             "What is the name of the video",
+            "What is the name of the music",
             "What is the title of the song",
-            "What is the title of the video"
+            "What is the title of the video",
+            "What is the title of the music",
+            "What is currently playing"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "name": "MediaType",
+          "values": [
+            {
+              "id": "media",
+              "name": {
+                "value": "media"
+              }
+            },
+            {
+              "id": "video",
+              "name": {
+                "value": "video"
+              }
+            },
+            {
+              "id": "audio",
+              "name": {
+                "value": "Audio",
+                "synonyms": [
+                  "music, song"
+                ]
+              }
+            }
           ]
         }
       ]

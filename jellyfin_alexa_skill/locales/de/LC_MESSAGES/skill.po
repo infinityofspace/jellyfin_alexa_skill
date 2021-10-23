@@ -1,0 +1,110 @@
+#: alexa/handler/control.py:36
+msgid "Sorry, I can't find any songs for this search. Please try again."
+msgstr ""
+"Leider kann ich keine Lieder für diese Suche finden. Bitte versuche es "
+"erneut."
+
+#: alexa/handler/control.py:103
+msgid "Sorry, I can't find any videos for this search. Please try again."
+msgstr ""
+"Leider kann ich keine Videos für diese Suche finden. Bitte versuche es "
+"erneut."
+
+#: alexa/handler/control.py:160
+msgid "Sorry, I can't find any songs with this artist. Please try again."
+msgstr ""
+"Leider kann ich keine Songs mit diesem Künstler finden. Bitte versuche es"
+" erneut."
+
+#: alexa/handler/control.py:234
+msgid "Sorry, I couldn't find any recently added media."
+msgstr "Leider konnte ich keine kürzlich hinzugefügten Medien finden."
+
+#: alexa/handler/control.py:296
+msgid "What can I play?"
+msgstr "Was soll ich spielen?"
+
+#: alexa/handler/control.py:361
+msgid "You reached the end of the playback queue."
+msgstr "Du hast das Ende der Wiedergabeliste erreicht."
+
+#: alexa/handler/control.py:399
+msgid "You reached the start of the playback queue."
+msgstr "Du hast den Anfang der Wiedergabeliste erreicht."
+
+#: alexa/handler/control.py:478
+msgid "The playback queue is empty. Please try to add some media and try again."
+msgstr ""
+"Die Wiedergabeliste ist leer. Bitte füge Medien hinzu und versuche es "
+"erneut."
+
+#: alexa/handler/error.py:28
+msgid "Sorry, something went wrong. Please try again."
+msgstr "Entschuldigung etwas ist schief gelaufen. Bitte versuche es erneut."
+
+#: alexa/handler/event.py:114
+msgid "Something went wrong during media playback. Please try again."
+msgstr ""
+"Etwas ist während der Medienwiedergabe schief gelaufen. Bitte versuche es"
+" erneut."
+
+#: alexa/handler/fallback.py:22
+msgid "Sorry, I could not understand that. Please try again."
+msgstr "Leider konnte ich das nicht verstehen. Bitte versuche es erneut."
+
+#: alexa/handler/favorite.py:57
+msgid "Sorry, you don't have any favorite media."
+msgstr "Leider hast du kein Lieblingsmedien. "
+
+#: alexa/handler/favorite.py:86
+msgid "Added to your favorites."
+msgstr "Zu deinen Favoriten hinzugefügt."
+
+#: alexa/handler/favorite.py:88 alexa/handler/favorite.py:118
+msgid "There is currently no media playing."
+msgstr "Es werden derzeit keine Medien abgespielt."
+
+#: alexa/handler/favorite.py:116
+msgid "Removed from your favorites."
+msgstr "Aus deinen Favoriten entfernt."
+
+#: alexa/handler/help.py:23
+msgid ""
+"With this skill your can play media from your Jellyfin Server. Use 'Play "
+"Game of Live from Earth' or 'Play playlist this is number 42' to play "
+"some songs."
+msgstr ""
+"Mit diesem Skill kannst du Medien von deinem Jellyfin Server abspielen. "
+"Benutze 'Spiele Game of Live von Earth' oder 'Spiele die Playlist this is"
+" number 42' um deine Lieder abzuspielen."
+
+#: alexa/handler/info.py:29
+msgid "Currently playing {title} from {artists}."
+msgstr "Es wird aktuell {title} von {artists} wiedergegeben."
+
+#: alexa/handler/info.py:32
+msgid "Currently no media is played."
+msgstr "Aktuell werden keine Medien wiedergegeben."
+
+#: alexa/handler/launch.py:39
+msgid "Welcome to Jellyfin Player skill, what can I play?"
+msgstr "Willkommen beim Jellyfin Player Skill, was soll ich spielen?"
+
+#: alexa/handler/launch.py:60
+msgid "Sorry, this device does not support media playback."
+msgstr "Leider unterstützt dieses Gerät keine Medien Wiedergabe."
+
+#: alexa/handler/playlist.py:38
+msgid "Sorry, I couldn't find any playlist with this name. Please try again."
+msgstr ""
+"Leider kann ich keine Playlist mit diesen Namen finden. Bitte versuche es"
+" erneut "
+
+#: alexa/handler/playlist.py:50
+msgid "Sorry, this playlist does not exists anymore."
+msgstr "Leider existiert diese Playlist nicht mehr."
+
+#: alexa/handler/playlist.py:65
+msgid "Ok, I play the playlist {}."
+msgstr "Ok, ich spiele die Playlist {}"
+
