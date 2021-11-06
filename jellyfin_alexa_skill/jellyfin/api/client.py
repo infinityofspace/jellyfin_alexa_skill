@@ -270,13 +270,14 @@ class JellyfinClient:
                       token: str,
                       term, **kwargs):
         params = {
-            "UserId": "{UserId}",
+            "UserId": user_id,
             "searchTerm": term,
+            "IncludeArtists": True,
             "Recursive": True
         }
         params.update(kwargs)
 
-        url = self.server_endpoint + "/Users/{}/Items".format(user_id)
+        url = self.server_endpoint + "/Artists"
 
         headers = {
             "Content-Type": "application/json",

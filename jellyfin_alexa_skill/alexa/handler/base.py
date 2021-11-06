@@ -9,7 +9,7 @@ from jellyfin_alexa_skill.database.model.user import User
 
 
 class BaseHandler(AbstractRequestHandler, ABC):
-    def handle(self, handler_input: HandlerInput, *arg, **kwargs):
+    def handle(self, handler_input: HandlerInput, *args, **kwargs):
         alexa_auth_token = handler_input.request_envelope.context.system.user.access_token
 
         if not alexa_auth_token:
@@ -22,8 +22,8 @@ class BaseHandler(AbstractRequestHandler, ABC):
             handler_input.response_builder.set_card(LinkAccountCard())
             return handler_input.response_builder.response
 
-        return self.handle_func(user=user, handler_input=handler_input, *arg, **kwargs)
+        return self.handle_func(user=user, handler_input=handler_input, *args, **kwargs)
 
     @abstractmethod
-    def handle_func(self, user: User, handler_input: HandlerInput, *arg, **kwargs):
+    def handle_func(self, user: User, handler_input: HandlerInput, *args, **kwargs):
         pass

@@ -33,7 +33,8 @@ class PlaySongIntentHandler(BaseHandler):
         song = handler_input.request_envelope.request.intent.slots["song"].value
         musician = handler_input.request_envelope.request.intent.slots["musician"].value
 
-        no_result_response_text = translation.gettext("Sorry, I can't find any songs for this search. Please try again.")
+        no_result_response_text = translation.gettext(
+            "Sorry, I can't find any songs for this search. Please try again.")
 
         if not song:
             handler_input.response_builder.speak(no_result_response_text)
@@ -172,6 +173,10 @@ class PlayArtistSongsIntentHandler(BaseHandler):
 
         song_match_scores = [fuzz.partial_ratio(item["Name"].lower(), musician) for item in search_results]
 
+        if not song_match_scores:
+            handler_input.response_builder.speak(no_result_response_text)
+            return handler_input.response_builder.response
+
         best_score = max(song_match_scores)
         if best_score < ARTISTS_PARTIAL_RATIO_THRESHOLD:
             handler_input.response_builder.speak(no_result_response_text)
@@ -184,6 +189,10 @@ class PlayArtistSongsIntentHandler(BaseHandler):
                                                       token=user.jellyfin_token,
                                                       artist_id=artist_id,
                                                       media=MediaType.AUDIO)
+
+        if not items:
+            handler_input.response_builder.speak(no_result_response_text)
+            return handler_input.response_builder.response
 
         playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
                           for item in items]

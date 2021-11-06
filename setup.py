@@ -1,27 +1,13 @@
 from setuptools import setup, find_packages
-from setuptools.command.install import install
 
-import jellyfin_alexa_skill
+from jellyfin_alexa_skill import __version__
 
 with open("Readme.md") as f:
     long_description = f.read()
 
-
-class CompilePoAndInstall(install):
-    def run(self):
-        from babel.messages.frontend import compile_catalog
-
-        compiler = compile_catalog()
-        compiler.domain = ["skill"]
-        compiler.directory = "jellyfin_alexa_skill/locales"
-        compiler.use_fuzzy = True
-        compiler.run()
-        super().run()
-
-
 setup(
     name="jellyfin_alexa_skill",
-    version=jellyfin_alexa_skill.__version__,
+    version=__version__,
     author="infinityofspace",
     url="https://github.com/infinityofspace/jellyfin_alexa_skill",
     description="Selfhosted Alexa media player skill for Jellyfin",
@@ -60,14 +46,11 @@ setup(
         "jellyfin_alexa_skill": [
             "alexa/setup/interaction/*.json",
             "alexa/setup/manifest/*.json",
-            "locales/*/LC_MESSAGES/*.po",
-            "locales/*/LC_MESSAGES/*.mo"
+            "locales/*/*/*.po",
+            "locales/*/*/*.mo"
         ]
     },
     include_package_data=True,
-    cmdclass={
-        "install": CompilePoAndInstall
-    },
     entry_points={
         "console_scripts": [
             "jellyfin_alexa_skill = jellyfin_alexa_skill.main:main",
