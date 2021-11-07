@@ -4,10 +4,10 @@ from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
 from ask_sdk_model.interfaces.audioplayer import StopDirective
-from rapidfuzz import fuzz
 
 from jellyfin_alexa_skill.alexa.handler.base import BaseHandler
-from jellyfin_alexa_skill.alexa.util import set_shuffle_queue_idxs, build_stream_response, MediaTypeSlot, translate
+from jellyfin_alexa_skill.alexa.util import set_shuffle_queue_idxs, build_stream_response, MediaTypeSlot, translate, \
+    get_similarity
 from jellyfin_alexa_skill.config import ARTISTS_PARTIAL_RATIO_THRESHOLD, SONG_PARTIAL_RATIO_THRESHOLD, \
     TITLE_PARTIAL_RATIO_THRESHOLD
 from jellyfin_alexa_skill.database.db import set_playback_queue, get_playback
@@ -59,7 +59,7 @@ class PlaySongIntentHandler(BaseHandler):
             song_search_results = [song for song in song_search_results if
                                    set(artist["Id"] for artist in song["ArtistItems"]).intersection(artists_ids)]
 
-        song_match_scores = [fuzz.partial_ratio(item["Name"].lower(), song) for item in song_search_results]
+        song_match_scores = [get_similarity(item["Name"], song) for item in song_search_results]
 
         if song_match_scores:
             max_score = max(song_match_scores)
@@ -116,7 +116,7 @@ class PlayVideoIntentHandler(BaseHandler):
                                                                        media=MediaType.VIDEO,
                                                                        Filters="IsNotFolder")
 
-        video_match_scores = [fuzz.partial_ratio(item["Name"].lower(), title) for item in video_search_results]
+        video_match_scores = [get_similarity(item["Name"], title) for item in video_search_results]
 
         if video_match_scores:
             max_score = max(video_match_scores)
@@ -171,7 +171,7 @@ class PlayArtistSongsIntentHandler(BaseHandler):
                                                             token=user.jellyfin_token,
                                                             term=musician)
 
-        song_match_scores = [fuzz.partial_ratio(item["Name"].lower(), musician) for item in search_results]
+        song_match_scores = [get_similarity(item["Name"], musician) for item in search_results]
 
         if not song_match_scores:
             handler_input.response_builder.speak(no_result_response_text)

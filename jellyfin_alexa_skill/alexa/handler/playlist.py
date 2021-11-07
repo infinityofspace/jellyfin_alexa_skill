@@ -3,10 +3,9 @@ from gettext import GNUTranslations
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
-from rapidfuzz import fuzz
 
 from jellyfin_alexa_skill.alexa.handler import BaseHandler
-from jellyfin_alexa_skill.alexa.util import build_stream_response, translate
+from jellyfin_alexa_skill.alexa.util import build_stream_response, translate, get_similarity
 from jellyfin_alexa_skill.database.db import set_playback_queue
 from jellyfin_alexa_skill.database.model.playback import PlaybackItem
 from jellyfin_alexa_skill.database.model.user import User
@@ -39,7 +38,7 @@ class PlayPlaylistIntentHandler(BaseHandler):
             handler_input.response_builder.speak(text)
         else:
             # try to find the best playlist name match
-            match_scores = [fuzz.partial_ratio(item["Name"], playlist_name) for item in playlists]
+            match_scores = [get_similarity(item["Name"], playlist_name) for item in playlists]
             best_playlist = playlists[match_scores.index(max(match_scores))]
 
             playlist_items = self.jellyfin_client.get_playlist_items(user_id=user.jellyfin_user_id,

@@ -1,3 +1,4 @@
+from difflib import SequenceMatcher
 from enum import Enum
 from functools import wraps
 from random import shuffle
@@ -62,3 +63,7 @@ def translate(func):
         return func(self, handler_input=handler_input, translation=translation, *args, **kwargs)
 
     return wrapper
+
+
+def get_similarity(s1: str, s2: str) -> float:
+    return SequenceMatcher(lambda x: x in " \t,.:-;/", s1.lower(), s2.lower()).ratio()
