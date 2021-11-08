@@ -14,8 +14,8 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
+COPY requirements-docker-build.txt .
+RUN pip3 install --upgrade pip && pip3 install -r requirements-docker-build.txt
 
 COPY . .
 RUN pip3 install .
