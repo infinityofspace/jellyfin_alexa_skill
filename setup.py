@@ -46,7 +46,8 @@ setup(
             "alexa/setup/interaction/*.json",
             "alexa/setup/manifest/*.json",
             "locales/*/*/*.po",
-            "locales/*/*/*.mo"
+            "locales/*/*/*.mo",
+            "jellyfin/web/templates/*.html"
         ]
     },
     include_package_data=True,
