@@ -39,8 +39,8 @@ VALID_ALEXA_REDIRECT_URLS_REGEX = re.compile(
     "https://((alexa)|(layla)|(pitangui))\.amazon\.com/spa/skill/account-linking-status\.html\?vendorId=.+"
 )
 
-EN_TRANSLATION = gettext.translation("skill", localedir="jellyfin_alexa_skill/locales", languages=("en",))
-DE_TRANSLATION = gettext.translation("skill", localedir="jellyfin_alexa_skill/locales", languages=("de",))
+EN_TRANSLATION = gettext.translation("skill", localedir=Path(__file__).resolve().parent / "locales", languages=("en",))
+DE_TRANSLATION = gettext.translation("skill", localedir=Path(__file__).resolve().parent / "locales", languages=("de",))
 
 
 def get_translation(language_code: str) -> gettext.GNUTranslations:
