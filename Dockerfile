@@ -29,13 +29,8 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 RUN apk add --no-cache binutils openssl-dev
 
-RUN addgroup -S skill && adduser -S skill -G skill
-
 RUN mkdir -p /skill/config \
-    && mkdir -p /skill/data \
-    && chown -R skill:skill /skill
-
-USER skill
+    && mkdir -p /skill/data
 
 ENV JELLYFIN_ALEXA_SKILL_CONFIG=/skill/config/skill.conf
 ENV JELLYFIN_ALEXA_SKILL_DATA=/skill/data
