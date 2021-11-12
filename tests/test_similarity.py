@@ -3,7 +3,7 @@ import unittest
 
 class TestSimilarity(unittest.TestCase):
     def test_similarity_empty(self):
-        from alexa.util import get_similarity
+        from jellyfin_alexa_skill.alexa.util import get_similarity
 
         s1 = ""
         s2 = ""
@@ -12,7 +12,7 @@ class TestSimilarity(unittest.TestCase):
         self.assertEqual(similarity, 1.0)
 
     def test_similarity(self):
-        from alexa.util import get_similarity
+        from jellyfin_alexa_skill.alexa.util import get_similarity
 
         # same string
         with self.subTest():
