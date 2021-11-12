@@ -36,7 +36,7 @@ SONG_PARTIAL_RATIO_THRESHOLD = 0.5
 TITLE_PARTIAL_RATIO_THRESHOLD = 0.5
 
 VALID_ALEXA_REDIRECT_URLS_REGEX = re.compile(
-    "https://((alexa)|(layla)|(pitangui))\.amazon\.com/spa/skill/account-linking-status\.html\?vendorId=.+"
+    r"https://((pitangui|layla)\.amazon\.com|alexa\.amazon\.co\.jp)/spa/skill/account-linking-status\.html\?vendorId=.+"
 )
 
 EN_TRANSLATION = gettext.translation("skill", localedir=Path(__file__).resolve().parent / "locales", languages=("en",))
