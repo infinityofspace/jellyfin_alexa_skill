@@ -1,6 +1,6 @@
 import unittest
 
-from jellyfin.api.client import JellyfinClient
+from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient
 
 
 class TestJellyfinApiClient(unittest.TestCase):

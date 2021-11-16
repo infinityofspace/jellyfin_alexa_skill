@@ -1,10 +1,10 @@
 import unittest
 
+from jellyfin_alexa_skill.alexa.util import get_similarity
+
 
 class TestSimilarity(unittest.TestCase):
     def test_similarity_empty(self):
-        from jellyfin_alexa_skill.alexa.util import get_similarity
-
         s1 = ""
         s2 = ""
         similarity = get_similarity(s1, s2)
@@ -12,8 +12,6 @@ class TestSimilarity(unittest.TestCase):
         self.assertEqual(similarity, 1.0)
 
     def test_similarity(self):
-        from jellyfin_alexa_skill.alexa.util import get_similarity
-
         # same string
         with self.subTest():
             s1 = "Hello"
