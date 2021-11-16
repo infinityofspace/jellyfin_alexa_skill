@@ -53,6 +53,9 @@ from the outside, in this case the two services are exposed with a tunnel.
     - remove current media from favorites
 - metadata:
     - show the metadata of the media (title and artist)
+- other:
+    - multi-language support (see [Supported languages](#supported-languages))
+    - multi-user support (any user on the Jellyfin server can use the skill)
 
 If you have a feature idea, use
 this [issue template](https://github.com/infinityofspace/jellyfin_alexa_skill/issues/new?labels=feature&template=feature_request.md)
@@ -140,7 +143,7 @@ enabled devices.
 The skill has support for the following languages:
 
 - English
-- German (currently only english Alexa response)
+- German
 
 ## Skill speech examples
 
