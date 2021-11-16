@@ -41,5 +41,15 @@ jobs:
           pip3 install --upgrade pip
           pip3 install -r requirements.txt
 
+      - name: Start Jellyfin test server
+        run: /start_jellyfin.sh > /dev/null 2>&1 &
+
+      - name: Wait until server is up or timeout of 60 seconds
+        run: timeout 60 sh -c 'until nc -z $0 $1; do sleep 1; done' localhost 8096
+
       - name: Run unit tests
         run: python3 -m unittest tests/test_jellyfin_api_client.py
+
+#      - name: Stop Jellyfin test server
+#        run: |
+#          kill -n 1 %1
