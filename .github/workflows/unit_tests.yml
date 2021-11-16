@@ -23,4 +23,31 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run unit tests
-        run: python -m unittest discover -s tests -p "*.py"
+        run: python -m unittest tests/test_similarity.py tests/test_alexa_redirect_urls.py
+
+  tests-jellyfin-api:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/infinityofspace/jellyfin_alexa_skill:unittests
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Set up Python 3 and test setup requirements
+        run: apt update && apt install -y python3 python3-pip netcat
+
+      - name: Install requirements
+        run: |
+          pip3 install --upgrade pip
+          pip3 install -r requirements.txt
+
+      - name: Start Jellyfin test server
+        run: |
+          cd /
+          /start_jellyfin.sh > /dev/null 2>&1 &
+
+      - name: Wait until server is up or timeout of 60 seconds
+        run: timeout 60 sh -c 'until nc -z $0 $1; do sleep 1; done' localhost 8096
+
+      - name: Run unit tests
+        run: python3 -m unittest tests/test_jellyfin_api_client.py

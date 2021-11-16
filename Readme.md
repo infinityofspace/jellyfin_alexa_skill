@@ -169,6 +169,7 @@ You can find the FAQ [here](https://github.com/infinityofspace/jellyfin_alexa_sk
 | gunicorn | [License](https://raw.githubusercontent.com/benoitc/gunicorn/master/LICENSE) | [Project](https://github.com/benoitc/gunicorn) |
 | Babel | [License](https://raw.githubusercontent.com/python-babel/babel/master/LICENSE) | [Project](https://github.com/python-babel/babel) |
 | Flask-WTF | [License](https://raw.githubusercontent.com/wtforms/wtforms/master/LICENSE.rst) | [Project](https://github.com/wtforms/wtforms) |
+| requests | [License](https://raw.githubusercontent.com/psf/requests/main/LICENSE) | [Project](https://github.com/psf/requests) |
 
 Furthermore, this readme file contains embeddings of [Shields.io](https://github.com/badges/shields).
 
