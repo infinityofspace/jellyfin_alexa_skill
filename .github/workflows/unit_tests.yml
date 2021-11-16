@@ -42,4 +42,4 @@ jobs:
           pip3 install -r requirements.txt
 
       - name: Run unit tests
-        run: python -m unittest tests/test_jellyfin_api_client.py
+        run: python3 -m unittest tests/test_jellyfin_api_client.py
