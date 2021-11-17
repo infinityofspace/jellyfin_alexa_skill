@@ -17,7 +17,7 @@
       }
     },
     "publishingInformation": {
-      "name": "jellyfin_0.2.2",
+      "name": "jellyfin",
       "category": "STREAMING_SERVICE",
       "distributionCountries": [],
       "isAvailableWorldwide": false,
