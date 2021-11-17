@@ -43,6 +43,12 @@
           "description": "Spiele Medien von deinem Jellyfin Server.\n\nQuellcode: https://github.com/infinityofspace/jellyfin_alexa_skill"
         }
       },
+      "automaticClonedLocale": {
+        "locales":[ {
+          "source": "en-US",
+          "targets": ["en-AU", "en-CA", "en-IN", "en-GB"]
+        } ]
+      },
       "testingInstructions": ""
     }
   }
