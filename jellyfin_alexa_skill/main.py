@@ -154,6 +154,17 @@ def main():
     if config["general"].getboolean("force_reset_skill") or skill_version != __version__:
         logging.info("Updating skill interaction model...")
 
+        # check if there is an override of interaction model in skill.config
+        if ("en-US" in config) and ("invocation_name" in config["en-US"]):
+            invocation_name = config["en-US"]["invocation_name"]
+            logging.info("OVERRIDE [en-US]: invocation_name [%s]", invocation_name)
+            INTERACTION_MODEL_EN_US.interaction_model.language_model.invocation_name = invocation_name
+
+        if ("de-DE" in config) and ("invocation_name" in config["de-DE"]):
+            invocation_name = config["de-DE"]["invocation_name"]
+            logging.info("OVERRIDE [de-DE]: invocation_name [%s]", invocation_name)
+            INTERACTION_MODEL_DE_DE.interaction_model.language_model.invocation_name = invocation_name
+
         smapi_client.set_interaction_model_v1(skill_id=skill_id,
                                               stage_v2=stage,
                                               locale="en_US",
@@ -193,6 +204,25 @@ def main():
 
         manifest.manifest.apis.custom.endpoint = SkillManifestEndpoint(skill_endpoint,
                                                                        ssl_certificate_type=ssl_cert_type)
+
+        # check if there is an override of manifest name in skill.config
+        if ("en-US" in config) and ("display_name" in config["en-US"]):
+            display_name = config["en-US"]["display_name"]
+            logging.info("OVERRIDE [en-US]: display_name [%s]", display_name)
+
+            # replace "Jellyfin Player" with "display_name" in all 3 example phrases
+            for i in range(3):
+                manifest.manifest.publishing_information.locales["en-US"].example_phrases[i] = \
+                  manifest.manifest.publishing_information.locales["en-US"].example_phrases[i].replace("Jellyfin Player",display_name)
+
+        if ("de-DE" in config) and ("display_name" in config["de-DE"]):
+            display_name = config["de-DE"]["display_name"]
+            logging.info("OVERRIDE [de-DE]: display_name [%s]", display_name)
+
+            # replace "Jellyfin Player" with "display_name" in all 3 example phrases
+            for i in range(3):
+                manifest.manifest.publishing_information.locales["de-DE"].example_phrases[i] = \
+                  manifest.manifest.publishing_information.locales["de-DE"].example_phrases[i].replace("Jellyfin Player",display_name)
 
         smapi_client.update_skill_manifest_v1(skill_id=skill_id,
                                               stage_v2=stage,
