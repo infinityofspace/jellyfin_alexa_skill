@@ -13,6 +13,7 @@ from jellyfin_alexa_skill.config import APP_NAME
 class MediaType(Enum):
     AUDIO = "Audio"
     VIDEO = "Video"
+    CHANNEL = "TvChannel"
 
 
 class JellyfinClient:
