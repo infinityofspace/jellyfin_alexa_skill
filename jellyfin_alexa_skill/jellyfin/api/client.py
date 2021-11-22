@@ -124,6 +124,41 @@ class JellyfinClient:
 
         return url
 
+
+    def get_art_url(self,
+                    item_id: str,
+                    token: str,
+                    **kwargs) -> str:
+        """
+        Generate a url to display cover art for this item
+        Return empty string (None) if there is no cover art available
+        """
+
+        # first check if there is any cover art
+        url = self.server_endpoint + f"/Items/{item_id}/Images"
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
+
+        res = requests.get(url, headers=headers)
+        if res:
+            image_info = json.loads(res.content)
+            if not image_info:
+                return None
+        else:
+            res.raise_for_status()
+
+        # build url
+        url = self.server_endpoint
+        image_type = image_info[0]["ImageType"]
+        path = f"/Items/{item_id}/Images/{image_type}"
+        url = urllib.parse.urljoin(url, path)
+
+        return url
+
+
     def get_favorites(self,
                       user_id: str,
                       token: str,
