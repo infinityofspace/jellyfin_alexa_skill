@@ -64,7 +64,7 @@
           "name": "PlayChannelIntent",
           "samples": [
             "Spiele den Kanal {channel}",
-            "Spiele den Radio {channel}"
+            "Spiele das Radio {channel}"
           ],
           "slots": [
             {

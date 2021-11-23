@@ -2,31 +2,35 @@
 msgid "Sorry, I can't find any songs for this search. Please try again."
 msgstr ""
 
-#: alexa/handler/control.py:103
+#: alexa/handler/control.py:104
 msgid "Sorry, I can't find any videos for this search. Please try again."
 msgstr ""
 
 #: alexa/handler/control.py:160
+msgid "Sorry, I can't find any channels with that name. Please try again."
+msgstr ""
+
+#: alexa/handler/control.py:217
 msgid "Sorry, I can't find any songs with this artist. Please try again."
 msgstr ""
 
-#: alexa/handler/control.py:234
+#: alexa/handler/control.py:299
 msgid "Sorry, I couldn't find any recently added media."
 msgstr ""
 
-#: alexa/handler/control.py:296
+#: alexa/handler/control.py:361
 msgid "What can I play?"
 msgstr ""
 
-#: alexa/handler/control.py:361
+#: alexa/handler/control.py:426
 msgid "You reached the end of the playback queue."
 msgstr ""
 
-#: alexa/handler/control.py:399
+#: alexa/handler/control.py:464
 msgid "You reached the start of the playback queue."
 msgstr ""
 
-#: alexa/handler/control.py:478
+#: alexa/handler/control.py:543
 msgid "The playback queue is empty. Please try to add some media and try again."
 msgstr ""
 
@@ -81,68 +85,15 @@ msgstr ""
 msgid "Sorry, this device does not support media playback."
 msgstr ""
 
-#: alexa/handler/playlist.py:38
+#: alexa/handler/playlist.py:37
 msgid "Sorry, I couldn't find any playlist with this name. Please try again."
 msgstr ""
 
-#: alexa/handler/playlist.py:50
+#: alexa/handler/playlist.py:49
 msgid "Sorry, this playlist does not exists anymore."
 msgstr ""
 
-#: alexa/handler/playlist.py:65
+#: alexa/handler/playlist.py:64
 msgid "Ok, I play the playlist {}."
 msgstr ""
-
-#~ msgid "Sorry, I couldn't find any recently added media."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "With this skill your can play "
-#~ "media from your Jellyfin Server.Use "
-#~ "'Play Game of Live from Earth' or"
-#~ " 'Play playlist this is number 42'"
-#~ " to play some songs."
-#~ msgstr ""
-
-#~ msgid "Currently playing {title} from {artists}"
-#~ msgstr ""
-
-#~ msgid "Currently no media is played"
-#~ msgstr ""
-
-#~ msgid "Sorry, this device does not support media playback."
-#~ msgstr ""
-
-#~ msgid "Ok, I play the playlist {}"
-#~ msgstr ""
-
-#~ msgid "Sorry I can't find any songs for this search. Please try again."
-#~ msgstr ""
-
-#~ msgid "Sorry I can't find any videos for this search. Please try again."
-#~ msgstr ""
-
-#~ msgid "Sorry I can't find any songs with this artist. Please try again."
-#~ msgstr ""
-
-#~ msgid "Sorry I couldn't find any recently added media."
-#~ msgstr ""
-
-#~ msgid "Sorry something went wrong. Please try again."
-#~ msgstr ""
-
-#~ msgid "Sorry I could not understand that. Please try again."
-#~ msgstr ""
-
-#~ msgid "Sorry you don't have any favorite media."
-#~ msgstr ""
-
-#~ msgid "Sorry this device does not support media playback."
-#~ msgstr ""
-
-#~ msgid "Sorry I couldn't find any playlist with this name. Please try again."
-#~ msgstr ""
-
-#~ msgid "Sorry this playlist does not exists anymore."
-#~ msgstr ""
 
