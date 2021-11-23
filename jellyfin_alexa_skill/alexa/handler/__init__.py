@@ -22,6 +22,7 @@ def get_skill_builder(jellyfin_client: JellyfinClient):
     skill_builder.add_request_handler(SessionEndedRequestHandler())
 
     skill_builder.add_request_handler(PlaySongIntentHandler(jellyfin_client))
+    skill_builder.add_request_handler(PlayChannelIntentHandler(jellyfin_client))
     skill_builder.add_request_handler(PlayVideoIntentHandler(jellyfin_client))
     skill_builder.add_request_handler(PlayArtistSongsIntentHandler(jellyfin_client))
 
