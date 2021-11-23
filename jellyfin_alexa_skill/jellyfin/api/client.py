@@ -125,6 +125,91 @@ class JellyfinClient:
 
         return url
 
+
+    def get_ancestor_with_image(self,
+                    item_id: str,
+                    token: str) -> str:
+
+        """
+        Returns id of the first ancestor of item_id that has an image
+        Return empty string (None) if: * there are no ancestors, or
+                                       * no ancestor has an image
+        """
+
+        url = self.server_endpoint + f"/Items/{item_id}/Ancestors"
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
+
+        res = requests.get(url, headers=headers)
+        if res:
+            ancestor_info = json.loads(res.content)
+            if not ancestor_info:
+                # item has no ancestors
+                return None
+        else:
+            res.raise_for_status()
+
+        # return the first ancestor we find with an image
+        for ancestor in ancestor_info:
+            if ancestor["ImageTags"]:
+                return ancestor["Id"]
+
+        return None
+
+
+    def get_art_url(self,
+                    item_id: str,
+                    token: str,
+                    **kwargs) -> str:
+        """
+        Generate a url to display cover art for this item
+        Return empty string (None) if there is no cover art available
+        """
+
+        # first check if there is any cover art
+        url = self.server_endpoint + f"/Items/{item_id}/Images"
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
+
+        res = requests.get(url, headers=headers)
+        if res:
+            image_info = json.loads(res.content)
+            if not image_info:
+                # this item has no image - use an ancestor's image (if there is one)
+                parent_id = self.get_ancestor_with_image(item_id=item_id,token=token)
+                if parent_id:
+                    # RECURSIVELY call get_art_url() to serve up the image
+                    return self.get_art_url(item_id=parent_id,token=token)
+
+                # no image to display
+                return None
+        else:
+            res.raise_for_status()
+
+        # prefer the "Primary" image, otherwise we'll use the first image (image_info[0]) in the list of images
+        image_index = 0
+        idx = 0
+        for info in image_info:
+            if info["ImageType"] == "Primary":
+                image_index = idx
+                break
+            idx += 1
+
+        # build url
+        url = self.server_endpoint
+        image_type = image_info[image_index]["ImageType"]
+        path = f"/Items/{item_id}/Images/{image_type}"
+        url = urllib.parse.urljoin(url, path)
+
+        return url
+
+
     def get_favorites(self,
                       user_id: str,
                       token: str,

@@ -5,6 +5,7 @@ from random import shuffle
 
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model.interfaces.audioplayer import PlayDirective, PlayBehavior, AudioItem, Stream, AudioItemMetadata
+from ask_sdk_model.interfaces.display import Image, ImageInstance
 
 from jellyfin_alexa_skill.config import get_translation
 from jellyfin_alexa_skill.database.model.playback import Playback
@@ -38,6 +39,11 @@ def build_stream_response(jellyfin_client: JellyfinClient,
 
     stream_url = jellyfin_client.get_stream_url(item_id=item["id"], user_id=jellyfin_user_id, token=jellyfin_token)
 
+    art_image = None
+    art_url = jellyfin_client.get_art_url(item_id=item["id"], token=jellyfin_token)
+    if art_url:
+        art_image = Image( sources=[ImageInstance(url=art_url)] )
+
     handler_input.response_builder.add_directive(
         PlayDirective(
             play_behavior=PlayBehavior.REPLACE_ALL,
@@ -48,7 +54,8 @@ def build_stream_response(jellyfin_client: JellyfinClient,
                     offset_in_milliseconds=0),
                 metadata=AudioItemMetadata(
                     title=item["title"],
-                    subtitle=" ,".join(item["artists"])
+                    subtitle=" ,".join(item["artists"]),
+                    art=art_image
                 )
             )
         )
