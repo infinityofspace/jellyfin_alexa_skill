@@ -45,6 +45,7 @@ from the outside, in this case the two services are exposed with a tunnel.
     - repeat a single media
     - repeat all media in queue
     - shuffle mode
+    - play internet radio streams
 - playlist:
     - play a specific playlist
 - favorite:
@@ -53,6 +54,7 @@ from the outside, in this case the two services are exposed with a tunnel.
     - remove current media from favorites
 - metadata:
     - show the metadata of the media (title and artist)
+    - show cover art of the media
 - other:
     - multi-language support (see [Supported languages](#supported-languages))
     - multi-user support (any user on the Jellyfin server can use the skill)

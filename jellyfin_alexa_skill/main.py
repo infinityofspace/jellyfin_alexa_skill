@@ -21,7 +21,8 @@ from pyngrok import conf, ngrok
 from jellyfin_alexa_skill import __version__
 from jellyfin_alexa_skill.alexa.handler import get_skill_builder
 from jellyfin_alexa_skill.alexa.setup.interaction.model import INTERACTION_MODEL_DE_DE, INTERACTION_MODEL_EN_US
-from jellyfin_alexa_skill.alexa.setup.manifest.manifest import get_skill_version, SKILL_MANIFEST
+from jellyfin_alexa_skill.alexa.setup.manifest.manifest import get_skill_version, SKILL_MANIFEST, update_display_name
+
 from jellyfin_alexa_skill.alexa.web.skill import get_skill_blueprint
 from jellyfin_alexa_skill.config import get_config, DEFAULT_ALEXA_SKILL_CONFIG_PATH, DEFAULT_ALEXA_SKILL_DATA_PATH, \
     APP_NAME
@@ -150,8 +151,33 @@ def main():
 
     skill_version = get_skill_version(manifest)
 
+    # check if the invocation name has an override in skill.config, or if name has otherwise changed
+    model_changed = False
+
+    if ("en-US" in config) and ("invocation_name" in config["en-US"]):
+        invocation_name = config["en-US"]["invocation_name"].lower()
+        INTERACTION_MODEL_EN_US.interaction_model.language_model.invocation_name = invocation_name
+
+    current_model = smapi_client.get_interaction_model_v1(skill_id=skill_id, stage_v2=stage, locale="en_US")
+    current_name = current_model.interaction_model.language_model.invocation_name
+    if current_name != INTERACTION_MODEL_EN_US.interaction_model.language_model.invocation_name:
+        logging.info("[en-US] invocation name changed to [%s]",
+                       INTERACTION_MODEL_EN_US.interaction_model.language_model.invocation_name)
+        model_changed = True
+
+    if ("de-DE" in config) and ("invocation_name" in config["de-DE"]):
+        invocation_name = config["de-DE"]["invocation_name"].lower()
+        INTERACTION_MODEL_DE_DE.interaction_model.language_model.invocation_name = invocation_name
+
+    current_model = smapi_client.get_interaction_model_v1(skill_id=skill_id, stage_v2=stage, locale="de_DE")
+    current_name = current_model.interaction_model.language_model.invocation_name
+    if current_name != INTERACTION_MODEL_DE_DE.interaction_model.language_model.invocation_name:
+        logging.info("[de-DE] invocation name changed to [%s]",
+                       INTERACTION_MODEL_DE_DE.interaction_model.language_model.invocation_name)
+        model_changed = True
+
     # update the skill in the could when we are on an older version or force reset to clean manual changes
-    if config["general"].getboolean("force_reset_skill") or skill_version != __version__:
+    if config["general"].getboolean("force_reset_skill") or skill_version != __version__ or model_changed:
         logging.info("Updating skill interaction model...")
 
         smapi_client.set_interaction_model_v1(skill_id=skill_id,
@@ -181,12 +207,34 @@ def main():
     else:
         raise Exception("Invalid ssl certificate type defined")
 
+    # check if there is an override of display name in skill.config, or a change otherwise
+    change_manifest = False
+
+    display_name = SKILL_MANIFEST.manifest.publishing_information.locales["en-US"].name
+    if ("en-US" in config) and ("display_name" in config["en-US"]):
+        display_name = config["en-US"]["display_name"]
+        update_display_name(locale="en-US",new_name=display_name)
+
+    current_name = manifest.manifest.publishing_information.locales["en-US"].name
+    if (current_name != display_name):
+        change_manifest = True
+
+    display_name = SKILL_MANIFEST.manifest.publishing_information.locales["de-DE"].name
+    if ("de-DE" in config) and ("display_name" in config["de-DE"]):
+        display_name = config["de-DE"]["display_name"]
+        update_display_name(locale="de-DE",new_name=display_name)
+
+    current_name = manifest.manifest.publishing_information.locales["de-DE"].name
+    if (current_name != display_name):
+        change_manifest = True
+
     # check if the current saved endpoint or ssl cert type requires an update
     if config["general"].getboolean("force_reset_skill") \
             or skill_version != __version__ \
             or manifest.manifest.apis.custom.endpoint is None \
             or manifest.manifest.apis.custom.endpoint.uri != skill_endpoint \
-            or manifest.manifest.apis.custom.endpoint.ssl_certificate_type != ssl_cert_type:
+            or manifest.manifest.apis.custom.endpoint.ssl_certificate_type != ssl_cert_type \
+            or change_manifest:
         logging.info("Updating skill endpoint...")
 
         manifest = SKILL_MANIFEST

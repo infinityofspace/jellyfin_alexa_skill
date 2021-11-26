@@ -4,35 +4,41 @@ msgstr ""
 "Leider kann ich keine Lieder für diese Suche finden. Bitte versuche es "
 "erneut."
 
-#: alexa/handler/control.py:103
+#: alexa/handler/control.py:104
 msgid "Sorry, I can't find any videos for this search. Please try again."
 msgstr ""
 "Leider kann ich keine Videos für diese Suche finden. Bitte versuche es "
 "erneut."
 
 #: alexa/handler/control.py:160
+msgid "Sorry, I can't find any channels with that name. Please try again."
+msgstr ""
+"Leider kann ich keinen Kanal oder Radio mit diesem Namen finden. Bitte "
+"versuche es erneut."
+
+#: alexa/handler/control.py:217
 msgid "Sorry, I can't find any songs with this artist. Please try again."
 msgstr ""
 "Leider kann ich keine Songs mit diesem Künstler finden. Bitte versuche es"
 " erneut."
 
-#: alexa/handler/control.py:234
+#: alexa/handler/control.py:299
 msgid "Sorry, I couldn't find any recently added media."
 msgstr "Leider konnte ich keine kürzlich hinzugefügten Medien finden."
 
-#: alexa/handler/control.py:296
+#: alexa/handler/control.py:361
 msgid "What can I play?"
 msgstr "Was soll ich spielen?"
 
-#: alexa/handler/control.py:361
+#: alexa/handler/control.py:426
 msgid "You reached the end of the playback queue."
 msgstr "Du hast das Ende der Wiedergabeliste erreicht."
 
-#: alexa/handler/control.py:399
+#: alexa/handler/control.py:464
 msgid "You reached the start of the playback queue."
 msgstr "Du hast den Anfang der Wiedergabeliste erreicht."
 
-#: alexa/handler/control.py:478
+#: alexa/handler/control.py:543
 msgid "The playback queue is empty. Please try to add some media and try again."
 msgstr ""
 "Die Wiedergabeliste ist leer. Bitte füge Medien hinzu und versuche es "
@@ -94,17 +100,17 @@ msgstr "Willkommen beim Jellyfin Player Skill, was soll ich spielen?"
 msgid "Sorry, this device does not support media playback."
 msgstr "Leider unterstützt dieses Gerät keine Medien Wiedergabe."
 
-#: alexa/handler/playlist.py:38
+#: alexa/handler/playlist.py:37
 msgid "Sorry, I couldn't find any playlist with this name. Please try again."
 msgstr ""
 "Leider kann ich keine Playlist mit diesen Namen finden. Bitte versuche es"
 " erneut "
 
-#: alexa/handler/playlist.py:50
+#: alexa/handler/playlist.py:49
 msgid "Sorry, this playlist does not exists anymore."
 msgstr "Leider existiert diese Playlist nicht mehr."
 
-#: alexa/handler/playlist.py:65
+#: alexa/handler/playlist.py:64
 msgid "Ok, I play the playlist {}."
 msgstr "Ok, ich spiele die Playlist {}"
 
