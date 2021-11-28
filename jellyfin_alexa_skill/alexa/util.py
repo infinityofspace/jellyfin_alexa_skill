@@ -74,3 +74,44 @@ def translate(func):
 
 def get_similarity(s1: str, s2: str) -> float:
     return SequenceMatcher(lambda x: x in " \t,.:-;/&_", s1.lower(), s2.lower()).ratio()
+
+def best_matches_by_idx(match_scores, max_matches=3):
+    """
+        takes a list of "match_scores" (floats) and returns list of indexes into match_scores corresponding to
+        the top "max_matches" scores
+
+        returns * list of 0-based indexes into match_scores corresponding to the top "max_matches"
+                  note: the len() of the returned list will be the minimum of len(match_scores) and max_matches
+                * an empty list if "match_scores" is empty
+
+        example:  match_scores = [ 0.31, 0.4, 0.21, 0.8 ]  max_matches=3
+                    ==> [ 3, 1, 0 ]  corresponding to match_scores[3], match_scores[1] and match_scores[0]
+    """
+
+    # the simple cases first
+    if len(match_scores) == 0:
+        return []
+    if len(match_scores) == 1:
+        return [ 0 ]
+
+    # more complex cases: match_scores consists of 2 or more scores
+    # step 1 - build a dictionary to remember the original index of each score in "match_scores"
+    idx = 0
+    indexed_scores = {}
+    for score in match_scores:
+        indexed_scores[idx] = score
+        idx += 1
+
+    # step 2 - sort the scores (by value) in descending order
+    sorted_scores = {key: val for key, val in sorted(indexed_scores.items(), key = lambda item: item[1], reverse = True)}
+
+    # step 3 - put the top "max_matches" indexes (by key) in a list
+    idx = 0
+    indexed_list = []
+    for key in sorted_scores.keys():
+        indexed_list.append(key)
+        idx += 1
+        if (idx >= max_matches):
+           break
+
+    return indexed_list

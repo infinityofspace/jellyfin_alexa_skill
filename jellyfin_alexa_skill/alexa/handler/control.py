@@ -141,63 +141,6 @@ class PlayVideoIntentHandler(BaseHandler):
 
         return handler_input.response_builder.response
 
-class PlayChannelIntentHandler(BaseHandler):
-    def __init__(self, jellyfin_client: JellyfinClient):
-        self.jellyfin_client = jellyfin_client
-
-    def can_handle(self, handler_input: HandlerInput) -> bool:
-        return is_intent_name("PlayChannelIntent")(handler_input)
-
-    @translate
-    def handle_func(self,
-                    user: User,
-                    handler_input: HandlerInput,
-                    translation: GNUTranslations,
-                    *args,
-                    **kwargs) -> Response:
-        channel = handler_input.request_envelope.request.intent.slots["channel"].value
-
-        no_result_response_text = translation.gettext(
-            "Sorry, I can't find any channels with that name. Please try again.")
-
-        if not channel:
-            handler_input.response_builder.speak(no_result_response_text)
-            return handler_input.response_builder.response
-
-        channel = channel.lower()
-
-        channel_search_results = self.jellyfin_client.search_media_items(user_id=user.jellyfin_user_id,
-                                                                       token=user.jellyfin_token,
-                                                                       term=channel,
-                                                                       media=MediaType.CHANNEL,
-                                                                       Filters="IsNotFolder")
-
-        channel_match_scores = [get_similarity(item["Name"], channel) for item in channel_search_results]
-
-        if channel_match_scores:
-            max_score = max(channel_match_scores)
-            if max_score >= TITLE_PARTIAL_RATIO_THRESHOLD:
-                item = channel_search_results[channel_match_scores.index(max_score)]
-            else:
-                handler_input.response_builder.speak(no_result_response_text)
-                return handler_input.response_builder.response
-        else:
-            handler_input.response_builder.speak(no_result_response_text)
-            return handler_input.response_builder.response
-
-        user_id = handler_input.request_envelope.context.system.user.user_id
-        playback = set_playback_queue(user_id, [PlaybackItem(item["Id"], item["Name"], [])])
-
-        build_stream_response(jellyfin_client=self.jellyfin_client,
-                              jellyfin_user_id=user.jellyfin_user_id,
-                              jellyfin_token=user.jellyfin_token,
-                              handler_input=handler_input,
-                              playback=playback,
-                              idx=0)
-
-        return handler_input.response_builder.response
-
-
 class PlayArtistSongsIntentHandler(BaseHandler):
     def __init__(self, jellyfin_client: JellyfinClient):
         self.jellyfin_client = jellyfin_client
@@ -321,12 +264,17 @@ class PauseIntentHandler(BaseHandler):
                or is_intent_name("AMAZON.CancelIntent")(handler_input)
 
     def handle_func(self, user: User, handler_input: HandlerInput, *args, **kwargs) -> Response:
-        user_id = handler_input.request_envelope.context.system.user.user_id
 
+        user_id = handler_input.request_envelope.context.system.user.user_id
         playback = get_playback(user_id)
-        playback.playing = False
-        playback.offset = handler_input.request_envelope.context.audio_player.offset_in_milliseconds
-        playback.save()
+        if playback.playing == True:
+            playback.playing = False
+            playback.offset = handler_input.request_envelope.context.audio_player.offset_in_milliseconds
+            playback.save()
+
+        # in case user says stop/cancel during a yes/no dialogue - clear the TopMatches
+        if "TopMatches" in handler_input.attributes_manager.session_attributes:
+            handler_input.attributes_manager.session_attributes["TopMatches"].clear()
 
         handler_input.response_builder.add_directive(StopDirective())
 

@@ -35,6 +35,8 @@ ARTISTS_PARTIAL_RATIO_THRESHOLD = 0.7
 SONG_PARTIAL_RATIO_THRESHOLD = 0.5
 TITLE_PARTIAL_RATIO_THRESHOLD = 0.5
 
+USE_GENEROUS_SEARCH = False
+
 VALID_ALEXA_REDIRECT_URLS_REGEX = re.compile(
     r"https://((pitangui|layla)\.amazon\.com|alexa\.amazon\.co\.jp)/spa/skill/account-linking-status\.html\?vendorId=.+"
 )
@@ -54,4 +56,11 @@ def get_config(path: Path = DEFAULT_ALEXA_SKILL_DATA_PATH) -> configparser.Confi
     config = configparser.ConfigParser()
     config.read(path)
 
+    global USE_GENEROUS_SEARCH
+    if "use_generous_search" in config["general"]:
+        USE_GENEROUS_SEARCH = config["general"].getboolean("use_generous_search")
+
     return config
+
+def use_generous_search() -> bool:
+    return USE_GENEROUS_SEARCH
