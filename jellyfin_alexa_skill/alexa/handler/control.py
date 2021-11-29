@@ -7,9 +7,9 @@ from ask_sdk_model.interfaces.audioplayer import StopDirective
 
 from jellyfin_alexa_skill.alexa.handler.base import BaseHandler
 from jellyfin_alexa_skill.alexa.util import set_shuffle_queue_idxs, build_stream_response, MediaTypeSlot, translate, \
-    get_similarity
+    get_similarity, best_matches_by_idx
 from jellyfin_alexa_skill.config import ARTISTS_PARTIAL_RATIO_THRESHOLD, SONG_PARTIAL_RATIO_THRESHOLD, \
-    TITLE_PARTIAL_RATIO_THRESHOLD
+    TITLE_PARTIAL_RATIO_THRESHOLD, use_generous_search
 from jellyfin_alexa_skill.database.db import set_playback_queue, get_playback
 from jellyfin_alexa_skill.database.model.playback import PlaybackItem
 from jellyfin_alexa_skill.database.model.user import User
@@ -61,16 +61,42 @@ class PlaySongIntentHandler(BaseHandler):
 
         song_match_scores = [get_similarity(item["Name"], song) for item in song_search_results]
 
-        if song_match_scores:
-            max_score = max(song_match_scores)
-            if max_score >= SONG_PARTIAL_RATIO_THRESHOLD:
-                item = song_search_results[song_match_scores.index(max_score)]
+        if use_generous_search():
+            if len(song_search_results) == 1:
+                # just play this one
+                item = song_search_results[0]
+            else:
+                # more than 1 result, so we need to find the best results and start a yes/no dialog with user
+
+                # get list of top matches (sorted in descending order of match score) and store as session variable list
+                top_matches_idx = best_matches_by_idx(match_scores=song_match_scores)
+                top_matches = []
+                for idx in top_matches_idx:
+                    match = { "Name" : song_search_results[idx]["Name"],
+                              "Id" : song_search_results[idx]["Id"],
+                              "Artist": song_search_results[idx]["Artists"] }
+                    top_matches.append( match )
+                handler_input.attributes_manager.session_attributes["TopMatches"] = top_matches
+
+                # ask user if they want the first one...  (response is handled by YesNoIntentHandler)
+                request_text = f"Would you like to hear <break/> {top_matches[0]['Name']} "
+                artists = top_matches[0]["Artist"]
+                if len(artists) > 0:
+                    request_text += f"by {artists[0]} "
+                request_text += "?"
+
+                return handler_input.response_builder.speak(request_text).ask(request_text).response
+        else:
+            if song_match_scores:
+                max_score = max(song_match_scores)
+                if max_score >= SONG_PARTIAL_RATIO_THRESHOLD:
+                    item = song_search_results[song_match_scores.index(max_score)]
+                else:
+                    handler_input.response_builder.speak(no_result_response_text)
+                    return handler_input.response_builder.response
             else:
                 handler_input.response_builder.speak(no_result_response_text)
                 return handler_input.response_builder.response
-        else:
-            handler_input.response_builder.speak(no_result_response_text)
-            return handler_input.response_builder.response
 
         user_id = handler_input.request_envelope.context.system.user.user_id
         playback = set_playback_queue(user_id, [PlaybackItem(item["Id"], item["Name"], item["Artists"])])
