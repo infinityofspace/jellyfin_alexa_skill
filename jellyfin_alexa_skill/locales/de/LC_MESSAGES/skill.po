@@ -10,6 +10,11 @@ msgstr ""
 "Möchten Sie hören <break/> {top_matches[0]['Name']} "
 
 #: alexa/handler/control.py
+msgid "Would you like to watch <break/> {top_matches[0]['Name']} "
+msgstr ""
+"Möchten Sie sehen <break/> {top_matches[0]['Name']} "
+
+#: alexa/handler/control.py
 #: alexa/handler/yesno.py
 msgid "by {artists[0]} "
 msgstr ""
