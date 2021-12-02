@@ -6,6 +6,10 @@ msgstr ""
 msgid "Sorry, I can't find any videos for this search. Please try again."
 msgstr ""
 
+#: alexa/handler/control.py
+msgid "I'm sorry, I can't play videos on this device."
+msgstr ""
+
 #: alexa/handler/control.py:160
 msgid "Sorry, I can't find any channels with that name. Please try again."
 msgstr ""

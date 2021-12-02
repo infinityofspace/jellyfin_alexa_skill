@@ -110,7 +110,7 @@ class PlayVideoIntentHandler(BaseHandler):
 
         # check whether the device supports video
         if not handler_input.request_envelope.context.system.device.supported_interfaces.video_app:
-            response_text = "I'm sorry, I can't play videos on this device."
+            response_text = translation.gettext("I'm sorry, I can't play videos on this device.")
             handler_input.response_builder.speak(response_text)
             return handler_input.response_builder.response
 

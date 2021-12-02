@@ -10,6 +10,10 @@ msgstr ""
 "Leider kann ich keine Videos für diese Suche finden. Bitte versuche es "
 "erneut."
 
+#: alexa/handler/control.py
+msgid "I'm sorry, I can't play videos on this device."
+msgstr "Leider kann ich auf diesem Gerät keine Videos abspielen."
+
 #: alexa/handler/control.py:160
 msgid "Sorry, I can't find any channels with that name. Please try again."
 msgstr ""
