@@ -5,32 +5,26 @@ msgstr ""
 "erneut."
 
 #: alexa/handler/control.py
-msgid "Would you like to hear <break/> {top_matches[0]['Name']} "
+msgid "Would you like to hear <break/> {title} {by_artist} ?"
 msgstr ""
-"Möchten Sie hören <break/> {top_matches[0]['Name']} "
+"Möchten Sie <break/> {title} {by_artist} hören ?"
 
 #: alexa/handler/control.py
-msgid "Would you like to watch <break/> {top_matches[0]['Name']} "
+msgid "Would you like to watch <break/> {title} {by_artist} ?"
 msgstr ""
-"Möchten Sie sehen <break/> {top_matches[0]['Name']} "
+"Möchten Sie <break/> {title} {by_artist} sehen ?"
 
 #: alexa/handler/control.py
 #: alexa/handler/yesno.py
-msgid "by {artists[0]} "
+msgid "by {artist}"
 msgstr ""
-"von {artists[0]} "
+"von {artist}"
 
 #: alexa/handler/control.py:104
 msgid "Sorry, I can't find any videos for this search. Please try again."
 msgstr ""
 "Leider kann ich keine Videos für diese Suche finden. Bitte versuche es "
 "erneut."
-
-#: alexa/handler/control.py:160
-msgid "Sorry, I can't find any channels with that name. Please try again."
-msgstr ""
-"Leider kann ich keinen Kanal oder Radio mit diesem Namen finden. Bitte "
-"versuche es erneut."
 
 #: alexa/handler/control.py:217
 msgid "Sorry, I can't find any songs with this artist. Please try again."
@@ -60,10 +54,21 @@ msgstr ""
 "Die Wiedergabeliste ist leer. Bitte füge Medien hinzu und versuche es "
 "erneut."
 
-#: alexa/handler/yesno.py
-msgid "Hmm.  How about <break/> {item['Name']} "
+#: alexa/handler/channel.py
+msgid "Sorry, I can't find any channels with that name. Please try again."
 msgstr ""
-"Hmm, wie wäre es mit <break/> {item['Name']} "
+"Leider kann ich keinen Kanal oder Radio mit diesem Namen finden. Bitte "
+"versuche es erneut."
+
+#: alexa/handler/channel.py
+msgid "Would you like to listen to {name} ?"
+msgstr ""
+"Möchten Sie {name} hören?"
+
+#: alexa/handler/yesno.py
+msgid "Hmm. How about <break/> {title} {by_artist} ?"
+msgstr ""
+"Hmm, wie wäre es mit <break/> {title} {by_artist} ?"
 
 #: alexa/handler/yesno.py
 msgid "I'm all out of guesses.  Please try asking a different way."

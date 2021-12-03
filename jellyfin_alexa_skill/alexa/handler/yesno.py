@@ -63,13 +63,18 @@ class YesNoIntentHandler(BaseHandler):
 
         if handler_input.attributes_manager.session_attributes["TopMatches"]:
             item = handler_input.attributes_manager.session_attributes["TopMatches"][0]
-            request_text = f"Hmm.  How about <break/> {item['Name']} "
+
             artists = item["Artist"]
+            by_artist = ""
             if len(artists) > 0:
-                request_text += f"by {artists[0]} "
-            request_text += "?"
+                by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
+
+            request_text = translation.gettext("Hmm. How about <break/> {title} {by_artist} ?".format(
+                                                                                     title=item['Name'],
+                                                                                     by_artist=by_artist))
+
             return handler_input.response_builder.speak(request_text).ask(request_text).response
         else:
-            speak_output = "I'm all out of guesses.  Please try asking a different way."
+            speak_output = translation.gettext("I'm all out of guesses.  Please try asking a different way.")
             handler_input.response_builder.speak(speak_output)
             return handler_input.response_builder.response

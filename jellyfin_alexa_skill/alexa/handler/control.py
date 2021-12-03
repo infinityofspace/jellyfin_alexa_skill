@@ -79,11 +79,14 @@ class PlaySongIntentHandler(BaseHandler):
                 handler_input.attributes_manager.session_attributes["TopMatches"] = top_matches
 
                 # ask user if they want the first one...  (response is handled by YesNoIntentHandler)
-                request_text = f"Would you like to hear <break/> {top_matches[0]['Name']} "
                 artists = top_matches[0]["Artist"]
+                by_artist = ""
                 if len(artists) > 0:
-                    request_text += f"by {artists[0]} "
-                request_text += "?"
+                    by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
+
+                request_text = translation.gettext("Would you like to hear <break/> {title} {by_artist} ?".format(
+                                                                                     title=top_matches[0]['Name'],
+                                                                                     by_artist=by_artist))
 
                 return handler_input.response_builder.speak(request_text).ask(request_text).response
         else:
@@ -162,11 +165,14 @@ class PlayVideoIntentHandler(BaseHandler):
                 handler_input.attributes_manager.session_attributes["TopMatches"] = top_matches
 
                 # ask user if they want the first one...  (response is handled by YesNoIntentHandler)
-                request_text = f"Would you like to watch <break/> {top_matches[0]['Name']} "
                 artists = top_matches[0]["Artist"]
+                by_artist = ""
                 if len(artists) > 0:
-                    request_text += f"by {artists[0]} "
-                request_text += "?"
+                    by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
+
+                request_text = translation.gettext("Would you like to watch <break/> {title} {by_artist} ?".format(
+                                                                                     title=top_matches[0]['Name'],
+                                                                                     by_artist=by_artist))
 
                 return handler_input.response_builder.speak(request_text).ask(request_text).response
         else:

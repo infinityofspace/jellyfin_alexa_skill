@@ -77,7 +77,9 @@ class PlayChannelIntentHandler(BaseHandler):
                 handler_input.attributes_manager.session_attributes["TopMatches"] = top_matches
 
                 # ask user if they want the first one...  (response is handled by YesNoIntentHandler)
-                request_text = f"Would you like to listen to {top_matches[0]['Name']} ?"
+                request_text = translation.gettext("Would you like to listen to {name} ?".format(
+                                                                                 name=top_matches[0]['Name']))
+
                 return handler_input.response_builder.speak(request_text).ask(request_text).response
 
         else:
