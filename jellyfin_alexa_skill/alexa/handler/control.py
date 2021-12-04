@@ -59,6 +59,10 @@ class PlaySongIntentHandler(BaseHandler):
             song_search_results = [song for song in song_search_results if
                                    set(artist["Id"] for artist in song["ArtistItems"]).intersection(artists_ids)]
 
+        if not song_search_results:
+            handler_input.response_builder.speak(no_result_response_text)
+            return handler_input.response_builder.response
+
         song_match_scores = [get_similarity(item["Name"], song) for item in song_search_results]
 
         if use_generous_search():
@@ -144,6 +148,10 @@ class PlayVideoIntentHandler(BaseHandler):
                                                                        term=title,
                                                                        media=MediaType.VIDEO,
                                                                        Filters="IsNotFolder")
+
+        if not video_search_results:
+            handler_input.response_builder.speak(no_result_response_text)
+            return handler_input.response_builder.response
 
         video_match_scores = [get_similarity(item["Name"], title) for item in video_search_results]
 
