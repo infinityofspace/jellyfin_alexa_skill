@@ -19,7 +19,11 @@ class MediaTypeSlot(Enum):
     MEDIA = "media"
     VIDEO = "video"
     AUDIO = "audio"
+    LIVETV = "livetv"
 
+class ReturnCode(Enum):
+    OK = 0
+    ERROR_NOT_VIDEO_DEVICE = 1
 
 def set_shuffle_queue_idxs(playback: Playback) -> None:
     playback.shuffle_idxs = list(range(len(playback.queue)))
@@ -34,7 +38,7 @@ def build_stream_response(jellyfin_client: JellyfinClient,
                           jellyfin_token: str,
                           handler_input,
                           playback: Playback,
-                          idx: int):
+                          idx: int) -> ReturnCode:
     if playback.shuffle:
         item = playback.queue[playback.shuffle_idxs[idx]]
     else:
@@ -66,7 +70,12 @@ def build_stream_response(jellyfin_client: JellyfinClient,
                 )
             )
         )
-    elif stream_type == "video":
+    elif (stream_type == "video") or (stream_type == "livetv"):
+
+        # confirm that device supports video
+        if not handler_input.request_envelope.context.system.device.supported_interfaces.video_app:
+            return ReturnCode.ERROR_NOT_VIDEO_DEVICE
+
         handler_input.response_builder.add_directive(
             LaunchDirective(
                 video_item=VideoItem(
@@ -79,6 +88,8 @@ def build_stream_response(jellyfin_client: JellyfinClient,
         )
     else:
         logging.warning("Unknown stream_type [%s]",stream_type)
+
+    return ReturnCode.OK
 
 def translate(func):
     @wraps(func)
