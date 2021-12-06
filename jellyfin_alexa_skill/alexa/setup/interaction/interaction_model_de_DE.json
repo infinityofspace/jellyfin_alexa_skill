@@ -28,6 +28,12 @@
           "name": "AMAZON.PreviousIntent"
         },
         {
+          "name": "AMAZON.YesIntent"
+        },
+        {
+          "name": "AMAZON.NoIntent"
+        },
+        {
           "name": "LoopAllOffIntent",
           "samples": [
             "Wiederholung aus"
