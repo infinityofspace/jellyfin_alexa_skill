@@ -116,7 +116,10 @@ class JellyfinClient:
         if play_info["MediaSources"][0]:
             for stream in play_info["MediaSources"][0]["MediaStreams"]:
                 if stream["Type"] == "Video":
-                    stream_type = "video"
+                    if play_info["MediaSources"][0]["IsInfiniteStream"] == True:
+                        stream_type = "livetv"
+                    else:
+                        stream_type = "video"
                     break
 
         url = self.server_endpoint
