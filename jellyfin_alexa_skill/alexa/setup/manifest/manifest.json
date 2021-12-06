@@ -5,6 +5,9 @@
         "interfaces": [
           {
             "type": "AUDIO_PLAYER"
+          },
+          {
+            "type": "VIDEO_APP"
           }
         ]
       }

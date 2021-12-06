@@ -9,10 +9,9 @@ import requests
 from jellyfin_alexa_skill import __version__
 from jellyfin_alexa_skill.config import APP_NAME
 
-
 class MediaType(Enum):
     AUDIO = "Audio"
-    VIDEO = "Video"
+    VIDEO = "Video,MusicVideo"
     CHANNEL = "TvChannel"
 
 
@@ -81,9 +80,15 @@ class JellyfinClient:
                        audio_codec: str = "mp3",
                        max_streaming_bitrate: int = 140000000,
                        start_time_ticks: int = 0,
-                       **kwargs) -> str:
+                       **kwargs) -> Tuple[str,str]:
+
         """
         Generate a url which allows streaming the requested media file.
+
+        Returns [stream_type,url]
+                if stream_type="audio", url is a stream url ready for AudioPlayer
+                if stream_type="video", url is a url to video to pass on to VideoApp
+                if stream_type="", something went wrong
         """
 
         data = {
@@ -106,24 +111,44 @@ class JellyfinClient:
         else:
             res.raise_for_status()
 
+        stream_type = "audio"
+        if play_info["MediaSources"][0]:
+            for stream in play_info["MediaSources"][0]["MediaStreams"]:
+                if stream["Type"] == "Video":
+                    stream_type = "video"
+                    break
+
         url = self.server_endpoint
-        path = f"/Audio/{item_id}/universal"
-        params = {
-            'UserId': user_id,
-            'DeviceId': device_id,
-            "MaxStreamingBitrate": max_streaming_bitrate,
-            "PlaySessionId": play_info["PlaySessionId"],
-            "api_key": token,
-            "AudioCodec": audio_codec
-        }
+        if stream_type == "audio":
+            # prepare url for AudioPlayer
+            path = f"/Audio/{item_id}/universal"
+            params = {
+                'UserId': user_id,
+                'DeviceId': device_id,
+                "MaxStreamingBitrate": max_streaming_bitrate,
+                "PlaySessionId": play_info["PlaySessionId"],
+                "api_key": token,
+                "AudioCodec": audio_codec
+            }
+
+        elif stream_type == "video":
+            # prepare url for VideoApp
+            path = f"/Videos/{item_id}/stream"
+            params = {
+                "Container" : play_info["MediaSources"][0]["Container"],
+                "Tag": play_info["MediaSources"][0]["ETag"],
+                "PlaySessionId": play_info["PlaySessionId"],
+                'DeviceId': device_id,
+                "api_key": token
+            }
+
         params.update(kwargs)
 
         params_url = urllib.parse.urlencode(params)
 
         url = urllib.parse.urljoin(url, path)
         url += "?" + params_url
-
-        return url
+        return stream_type, url
 
 
     def get_ancestor_with_image(self,

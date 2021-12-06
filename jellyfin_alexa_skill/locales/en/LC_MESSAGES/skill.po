@@ -2,12 +2,29 @@
 msgid "Sorry, I can't find any songs for this search. Please try again."
 msgstr ""
 
-#: alexa/handler/control.py:104
-msgid "Sorry, I can't find any videos for this search. Please try again."
+#: alexa/handler/control.py
+msgid "Would you like to hear <break/> {title} {by_artist} ?"
+msgstr ""
+
+#: alexa/handler/control.py
+msgid "Would you like to watch <break/> {title} {by_artist} ?"
+msgstr ""
+
+#: alexa/handler/control.py
+msgid "I'm sorry, I can't play videos on this device."
 msgstr ""
 
 #: alexa/handler/control.py:160
 msgid "Sorry, I can't find any channels with that name. Please try again."
+msgstr ""
+
+#: alexa/handler/control.py
+#: alexa/handler/yesno.py
+msgid "by {artist}"
+msgstr ""
+
+#: alexa/handler/control.py:104
+msgid "Sorry, I can't find any videos for this search. Please try again."
 msgstr ""
 
 #: alexa/handler/control.py:217
@@ -32,6 +49,22 @@ msgstr ""
 
 #: alexa/handler/control.py:543
 msgid "The playback queue is empty. Please try to add some media and try again."
+msgstr ""
+
+#: alexa/handler/channel.py
+msgid "Sorry, I can't find any channels with that name. Please try again."
+msgstr ""
+
+#: alexa/handler/channel.py
+msgid "Would you like to listen to {name} ?"
+msgstr ""
+
+#: alexa/handler/yesno.py
+msgid "Hmm. How about <break/> {title} {by_artist} ?"
+msgstr ""
+
+#: alexa/handler/yesno.py
+msgid "I'm all out of guesses.  Please try asking a different way."
 msgstr ""
 
 #: alexa/handler/error.py:28

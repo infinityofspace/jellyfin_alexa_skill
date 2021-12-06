@@ -14,7 +14,7 @@ Selfhosted Alexa media player skill for Jellyfin
 
 _Note: This project is still in a very early alpha phase, this means not all features are fully functional yet and
 features or usage can change significantly between releases. Moreover, new releases can result in data loss of the skill
-database. Support for playing videos is currently not fully implemented and may lead to unexpected errors._
+database._
 
 ### Table of Contents
 
@@ -46,6 +46,7 @@ from the outside, in this case the two services are exposed with a tunnel.
     - repeat all media in queue
     - shuffle mode
     - play internet radio streams
+    - navigate through top search results
 - playlist:
     - play a specific playlist
 - favorite:
