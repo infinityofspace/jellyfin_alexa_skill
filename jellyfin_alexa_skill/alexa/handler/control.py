@@ -124,6 +124,12 @@ class PlayVideoIntentHandler(BaseHandler):
             handler_input.response_builder.speak(no_result_response_text)
             return handler_input.response_builder.response
 
+        # check whether the device supports video
+        if not handler_input.request_envelope.context.system.device.supported_interfaces.video_app:
+            response_text = translation.gettext("I'm sorry, I can't play videos on this device.")
+            handler_input.response_builder.speak(response_text)
+            return handler_input.response_builder.response
+
         title = title.lower()
 
         video_search_results = self.jellyfin_client.search_media_items(user_id=user.jellyfin_user_id,
