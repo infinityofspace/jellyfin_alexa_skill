@@ -129,7 +129,7 @@ OR
           ```commandline
           git clone https://github.com/infinityofspace/jellyfin_alexa_skill
           cd jellyfin_alexa_skill
-          pip3 install .
+          python3 setup.py install
           ```
     - start the skill: `jellyfin_alexa_skill --config /path/to/skill.conf --data /path/to/skill/data/`
 
