@@ -20,6 +20,9 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Build translations
+        run: python3 setup.py compile_catalog
+
       - name: Run unit tests
         run: python -m unittest tests/test_similarity.py tests/test_alexa_redirect_urls.py
 
@@ -38,6 +41,9 @@ jobs:
         run: |
           pip3 install --upgrade pip
           pip3 install -r requirements.txt
+
+      - name: Build translations
+        run: python3 setup.py compile_catalog
 
       - name: Start Jellyfin test server
         run: |
