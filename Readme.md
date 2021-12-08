@@ -25,8 +25,9 @@ database._
 5. [Skill speech examples](#skill-speech-examples)
 6. [Project plan](#project-plan)
 7. [FAQ](#faq)
-8. [Third party notices](#third-party-notices)
-9. [License](#license)
+8. [Development](#development)
+9. [Third party notices](#third-party-notices)
+10. [License](#license)
 
 ## About
 
@@ -161,6 +162,10 @@ and bug fixes are planned and in progress.
 ## FAQ
 
 You can find the FAQ [here](https://github.com/infinityofspace/jellyfin_alexa_skill/wiki/FAQ).
+
+## Development
+
+You can find more guidelines for the development [here](https://github.com/infinityofspace/jellyfin_alexa_skill/wiki/Development).
 
 ## Third party notices
 
