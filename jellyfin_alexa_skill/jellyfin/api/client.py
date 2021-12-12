@@ -88,6 +88,7 @@ class JellyfinClient:
         Returns [stream_type,url]
                 if stream_type="audio", url is a stream url ready for AudioPlayer
                 if stream_type="video", url is a url to video to pass on to VideoApp
+                if stream_type="livetv", url is a url to stream LiveTV to VideoApp
                 if stream_type="", something went wrong
         """
 
@@ -115,7 +116,10 @@ class JellyfinClient:
         if play_info["MediaSources"][0]:
             for stream in play_info["MediaSources"][0]["MediaStreams"]:
                 if stream["Type"] == "Video":
-                    stream_type = "video"
+                    if play_info["MediaSources"][0]["IsInfiniteStream"] == True:
+                        stream_type = "livetv"
+                    else:
+                        stream_type = "video"
                     break
 
         url = self.server_endpoint
@@ -136,11 +140,13 @@ class JellyfinClient:
             path = f"/Videos/{item_id}/stream"
             params = {
                 "Container" : play_info["MediaSources"][0]["Container"],
-                "Tag": play_info["MediaSources"][0]["ETag"],
                 "PlaySessionId": play_info["PlaySessionId"],
                 'DeviceId': device_id,
                 "api_key": token
             }
+        elif stream_type == "livetv":
+            # just return the direct internet path to the live tv channel (we don't need to use Jellyfin)
+            return stream_type, play_info["MediaSources"][0]["Path"]
 
         params.update(kwargs)
 
