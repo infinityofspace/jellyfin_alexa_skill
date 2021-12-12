@@ -196,6 +196,18 @@
             "What is the title of the music",
             "What is currently playing"
           ]
+        },
+        {
+          "name": "StartRemoteControl",
+          "samples": [
+            "Start remote control"
+          ]
+        },
+        {
+          "name": "StopRemoteControl",
+          "samples": [
+            "Stop remote control"
+          ]
         }
       ],
       "types": [

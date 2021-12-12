@@ -200,6 +200,18 @@
             "Was ist der Titel des Videos",
             "Was spielt gerade"
           ]
+        },
+        {
+          "name": "StartRemoteControl",
+          "samples": [
+            "Starte Remote Kontrolle"
+          ]
+        },
+        {
+          "name": "StopRemoteControl",
+          "samples": [
+            "Stoppe Remote Kontrolle"
+          ]
         }
       ],
       "types": [
