@@ -14,11 +14,11 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /app
 
-COPY requirements-docker-build.txt .
-RUN pip3 install --upgrade pip && pip3 install -r requirements-docker-build.txt
+COPY requirements.txt .
+RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
 COPY . .
-RUN pip3 install .
+RUN python3 setup.py install
 
 
 FROM python:3.10-alpine3.14
