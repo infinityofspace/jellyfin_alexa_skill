@@ -25,6 +25,8 @@ services:
     environment:
       - JELLYFIN_ALEXA_SKILL_CONFIG=/skill/config/skill.conf
       - JELLYFIN_ALEXA_SKILL_DATA=/skill/data
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--tries=1", "http://localhost:1456/healthy"]
 
 volumes:
   jellyfin_config:

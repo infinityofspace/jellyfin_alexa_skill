@@ -4,7 +4,7 @@ from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
 from jellyfin_alexa_skill.alexa.handler.base import BaseHandler
-from jellyfin_alexa_skill.alexa.util import translate, build_stream_response
+from jellyfin_alexa_skill.alexa.util import translate, build_stream_response, ReturnCode
 from jellyfin_alexa_skill.database.db import set_playback_queue
 from jellyfin_alexa_skill.database.model.playback import PlaybackItem
 from jellyfin_alexa_skill.database.model.user import User
@@ -48,12 +48,17 @@ class YesNoIntentHandler(BaseHandler):
             user_id = handler_input.request_envelope.context.system.user.user_id
             playback = set_playback_queue(user_id, [PlaybackItem(item["Id"], item["Name"], item["Artist"])])
 
-            build_stream_response(jellyfin_client=self.jellyfin_client,
+            rc = build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
                                   jellyfin_token=user.jellyfin_token,
                                   handler_input=handler_input,
                                   playback=playback,
                                   idx=0)
+
+            if rc == ReturnCode.ERROR_NOT_VIDEO_DEVICE:
+                # device does not support video
+                response_text = translation.gettext("I'm sorry, I can't play videos on this device.")
+                handler_input.response_builder.speak(response_text)
 
             return handler_input.response_builder.response
 
