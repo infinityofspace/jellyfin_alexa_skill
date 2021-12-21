@@ -9,6 +9,7 @@ import requests
 from jellyfin_alexa_skill import __version__
 from jellyfin_alexa_skill.config import APP_NAME
 
+
 class MediaType(Enum):
     AUDIO = "Audio"
     VIDEO = "Video,MusicVideo"
@@ -16,17 +17,37 @@ class MediaType(Enum):
 
 
 class JellyfinClient:
+    """
+    Client for the Jellyfin API.
+    """
 
-    def __init__(self, server_endpoint: str, client_name=APP_NAME):
+    def __init__(self, server_endpoint: str, client_name: str = APP_NAME):
+        """
+        :param server_endpoint: url of the server
+        :param client_name: name of the client (default: "jellyfin_alexa_skill")
+        """
+
         self.server_endpoint = server_endpoint
         self.client_name = client_name
 
     @staticmethod
-    def _build_emby_auth_header(client_name=APP_NAME,
-                                device_name="NONE",
-                                device_id="NONE",
-                                version=__version__,
-                                token=None):
+    def _build_emby_auth_header(client_name: str = APP_NAME,
+                                device_name: str = "NONE",
+                                device_id: str = "NONE",
+                                version: str = __version__,
+                                token: str = None) -> str:
+        """
+        Builds the Emby authorization header.
+
+        :param client_name: name of the client (default: "jellyfin_alexa_skill")
+        :param device_name: name of the device (default: "NONE")
+        :param device_id: id of the device (default: "NONE")
+        :param version: version of the client (default: __version__)
+        :param token: authentication token (default: None)
+
+        :return: string with the authorization header
+        """
+
         header = f"MediaBrowser Client={client_name}, Device={device_name}, DeviceId={device_id}, Version={version}"
 
         if token:
@@ -35,6 +56,12 @@ class JellyfinClient:
         return header
 
     def public_info(self) -> Optional[dict]:
+        """
+        Returns public information about the server.
+
+        :return: dict with server info or None if the server is not reachable or the server can not be reached
+        """
+
         url = self.server_endpoint + "/System/Info/Public"
 
         headers = {
@@ -52,6 +79,16 @@ class JellyfinClient:
     def get_auth_token(self,
                        username: str,
                        password: str) -> Tuple[str, str]:
+        """
+        Get authentication token for a user.
+
+        :param username: username of the user
+        :param password: password of the user
+
+        :return: tuple of type (user_id, token)
+        :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
+        """
+
         data = {
             "Username": username,
             "Pw": password
@@ -80,16 +117,27 @@ class JellyfinClient:
                        audio_codec: str = "mp3",
                        max_streaming_bitrate: int = 140000000,
                        start_time_ticks: int = 0,
-                       **kwargs) -> Tuple[str,str]:
-
+                       **kwargs) -> Tuple[str, str]:
         """
         Generate a url which allows streaming the requested media file.
 
-        Returns [stream_type,url]
-                if stream_type="audio", url is a stream url ready for AudioPlayer
-                if stream_type="video", url is a url to video to pass on to VideoApp
-                if stream_type="livetv", url is a url to stream LiveTV to VideoApp
-                if stream_type="", something went wrong
+        :param user_id: user id
+        :param token: authentication token
+        :param item_id: item id
+        :param device_id: device id (default: "NONE")
+        :param audio_codec: audio codec (default: "mp3")
+        :param max_streaming_bitrate: max streaming bitrate (default: 140000000)
+        :param start_time_ticks: start time ticks in ms (default: 0)
+        :param kwargs: additional parameters passed to the server for the request
+
+        :return: tuple of type (stream_type, url)
+        :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
+
+        stream_type can be one of the following:
+            "audio" - url is a stream url ready for AudioPlayer
+            "video" - url is a url to video to pass on to VideoApp
+            "livetv" - url is a url to stream LiveTV to VideoApp
+            "" - something went wrong
         """
 
         data = {
@@ -134,12 +182,11 @@ class JellyfinClient:
                 "api_key": token,
                 "AudioCodec": audio_codec
             }
-
         elif stream_type == "video":
             # prepare url for VideoApp
             path = f"/Videos/{item_id}/stream"
             params = {
-                "Container" : play_info["MediaSources"][0]["Container"],
+                "Container": play_info["MediaSources"][0]["Container"],
                 "PlaySessionId": play_info["PlaySessionId"],
                 'DeviceId': device_id,
                 "api_key": token
@@ -156,15 +203,19 @@ class JellyfinClient:
         url += "?" + params_url
         return stream_type, url
 
-
     def get_ancestor_with_image(self,
-                    item_id: str,
-                    token: str) -> str:
+                                item_id: str,
+                                token: str) -> Optional[str]:
 
         """
         Returns id of the first ancestor of item_id that has an image
-        Return empty string (None) if: * there are no ancestors, or
-                                       * no ancestor has an image
+
+        :param item_id: item id
+        :param token: authentication token
+
+        :return: id of the first ancestor of item_id that has an image or empty string if no such ancestor exists or no
+                 ancestor has an image
+        :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
         """
 
         url = self.server_endpoint + f"/Items/{item_id}/Ancestors"
@@ -190,14 +241,17 @@ class JellyfinClient:
 
         return None
 
-
     def get_art_url(self,
                     item_id: str,
-                    token: str,
-                    **kwargs) -> str:
+                    token: str) -> Optional[str]:
         """
-        Generate a url to display cover art for this item
-        Return empty string (None) if there is no cover art available
+        Generate a url to display cover art for this item.
+
+        :param item_id: item id
+        :param token: authentication token
+
+        :return: url to display cover art for this item or None if there is no cover art available
+        :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
         """
 
         # first check if there is any cover art
@@ -213,10 +267,10 @@ class JellyfinClient:
             image_info = json.loads(res.content)
             if not image_info:
                 # this item has no image - use an ancestor's image (if there is one)
-                parent_id = self.get_ancestor_with_image(item_id=item_id,token=token)
+                parent_id = self.get_ancestor_with_image(item_id=item_id, token=token)
                 if parent_id:
                     # RECURSIVELY call get_art_url() to serve up the image
-                    return self.get_art_url(item_id=parent_id,token=token)
+                    return self.get_art_url(item_id=parent_id, token=token)
 
                 # no image to display
                 return None
@@ -240,12 +294,23 @@ class JellyfinClient:
 
         return url
 
-
     def get_favorites(self,
                       user_id: str,
                       token: str,
                       media_type: Optional[MediaType] = None,
                       **kwargs) -> dict:
+        """
+        Get all favorite items for a specified user.
+
+        :param user_id: user id of the user whose favorite items should be retrieved
+        :param token: authentication token
+        :param media_type: media type of the favorite items to retrieve
+        :param kwargs: additional parameters to pass to the server for the request
+
+        :return: dict of favorite items
+        :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
+        """
+
         params = {
             "Filters": "IsFavorite",
             "Recursive": True,
@@ -274,7 +339,19 @@ class JellyfinClient:
                      user_id: str,
                      token: str,
                      playlist_name: Optional[str] = None,
-                     **kwargs):
+                     **kwargs) -> dict:
+        """
+        Get a specified playlist.
+
+        :param user_id: user id of the user whose playlist should be retrieved
+        :param token: authentication token
+        :param playlist_name: name of the playlist to retrieve
+        :param kwargs: additional parameters to pass to the server for the request
+
+        :return: dict of the playlist
+        :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
+        """
+
         params = {
             "IncludeItemTypes": "Playlist",
             "Recursive": True
@@ -303,7 +380,19 @@ class JellyfinClient:
                            user_id: str,
                            token: str,
                            playlist_id: str,
-                           **kwargs):
+                           **kwargs) -> dict:
+        """
+        Get all items in a specified playlist.
+
+        :param user_id: user id of the user whose playlist items should be retrieved
+        :param token: authentication token
+        :param playlist_id: id of the playlist whose items should be retrieved
+        :param kwargs: additional parameters to pass to the server for the request
+
+        :return: dict of playlist items
+        :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
+        """
+
         params = {
             "UserId": user_id
         }
@@ -329,8 +418,22 @@ class JellyfinClient:
                            token: str,
                            term: str,
                            media: MediaType,
-                           limit=20,
-                           **kwargs):
+                           limit: int = 20,
+                           **kwargs) -> dict:
+        """
+        Search for media items.
+
+        :param user_id: user id of the user whose media items should be searched
+        :param token: authentication token
+        :param term: search term
+        :param media: media type to search for
+        :param limit: maximum number of results to return (default: 20)
+        :param kwargs: additional parameters to pass to the server for the request
+
+        :return: dict of media items
+        :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
+        """
+
         params = {
             "searchTerm": term,
             "Recursive": True,
@@ -360,6 +463,19 @@ class JellyfinClient:
                          artist_id: str,
                          media: MediaType,
                          **kwargs):
+        """
+        Get all items of a specified artist.
+
+        :param user_id: user id of the user whose artist items should be retrieved
+        :param token: authentication token
+        :param artist_id: id of the artist whose items should be retrieved
+        :param media: media type to search for
+        :param kwargs: additional parameters to pass to the server for the request
+
+        :return: dict of artist items
+        :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
+        """
+
         params = {
             "ArtistIds": artist_id,
             "Recursive": True,
@@ -385,7 +501,20 @@ class JellyfinClient:
     def search_artist(self,
                       user_id: str,
                       token: str,
-                      term, **kwargs):
+                      term: str,
+                      **kwargs):
+        """
+        Search for a specific artist.
+
+        :param user_id: user id of the user whose artist should be searched
+        :param token: authentication token
+        :param term: search term
+        :param kwargs: additional parameters to pass to the server for the request
+
+        :return: dict of artist items
+        :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
+        """
+
         params = {
             "UserId": user_id,
             "searchTerm": term,
@@ -409,7 +538,25 @@ class JellyfinClient:
         else:
             res.raise_for_status()
 
-    def get_recently_added(self, user_id: str, token=str, media=None, limit=50, **kwargs):
+    def get_recently_added(self,
+                           user_id: str,
+                           token: str,
+                           media: MediaType = None,
+                           limit: int = 50,
+                           **kwargs) -> dict:
+        """
+        Get recently added items.
+
+        :param user_id: user id of the user whose recently added items should be retrieved
+        :param token: authentication token
+        :param media: media type to search for (default: None = all media types)
+        :param limit: maximum number of items to retrieve (default: 50)
+        :param kwargs: additional parameters to pass to the server for the request
+
+        :return: dict of recently added items
+        :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
+        """
+
         params = {
             "Limit": limit
         }
@@ -432,7 +579,18 @@ class JellyfinClient:
         else:
             res.raise_for_status()
 
-    def favorite(self, user_id: str, token: str, media_id: str):
+    def favorite(self, user_id: str, token: str, media_id: str) -> dict:
+        """
+        Favorite an item.
+
+        :param user_id: user id of the user whose item should be favorited
+        :param token: authentication token
+        :param media_id: id of the item to favorite
+
+        :return: dict of the favorited item
+        :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
+        """
+
         url = self.server_endpoint + f"/Users/{user_id}/FavoriteItems/{media_id}"
 
         headers = {
@@ -448,6 +606,17 @@ class JellyfinClient:
             res.raise_for_status()
 
     def unfavorite(self, user_id: str, token: str, media_id: str):
+        """
+        Unfavorite an item.
+
+        :param user_id: user id of the user whose item should be unfavorited
+        :param token: authentication token
+        :param media_id: id of the item to unfavorite
+
+        :return: dict of the unfavorited item
+        :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
+        """
+
         url = self.server_endpoint + f"/Users/{user_id}/FavoriteItems/{media_id}"
 
         headers = {
