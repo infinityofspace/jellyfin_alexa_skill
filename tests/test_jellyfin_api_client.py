@@ -111,9 +111,11 @@ class TestJellyfinApiClient(unittest.TestCase):
 
         # clear server name, because the name is not the same on every start
         info["ServerName"] = None
+        # clear server address, because the address is not the same on each system and depends on docker
+        info["LocalAddress"] = None
 
         valid_info = {
-            "LocalAddress": "http://172.17.0.2:8096",
+            "LocalAddress": None,
             "ServerName": None,
             "Version": "10.7.7",
             "ProductName": "Jellyfin Server",
