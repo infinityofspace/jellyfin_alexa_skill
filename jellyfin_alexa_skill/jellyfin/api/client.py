@@ -13,6 +13,7 @@ class MediaType(Enum):
     AUDIO = "Audio"
     VIDEO = "Video,MusicVideo"
     CHANNEL = "TvChannel"
+    ALBUM = "MusicAlbum"
 
 
 class JellyfinClient:
@@ -403,6 +404,29 @@ class JellyfinClient:
 
         res = requests.get(url, headers=headers, params=params)
 
+        if res:
+            json_res = json.loads(res.content)
+            return json_res["Items"]
+        else:
+            res.raise_for_status()
+
+    def get_album_items( self,
+                         user_id: str,
+                         token: str,
+                         album_id: str ):
+        params = {
+            "IncludeItemTypes": "Audio",
+            "Recursive": True,
+            "sortBy": "SortName",
+            "ParentId": album_id
+        }
+        url = self.server_endpoint + f"/Users/{user_id}/Items"
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
+
+        res = requests.get(url, headers=headers, params=params)
         if res:
             json_res = json.loads(res.content)
             return json_res["Items"]
