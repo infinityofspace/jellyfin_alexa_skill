@@ -67,7 +67,7 @@ class YesNoIntentHandler(BaseHandler):
                 playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artist"])]
 
             user_id = handler_input.request_envelope.context.system.user.user_id
-            playback = set_playback_queue(user_id, playback_items)
+            playback = set_playback_queue(user_id, playback_items, reset=True)
 
             rc = build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,

@@ -165,7 +165,7 @@ class PlayAlbumIntentHandler(BaseHandler):
                               for item in items]
 
             user_id = handler_input.request_envelope.context.system.user.user_id
-            playback = set_playback_queue(user_id, playback_items)
+            playback = set_playback_queue(user_id, playback_items, reset=True)
 
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
