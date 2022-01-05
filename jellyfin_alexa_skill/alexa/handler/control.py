@@ -142,7 +142,7 @@ class PlayAlbumIntentHandler(BaseHandler):
             artists_ids = set([artists["Id"] for artists in artists_search_results])
 
             album_search_results = [album for album in album_search_results if
-                                   set(artist["Id"] for artist in album["ArtistItems"]).intersection(artists_ids)]
+                                   set(artist["Id"] for artist in album["AlbumArtists"]).intersection(artists_ids)]
 
         if len(album_search_results) == 0:
             # no search results
@@ -161,7 +161,7 @@ class PlayAlbumIntentHandler(BaseHandler):
                 handler_input.response_builder.speak(no_result_response_text)
                 return handler_input.response_builder.response
 
-            artist = item["AlbumArtists"]
+            artist = item["AlbumArtists"][0]
             playback_items = [PlaybackItem(item["Id"], item["Name"], artist)
                               for item in items]
 
