@@ -48,14 +48,14 @@ class YesNoIntentHandler(BaseHandler):
             handler_input.attributes_manager.session_attributes["TopMatchesType"] = ""
 
             if (media_type == MediaType.ALBUM.value):
-
+                album = item
                 no_result_response_text = translation.gettext(
                     "Sorry, I can't find any songs with that name. Please try again.")
 
                 # get all tracks on the album
                 items = self.jellyfin_client.get_album_items( user_id=user.jellyfin_user_id,
                                                           token=user.jellyfin_token,
-                                                          album_id=item["Id"] )
+                                                          album_id=album["Id"] )
 
                 if not items:
                     handler_input.response_builder.speak(no_result_response_text)

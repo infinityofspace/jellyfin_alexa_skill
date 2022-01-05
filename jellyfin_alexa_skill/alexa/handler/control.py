@@ -116,21 +116,21 @@ class PlayAlbumIntentHandler(BaseHandler):
                     translation: GNUTranslations,
                     *args,
                     **kwargs) -> Response:
-        album = handler_input.request_envelope.request.intent.slots["album"].value
+        album_name = handler_input.request_envelope.request.intent.slots["album"].value
         musician = handler_input.request_envelope.request.intent.slots["musician"].value
 
         no_result_response_text = translation.gettext(
             "Sorry, I can't find any songs for this search. Please try again.")
 
-        if not album:
+        if not album_name:
             handler_input.response_builder.speak(no_result_response_text)
             return handler_input.response_builder.response
 
-        album = album.lower()
+        album_name = album_name.lower()
 
         album_search_results = self.jellyfin_client.search_media_items(user_id=user.jellyfin_user_id,
                                                                       token=user.jellyfin_token,
-                                                                      term=album,
+                                                                      term=album_name,
                                                                       media=MediaType.ALBUM,
                                                                       Filters="IsFolder")
         if musician:
@@ -151,18 +151,17 @@ class PlayAlbumIntentHandler(BaseHandler):
 
         if len(album_search_results) == 1:
             # there is only one search result, so just play it
-            item = album_search_results[0]
+            album = album_search_results[0]
 
             # get all tracks on the album
             items = self.jellyfin_client.get_album_items( user_id=user.jellyfin_user_id,
                                                           token=user.jellyfin_token,
-                                                          album_id=album_search_results[0]["Id"] )
+                                                          album_id=album["Id"] )
             if not items:
                 handler_input.response_builder.speak(no_result_response_text)
                 return handler_input.response_builder.response
 
-            artist = item["AlbumArtists"][0]
-            playback_items = [PlaybackItem(item["Id"], item["Name"], artist)
+            playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
                               for item in items]
 
             user_id = handler_input.request_envelope.context.system.user.user_id
@@ -178,14 +177,19 @@ class PlayAlbumIntentHandler(BaseHandler):
             return handler_input.response_builder.response
 
         # more than one search result, so find the best matches and ask user what they want to hear
-        album_match_scores = [get_similarity(item["Name"], album) for item in album_search_results]
+        album_match_scores = [get_similarity(album["Name"], album_name) for album in album_search_results]
         top_matches_idx = best_matches_by_idx(match_scores=album_match_scores)
         top_matches = []
         for idx in top_matches_idx:
-           match = { "Name" : album_search_results[idx]["Name"],
+            album_artists = []
+            if len(album_search_results[idx]["AlbumArtists"]) > 0:
+                album_artists = [album_search_results[idx]["AlbumArtists"][0]["Name"]]
+
+            match = { "Name" : album_search_results[idx]["Name"],
                       "Id" : album_search_results[idx]["Id"],
-                      "Artist": [album_search_results[idx]["AlbumArtists"][0]["Name"]] }
-           top_matches.append( match )
+                      "Artist": album_artists }
+            top_matches.append( match )
+
         handler_input.attributes_manager.session_attributes["TopMatches"] = top_matches
         handler_input.attributes_manager.session_attributes["TopMatchesType"] = MediaType.ALBUM
 
