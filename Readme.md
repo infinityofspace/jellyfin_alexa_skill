@@ -107,9 +107,10 @@ Now you are ready to perform the actual installation and startup, you have two o
 1. use docker:
     - you can build the image locally or use the prebuild images
       on [Github container registry](ghcr.io/infinityofspace/jellyfin_alexa_skill)
-        - if you want to build the Docker image locally, use this commands:
+        - if you want to build the Docker image locally, use this commands (this clones the last release, you can also
+          adjust the version to use older releases):
           ```commandline
-          git clone https://github.com/infinityofspace/jellyfin_alexa_skill
+          git clone -b 0.3 https://github.com/infinityofspace/jellyfin_alexa_skill
           cd jellyfin_alexa_skill
           docker build -t jellyfin_alexa_skill:latest .
           ```
@@ -128,7 +129,7 @@ OR
         - from pypi:`pip3 install jellyfin_alexa_skill`
         - you can also install from source:
           ```commandline
-          git clone https://github.com/infinityofspace/jellyfin_alexa_skill
+          git clone -b 0.3 https://github.com/infinityofspace/jellyfin_alexa_skill
           cd jellyfin_alexa_skill
           python3 setup.py install
           ```
@@ -165,7 +166,8 @@ You can find the FAQ [here](https://github.com/infinityofspace/jellyfin_alexa_sk
 
 ## Development
 
-You can find more guidelines for the development [here](https://github.com/infinityofspace/jellyfin_alexa_skill/wiki/Development).
+You can find more guidelines for the
+development [here](https://github.com/infinityofspace/jellyfin_alexa_skill/wiki/Development).
 
 ## Third party notices
 

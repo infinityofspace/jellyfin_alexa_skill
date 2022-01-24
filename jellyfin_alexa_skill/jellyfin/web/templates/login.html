@@ -40,7 +40,7 @@
     <input name="redirect_uri" type="hidden" value="{{ redirect_uri }}"/>
     <input name="state" type="hidden" value="{{ state }}"/>
     {% if error %}
-    <div>{{ error }}!</div>
+        <div style="color:white;">{{ error }}!</div>
     {% endif %}
     <button type="submit">Login</button>
 </form>

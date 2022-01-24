@@ -88,6 +88,110 @@ class PlaySongIntentHandler(BaseHandler):
                       "Artist": song_search_results[idx]["Artists"] }
             top_matches.append( match )
         handler_input.attributes_manager.session_attributes["TopMatches"] = top_matches
+        handler_input.attributes_manager.session_attributes["TopMatchesType"] = MediaType.AUDIO
+
+        # ask user if they want the first one...  (response is handled by YesNoIntentHandler)
+        by_artist = ""
+        artists = top_matches[0]["Artist"]
+        if len(artists) > 0:
+            by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
+
+        request_text = translation.gettext("Would you like to hear <break/> {title} {by_artist} ?".format(
+                                                                                     title=top_matches[0]['Name'],
+                                                                                     by_artist=by_artist))
+
+        return handler_input.response_builder.speak(request_text).ask(request_text).response
+
+class PlayAlbumIntentHandler(BaseHandler):
+    def __init__(self, jellyfin_client: JellyfinClient):
+        self.jellyfin_client = jellyfin_client
+
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        return is_intent_name("PlayAlbumIntent")(handler_input)
+
+    @translate
+    def handle_func(self,
+                    user: User,
+                    handler_input: HandlerInput,
+                    translation: GNUTranslations,
+                    *args,
+                    **kwargs) -> Response:
+        album_name = handler_input.request_envelope.request.intent.slots["album"].value
+        musician = handler_input.request_envelope.request.intent.slots["musician"].value
+
+        no_result_response_text = translation.gettext(
+            "Sorry, I can't find any songs for this search. Please try again.")
+
+        if not album_name:
+            handler_input.response_builder.speak(no_result_response_text)
+            return handler_input.response_builder.response
+
+        album_name = album_name.lower()
+
+        album_search_results = self.jellyfin_client.search_media_items(user_id=user.jellyfin_user_id,
+                                                                      token=user.jellyfin_token,
+                                                                      term=album_name,
+                                                                      media=MediaType.ALBUM,
+                                                                      Filters="IsFolder")
+        if musician:
+            musician = musician.lower()
+            # filter album search results with the searched musician
+            artists_search_results = self.jellyfin_client.search_artist(user_id=user.jellyfin_user_id,
+                                                                        token=user.jellyfin_token,
+                                                                        term=musician)
+            artists_ids = set([artists["Id"] for artists in artists_search_results])
+
+            album_search_results = [album for album in album_search_results if
+                                   set(artist["Id"] for artist in album["AlbumArtists"]).intersection(artists_ids)]
+
+        if len(album_search_results) == 0:
+            # no search results
+            handler_input.response_builder.speak(no_result_response_text)
+            return handler_input.response_builder.response
+
+        if len(album_search_results) == 1:
+            # there is only one search result, so just play it
+            album = album_search_results[0]
+
+            # get all tracks on the album
+            items = self.jellyfin_client.get_album_items( user_id=user.jellyfin_user_id,
+                                                          token=user.jellyfin_token,
+                                                          album_id=album["Id"] )
+            if not items:
+                handler_input.response_builder.speak(no_result_response_text)
+                return handler_input.response_builder.response
+
+            playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
+                              for item in items]
+
+            user_id = handler_input.request_envelope.context.system.user.user_id
+            playback = set_playback_queue(user_id, playback_items, reset=True)
+
+            build_stream_response(jellyfin_client=self.jellyfin_client,
+                                  jellyfin_user_id=user.jellyfin_user_id,
+                                  jellyfin_token=user.jellyfin_token,
+                                  handler_input=handler_input,
+                                  playback=playback,
+                                  idx=0)
+
+            return handler_input.response_builder.response
+
+        # more than one search result, so find the best matches and ask user what they want to hear
+        album_match_scores = [get_similarity(album["Name"], album_name) for album in album_search_results]
+        top_matches_idx = best_matches_by_idx(match_scores=album_match_scores)
+        top_matches = []
+        for idx in top_matches_idx:
+            album_artists = []
+            if len(album_search_results[idx]["AlbumArtists"]) > 0:
+                album_artists = [album_search_results[idx]["AlbumArtists"][0]["Name"]]
+
+            match = { "Name" : album_search_results[idx]["Name"],
+                      "Id" : album_search_results[idx]["Id"],
+                      "Artist": album_artists }
+            top_matches.append( match )
+
+        handler_input.attributes_manager.session_attributes["TopMatches"] = top_matches
+        handler_input.attributes_manager.session_attributes["TopMatchesType"] = MediaType.ALBUM
 
         # ask user if they want the first one...  (response is handled by YesNoIntentHandler)
         by_artist = ""
@@ -168,6 +272,7 @@ class PlayVideoIntentHandler(BaseHandler):
                       "Artist": video_search_results[idx]["Artists"] }
             top_matches.append( match )
         handler_input.attributes_manager.session_attributes["TopMatches"] = top_matches
+        handler_input.attributes_manager.session_attributes["TopMatchesType"] = MediaType.VIDEO
 
         # ask user if they want the first one...  (response is handled by YesNoIntentHandler)
         by_artist = ""
@@ -312,9 +417,10 @@ class PauseIntentHandler(BaseHandler):
             playback.offset = handler_input.request_envelope.context.audio_player.offset_in_milliseconds
             playback.save()
 
-        # in case user says stop/cancel during a yes/no dialogue - clear the TopMatches
+        # in case user says stop/cancel during a yes/no dialogue - clear the TopMatches/TopMatchesType
         if "TopMatches" in handler_input.attributes_manager.session_attributes:
             handler_input.attributes_manager.session_attributes["TopMatches"].clear()
+            handler_input.attributes_manager.session_attributes["TopMatchesType"] = ""
 
         handler_input.response_builder.add_directive(StopDirective())
 

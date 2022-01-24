@@ -84,6 +84,7 @@ class PlayChannelIntentHandler(BaseHandler):
                       "Artist": [] }
             top_matches.append( match )
         handler_input.attributes_manager.session_attributes["TopMatches"] = top_matches
+        handler_input.attributes_manager.session_attributes["TopMatchesType"] = MediaType.CHANNEL
 
         # ask user if they want the first one...  (response is handled by YesNoIntentHandler)
         request_text = translation.gettext("Would you like to listen to {name} ?".format(

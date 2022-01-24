@@ -41,10 +41,15 @@ def get_current_played_item(user_id: str) -> Optional[PlaybackItem]:
         return None
 
 
-def set_playback_queue(user_id: str, queue: List[PlaybackItem]) -> Playback:
+def set_playback_queue(user_id: str, queue: List[PlaybackItem], reset: bool = False) -> Playback:
     playback = get_playback(user_id)
     playback.queue = queue
     playback.current_idx = 0
+
+    if (reset):
+        playback.loop_single = False
+        playback.loop_all = False
+        playback.shuffle = False
 
     if playback.shuffle:
         set_shuffle_queue_idxs(playback)

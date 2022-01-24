@@ -97,6 +97,23 @@
           ]
         },
         {
+          "name": "PlayAlbumIntent",
+          "samples": [
+            "Play the album {album}",
+            "Play the album {album} by {musician}"
+          ],
+          "slots": [
+            {
+              "name": "album",
+              "type": "AMAZON.MusicRecording"
+            },
+            {
+              "name": "musician",
+              "type": "AMAZON.Musician"
+            }
+          ]
+        },
+        {
           "name": "PlayVideoIntent",
           "samples": [
             "Play the video {title}"
