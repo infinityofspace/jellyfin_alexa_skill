@@ -8,7 +8,7 @@ from jellyfin_alexa_skill.alexa.util import translate, build_stream_response, Re
 from jellyfin_alexa_skill.database.db import set_playback_queue
 from jellyfin_alexa_skill.database.model.playback import PlaybackItem
 from jellyfin_alexa_skill.database.model.user import User
-from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient
+from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient,MediaType
 
 
 class YesNoIntentHandler(BaseHandler):
@@ -43,10 +43,31 @@ class YesNoIntentHandler(BaseHandler):
 
             # grab the top match, then cleanup the TopMatches list
             item = handler_input.attributes_manager.session_attributes["TopMatches"][0]
+            media_type = handler_input.attributes_manager.session_attributes["TopMatchesType"]
             handler_input.attributes_manager.session_attributes["TopMatches"].clear()
+            handler_input.attributes_manager.session_attributes["TopMatchesType"] = ""
+
+            if (media_type == MediaType.ALBUM.value):
+                album = item
+                no_result_response_text = translation.gettext(
+                    "Sorry, I can't find any songs with that name. Please try again.")
+
+                # get all tracks on the album
+                items = self.jellyfin_client.get_album_items( user_id=user.jellyfin_user_id,
+                                                          token=user.jellyfin_token,
+                                                          album_id=album["Id"] )
+
+                if not items:
+                    handler_input.response_builder.speak(no_result_response_text)
+                    return handler_input.response_builder.response
+
+                playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
+                              for item in items]
+            else:
+                playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artist"])]
 
             user_id = handler_input.request_envelope.context.system.user.user_id
-            playback = set_playback_queue(user_id, [PlaybackItem(item["Id"], item["Name"], item["Artist"])])
+            playback = set_playback_queue(user_id, playback_items, reset=True)
 
             rc = build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
@@ -80,6 +101,8 @@ class YesNoIntentHandler(BaseHandler):
 
             return handler_input.response_builder.speak(request_text).ask(request_text).response
         else:
+            handler_input.attributes_manager.session_attributes["TopMatchesType"] = ""
+
             speak_output = translation.gettext("I'm all out of guesses.  Please try asking a different way.")
             handler_input.response_builder.speak(speak_output)
             return handler_input.response_builder.response
