@@ -14,7 +14,8 @@ install_requires = [
     "ask_smapi_model~=1.13.1",
     "peewee~=3.14.4",
     "gunicorn~=20.1.0",
-    "Flask-WTF~=0.15.1"
+    "Flask-WTF~=0.15.1",
+    "websocket-client~=1.2.3"
 ]
 
 setup_requires = [
