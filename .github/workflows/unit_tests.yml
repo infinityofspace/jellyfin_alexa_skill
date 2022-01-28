@@ -7,24 +7,32 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ 3.6, 3.7, 3.8, 3.9, 3.10 ]
+
     steps:
       - uses: actions/checkout@master
 
-      - name: Set up Python 3.10
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
-          python-version: "3.10"
+          python-version: ${{ matrix.python-version }}
 
       - name: Install requirements
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
+          pip install flake8
 
       - name: Build translations
         run: python3 setup.py compile_catalog
 
       - name: Run unit tests
         run: python -m unittest tests/test_similarity.py tests/test_alexa_redirect_urls.py
+
+      - name: Lint with flake8
+        run: flake8 jellyfin_alexa_skill --count --select=E9,F63,F7,F82 --show-source --statistics
 
   tests-jellyfin-api:
     runs-on: ubuntu-latest
