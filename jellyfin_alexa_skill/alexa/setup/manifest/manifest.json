@@ -47,10 +47,17 @@
         }
       },
       "automaticClonedLocale": {
-        "locales":[ {
-          "source": "en-US",
-          "targets": ["en-AU", "en-CA", "en-IN", "en-GB"]
-        } ]
+        "locales": [
+          {
+            "source": "en-US",
+            "targets": [
+              "en-AU",
+              "en-CA",
+              "en-IN",
+              "en-GB"
+            ]
+          }
+        ]
       },
       "testingInstructions": ""
     }

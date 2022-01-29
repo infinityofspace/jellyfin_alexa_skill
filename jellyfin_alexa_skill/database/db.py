@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from peewee import DoesNotExist
 
@@ -9,7 +9,7 @@ from jellyfin_alexa_skill.database.model.playback import Playback, PlaybackItem
 from jellyfin_alexa_skill.database.model.user import User
 
 
-def connect_db(path: Path):
+def connect_db(path: Union[Path, str]) -> None:
     db.init(str(path))
     db.connect()
 
@@ -46,7 +46,7 @@ def set_playback_queue(user_id: str, queue: List[PlaybackItem], reset: bool = Fa
     playback.queue = queue
     playback.current_idx = 0
 
-    if (reset):
+    if reset:
         playback.loop_single = False
         playback.loop_all = False
         playback.shuffle = False

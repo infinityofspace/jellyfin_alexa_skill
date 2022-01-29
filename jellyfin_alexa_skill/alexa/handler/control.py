@@ -6,7 +6,7 @@ from ask_sdk_model import Response
 from ask_sdk_model.interfaces.audioplayer import StopDirective
 
 from jellyfin_alexa_skill.alexa.handler.base import BaseHandler
-from jellyfin_alexa_skill.alexa.util import set_shuffle_queue_idxs, build_stream_response, MediaTypeSlot, translate, \
+from jellyfin_alexa_skill.alexa.util import set_shuffle_queue_idxs, build_stream_response, MediaTypeSlot, \
     get_similarity, best_matches_by_idx
 from jellyfin_alexa_skill.config import ARTISTS_PARTIAL_RATIO_THRESHOLD
 from jellyfin_alexa_skill.database.db import set_playback_queue, get_playback
@@ -22,7 +22,7 @@ class PlaySongIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("PlaySongIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,
@@ -83,10 +83,10 @@ class PlaySongIntentHandler(BaseHandler):
         top_matches_idx = best_matches_by_idx(match_scores=song_match_scores)
         top_matches = []
         for idx in top_matches_idx:
-            match = { "Name" : song_search_results[idx]["Name"],
-                      "Id" : song_search_results[idx]["Id"],
-                      "Artist": song_search_results[idx]["Artists"] }
-            top_matches.append( match )
+            match = {"Name": song_search_results[idx]["Name"],
+                     "Id": song_search_results[idx]["Id"],
+                     "Artist": song_search_results[idx]["Artists"]}
+            top_matches.append(match)
         handler_input.attributes_manager.session_attributes["TopMatches"] = top_matches
         handler_input.attributes_manager.session_attributes["TopMatchesType"] = MediaType.AUDIO
 
@@ -97,10 +97,11 @@ class PlaySongIntentHandler(BaseHandler):
             by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
 
         request_text = translation.gettext("Would you like to hear <break/> {title} {by_artist} ?".format(
-                                                                                     title=top_matches[0]['Name'],
-                                                                                     by_artist=by_artist))
+            title=top_matches[0]['Name'],
+            by_artist=by_artist))
 
         return handler_input.response_builder.speak(request_text).ask(request_text).response
+
 
 class PlayAlbumIntentHandler(BaseHandler):
     def __init__(self, jellyfin_client: JellyfinClient):
@@ -109,7 +110,7 @@ class PlayAlbumIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("PlayAlbumIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,
@@ -129,10 +130,10 @@ class PlayAlbumIntentHandler(BaseHandler):
         album_name = album_name.lower()
 
         album_search_results = self.jellyfin_client.search_media_items(user_id=user.jellyfin_user_id,
-                                                                      token=user.jellyfin_token,
-                                                                      term=album_name,
-                                                                      media=MediaType.ALBUM,
-                                                                      Filters="IsFolder")
+                                                                       token=user.jellyfin_token,
+                                                                       term=album_name,
+                                                                       media=MediaType.ALBUM,
+                                                                       Filters="IsFolder")
         if musician:
             musician = musician.lower()
             # filter album search results with the searched musician
@@ -142,7 +143,7 @@ class PlayAlbumIntentHandler(BaseHandler):
             artists_ids = set([artists["Id"] for artists in artists_search_results])
 
             album_search_results = [album for album in album_search_results if
-                                   set(artist["Id"] for artist in album["AlbumArtists"]).intersection(artists_ids)]
+                                    set(artist["Id"] for artist in album["AlbumArtists"]).intersection(artists_ids)]
 
         if len(album_search_results) == 0:
             # no search results
@@ -154,9 +155,9 @@ class PlayAlbumIntentHandler(BaseHandler):
             album = album_search_results[0]
 
             # get all tracks on the album
-            items = self.jellyfin_client.get_album_items( user_id=user.jellyfin_user_id,
-                                                          token=user.jellyfin_token,
-                                                          album_id=album["Id"] )
+            items = self.jellyfin_client.get_album_items(user_id=user.jellyfin_user_id,
+                                                         token=user.jellyfin_token,
+                                                         album_id=album["Id"])
             if not items:
                 handler_input.response_builder.speak(no_result_response_text)
                 return handler_input.response_builder.response
@@ -185,10 +186,10 @@ class PlayAlbumIntentHandler(BaseHandler):
             if len(album_search_results[idx]["AlbumArtists"]) > 0:
                 album_artists = [album_search_results[idx]["AlbumArtists"][0]["Name"]]
 
-            match = { "Name" : album_search_results[idx]["Name"],
-                      "Id" : album_search_results[idx]["Id"],
-                      "Artist": album_artists }
-            top_matches.append( match )
+            match = {"Name": album_search_results[idx]["Name"],
+                     "Id": album_search_results[idx]["Id"],
+                     "Artist": album_artists}
+            top_matches.append(match)
 
         handler_input.attributes_manager.session_attributes["TopMatches"] = top_matches
         handler_input.attributes_manager.session_attributes["TopMatchesType"] = MediaType.ALBUM
@@ -200,10 +201,11 @@ class PlayAlbumIntentHandler(BaseHandler):
             by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
 
         request_text = translation.gettext("Would you like to hear <break/> {title} {by_artist} ?".format(
-                                                                                     title=top_matches[0]['Name'],
-                                                                                     by_artist=by_artist))
+            title=top_matches[0]['Name'],
+            by_artist=by_artist))
 
         return handler_input.response_builder.speak(request_text).ask(request_text).response
+
 
 class PlayVideoIntentHandler(BaseHandler):
     def __init__(self, jellyfin_client: JellyfinClient):
@@ -212,7 +214,7 @@ class PlayVideoIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("PlayVideoIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,
@@ -267,10 +269,10 @@ class PlayVideoIntentHandler(BaseHandler):
         top_matches_idx = best_matches_by_idx(match_scores=video_match_scores)
         top_matches = []
         for idx in top_matches_idx:
-            match = { "Name" : video_search_results[idx]["Name"],
-                      "Id" : video_search_results[idx]["Id"],
-                      "Artist": video_search_results[idx]["Artists"] }
-            top_matches.append( match )
+            match = {"Name": video_search_results[idx]["Name"],
+                     "Id": video_search_results[idx]["Id"],
+                     "Artist": video_search_results[idx]["Artists"]}
+            top_matches.append(match)
         handler_input.attributes_manager.session_attributes["TopMatches"] = top_matches
         handler_input.attributes_manager.session_attributes["TopMatchesType"] = MediaType.VIDEO
 
@@ -281,10 +283,11 @@ class PlayVideoIntentHandler(BaseHandler):
             by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
 
         request_text = translation.gettext("Would you like to watch <break/> {title} {by_artist} ?".format(
-                                                                                     title=top_matches[0]['Name'],
-                                                                                     by_artist=by_artist))
+            title=top_matches[0]['Name'],
+            by_artist=by_artist))
 
         return handler_input.response_builder.speak(request_text).ask(request_text).response
+
 
 class PlayArtistSongsIntentHandler(BaseHandler):
     def __init__(self, jellyfin_client: JellyfinClient):
@@ -293,7 +296,7 @@ class PlayArtistSongsIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("PlayArtistSongsIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,
@@ -361,7 +364,7 @@ class PlayLastAddedIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("PlayLastAddedIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,
@@ -434,7 +437,7 @@ class ResumeIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("AMAZON.ResumeIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,
@@ -494,7 +497,7 @@ class NextIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("AMAZON.NextIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,
@@ -532,7 +535,7 @@ class PreviousIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("AMAZON.PreviousIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,
@@ -615,7 +618,7 @@ class StartOverIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("AMAZON.StartOverIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,

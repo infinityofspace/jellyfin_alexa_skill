@@ -1,11 +1,10 @@
 import logging
-from gettext import GNUTranslations
 
 from ask_sdk_core.dispatch_components import AbstractExceptionHandler
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model import Response
 
-from jellyfin_alexa_skill.alexa.util import translate
+from jellyfin_alexa_skill.config import get_translation
 
 
 class CatchAllExceptionHandler(AbstractExceptionHandler):
@@ -17,12 +16,12 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
     def can_handle(self, handler_input: HandlerInput, exception: Exception) -> bool:
         return True
 
-    @translate
     def handle(self,
                handler_input: HandlerInput,
                exception: Exception,
-               translation: GNUTranslations,
                *args, **kwargs) -> Response:
+        translation = get_translation(handler_input.request_envelope.request.locale)
+
         logging.error(exception, exc_info=True)
 
         speech = translation.gettext("Sorry, something went wrong. Please try again.")

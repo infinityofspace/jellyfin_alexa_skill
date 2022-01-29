@@ -1,16 +1,12 @@
 import logging
 from difflib import SequenceMatcher
 from enum import Enum
-from functools import wraps
 from random import shuffle
 
-from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model.interfaces.audioplayer import PlayDirective, PlayBehavior, AudioItem, Stream, AudioItemMetadata
+from ask_sdk_model.interfaces.display import Image, ImageInstance
 from ask_sdk_model.interfaces.videoapp import LaunchDirective, VideoItem, Metadata
 
-from ask_sdk_model.interfaces.display import Image, ImageInstance
-
-from jellyfin_alexa_skill.config import get_translation
 from jellyfin_alexa_skill.database.model.playback import Playback
 from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient
 
@@ -21,9 +17,11 @@ class MediaTypeSlot(Enum):
     AUDIO = "audio"
     LIVETV = "livetv"
 
+
 class ReturnCode(Enum):
     OK = 0
     ERROR_NOT_VIDEO_DEVICE = 1
+
 
 def set_shuffle_queue_idxs(playback: Playback) -> None:
     playback.shuffle_idxs = list(range(len(playback.queue)))
@@ -52,7 +50,7 @@ def build_stream_response(jellyfin_client: JellyfinClient,
         art_image = None
         art_url = jellyfin_client.get_art_url(item_id=item["id"], token=jellyfin_token)
         if art_url:
-            art_image = Image( sources=[ImageInstance(url=art_url)] )
+            art_image = Image(sources=[ImageInstance(url=art_url)])
 
         handler_input.response_builder.add_directive(
             PlayDirective(
@@ -87,22 +85,14 @@ def build_stream_response(jellyfin_client: JellyfinClient,
             )
         )
     else:
-        logging.warning("Unknown stream_type [%s]",stream_type)
+        logging.warning("Unknown stream_type [%s]", stream_type)
 
     return ReturnCode.OK
-
-def translate(func):
-    @wraps(func)
-    def wrapper(self, handler_input: HandlerInput, *args, **kwargs):
-        translation = get_translation(handler_input.request_envelope.request.locale)
-
-        return func(self, handler_input=handler_input, translation=translation, *args, **kwargs)
-
-    return wrapper
 
 
 def get_similarity(s1: str, s2: str) -> float:
     return SequenceMatcher(lambda x: x in " \t,.:-;/&_", s1.lower(), s2.lower()).ratio()
+
 
 def best_matches_by_idx(match_scores, max_matches=3):
     """
@@ -121,7 +111,7 @@ def best_matches_by_idx(match_scores, max_matches=3):
     if len(match_scores) == 0:
         return []
     if len(match_scores) == 1:
-        return [ 0 ]
+        return [0]
 
     # more complex cases: match_scores consists of 2 or more scores
     # step 1 - build a dictionary to remember the original index of each score in "match_scores"
@@ -132,7 +122,7 @@ def best_matches_by_idx(match_scores, max_matches=3):
         idx += 1
 
     # step 2 - sort the scores (by value) in descending order
-    sorted_scores = {key: val for key, val in sorted(indexed_scores.items(), key = lambda item: item[1], reverse = True)}
+    sorted_scores = {key: val for key, val in sorted(indexed_scores.items(), key=lambda item: item[1], reverse=True)}
 
     # step 3 - put the top "max_matches" indexes (by key) in a list
     idx = 0
@@ -140,7 +130,7 @@ def best_matches_by_idx(match_scores, max_matches=3):
     for key in sorted_scores.keys():
         indexed_list.append(key)
         idx += 1
-        if (idx >= max_matches):
-           break
+        if idx >= max_matches:
+            break
 
     return indexed_list

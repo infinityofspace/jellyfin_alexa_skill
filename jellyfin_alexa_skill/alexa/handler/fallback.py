@@ -5,14 +5,14 @@ from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
 
-from jellyfin_alexa_skill.alexa.util import translate
+from jellyfin_alexa_skill.alexa.handler import BaseHandler
 
 
 class FallbackIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("AMAZON.FallbackIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle(self,
                handler_input: HandlerInput,
                translation: GNUTranslations,

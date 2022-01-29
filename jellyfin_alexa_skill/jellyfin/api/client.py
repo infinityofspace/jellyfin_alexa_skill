@@ -539,10 +539,10 @@ class JellyfinClient:
         else:
             res.raise_for_status()
 
-    def get_album_items( self,
-                         user_id: str,
-                         token: str,
-                         album_id: str ):
+    def get_album_items(self,
+                        user_id: str,
+                        token: str,
+                        album_id: str) -> dict:
         params = {
             "IncludeItemTypes": "Audio",
             "Recursive": True,
