@@ -543,6 +543,17 @@ class JellyfinClient:
                         user_id: str,
                         token: str,
                         album_id: str) -> dict:
+        """
+        Get all items of a specified album.
+
+        :param user_id: user id of the user whose album items should be retrieved
+        :param token: authentication token
+        :param album_id: id of the album whose items should be retrieved
+
+        :return: dict of album items
+        :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
+        """
+
         params = {
             "IncludeItemTypes": "Audio",
             "Recursive": True,
