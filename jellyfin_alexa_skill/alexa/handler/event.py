@@ -5,7 +5,7 @@ from ask_sdk_core.utils import is_request_type
 from ask_sdk_model import Response
 
 from jellyfin_alexa_skill.alexa.handler import BaseHandler
-from jellyfin_alexa_skill.alexa.util import set_shuffle_queue_idxs, build_stream_response, translate
+from jellyfin_alexa_skill.alexa.util import set_shuffle_queue_idxs, build_stream_response
 from jellyfin_alexa_skill.database.db import get_playback
 from jellyfin_alexa_skill.database.model.user import User
 from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient
@@ -97,7 +97,7 @@ class PlaybackFailedEventHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_request_type("AudioPlayer.PlaybackFailed")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,
@@ -113,4 +113,16 @@ class PlaybackFailedEventHandler(BaseHandler):
         handler_input.response_builder.speak(
             translation.gettext("Something went wrong during media playback. Please try again."))
 
+        return handler_input.response_builder.response
+
+
+class SessionEndedRequestHandler(BaseHandler):
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        return is_request_type("SessionEndedRequest")(handler_input)
+
+    def handle_func(self,
+                    user: User,
+                    handler_input: HandlerInput,
+                    *args,
+                    **kwargs) -> Response:
         return handler_input.response_builder.response

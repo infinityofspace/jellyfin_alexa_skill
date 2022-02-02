@@ -1,27 +1,30 @@
 from ask_sdk_core.skill_builder import SkillBuilder
 
+from jellyfin_alexa_skill.alexa.handler.channel import *
 from jellyfin_alexa_skill.alexa.handler.control import *
-from jellyfin_alexa_skill.alexa.handler.error import CatchAllExceptionHandler
+from jellyfin_alexa_skill.alexa.handler.error import *
 from jellyfin_alexa_skill.alexa.handler.event import *
 from jellyfin_alexa_skill.alexa.handler.fallback import *
 from jellyfin_alexa_skill.alexa.handler.favorite import *
 from jellyfin_alexa_skill.alexa.handler.help import *
 from jellyfin_alexa_skill.alexa.handler.info import *
+from jellyfin_alexa_skill.alexa.handler.interface import *
 from jellyfin_alexa_skill.alexa.handler.launch import *
 from jellyfin_alexa_skill.alexa.handler.playlist import *
 from jellyfin_alexa_skill.alexa.handler.remote import *
 from jellyfin_alexa_skill.alexa.handler.yesno import *
-from jellyfin_alexa_skill.alexa.handler.channel import *
+
 
 
 def get_skill_builder(jellyfin_client: JellyfinClient):
     skill_builder = SkillBuilder()
 
+    skill_builder.add_request_handler(CheckAudioInterfaceHandler())
+
     skill_builder.add_request_handler(FallbackIntentHandler())
     skill_builder.add_exception_handler(CatchAllExceptionHandler())
 
     skill_builder.add_request_handler(LaunchRequestHandler(jellyfin_client))
-    skill_builder.add_request_handler(CheckAudioInterfaceHandler())
     skill_builder.add_request_handler(SessionEndedRequestHandler())
 
     skill_builder.add_request_handler(PlaySongIntentHandler(jellyfin_client))

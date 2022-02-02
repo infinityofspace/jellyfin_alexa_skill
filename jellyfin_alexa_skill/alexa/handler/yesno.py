@@ -3,12 +3,13 @@ from gettext import GNUTranslations
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
+
 from jellyfin_alexa_skill.alexa.handler.base import BaseHandler
-from jellyfin_alexa_skill.alexa.util import translate, build_stream_response, ReturnCode
+from jellyfin_alexa_skill.alexa.util import build_stream_response, ReturnCode
 from jellyfin_alexa_skill.database.db import set_playback_queue
 from jellyfin_alexa_skill.database.model.playback import PlaybackItem
 from jellyfin_alexa_skill.database.model.user import User
-from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient,MediaType
+from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient, MediaType
 
 
 class YesNoIntentHandler(BaseHandler):
@@ -18,11 +19,11 @@ class YesNoIntentHandler(BaseHandler):
     """
        Handler for Yes/No dialog with user
     """
-    def can_handle(self, handler_input: HandlerInput) -> bool:
-        return ( is_intent_name("AMAZON.YesIntent")(handler_input) \
-                 or is_intent_name("AMAZON.NoIntent")(handler_input) )
 
-    @translate
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        return is_intent_name("AMAZON.YesIntent")(handler_input) or is_intent_name("AMAZON.NoIntent")(handler_input)
+
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,
@@ -47,22 +48,22 @@ class YesNoIntentHandler(BaseHandler):
             handler_input.attributes_manager.session_attributes["TopMatches"].clear()
             handler_input.attributes_manager.session_attributes["TopMatchesType"] = ""
 
-            if (media_type == MediaType.ALBUM.value):
+            if media_type == MediaType.ALBUM.value:
                 album = item
                 no_result_response_text = translation.gettext(
                     "Sorry, I can't find any songs with that name. Please try again.")
 
                 # get all tracks on the album
-                items = self.jellyfin_client.get_album_items( user_id=user.jellyfin_user_id,
-                                                          token=user.jellyfin_token,
-                                                          album_id=album["Id"] )
+                items = self.jellyfin_client.get_album_items(user_id=user.jellyfin_user_id,
+                                                             token=user.jellyfin_token,
+                                                             album_id=album["Id"])
 
                 if not items:
                     handler_input.response_builder.speak(no_result_response_text)
                     return handler_input.response_builder.response
 
                 playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
-                              for item in items]
+                                  for item in items]
             else:
                 playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artist"])]
 
@@ -70,11 +71,11 @@ class YesNoIntentHandler(BaseHandler):
             playback = set_playback_queue(user_id, playback_items, reset=True)
 
             rc = build_stream_response(jellyfin_client=self.jellyfin_client,
-                                  jellyfin_user_id=user.jellyfin_user_id,
-                                  jellyfin_token=user.jellyfin_token,
-                                  handler_input=handler_input,
-                                  playback=playback,
-                                  idx=0)
+                                       jellyfin_user_id=user.jellyfin_user_id,
+                                       jellyfin_token=user.jellyfin_token,
+                                       handler_input=handler_input,
+                                       playback=playback,
+                                       idx=0)
 
             if rc == ReturnCode.ERROR_NOT_VIDEO_DEVICE:
                 # device does not support video
@@ -96,8 +97,8 @@ class YesNoIntentHandler(BaseHandler):
                 by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
 
             request_text = translation.gettext("Hmm. How about <break/> {title} {by_artist} ?".format(
-                                                                                     title=item['Name'],
-                                                                                     by_artist=by_artist))
+                title=item['Name'],
+                by_artist=by_artist))
 
             return handler_input.response_builder.speak(request_text).ask(request_text).response
         else:

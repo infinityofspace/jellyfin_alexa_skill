@@ -4,11 +4,11 @@ Selfhosted Alexa media player skill for Jellyfin
 
 ---
 
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/jellyfin_alexa_skill?style=for-the-badge) ![GitHub](https://img.shields.io/github/license/infinityofspace/jellyfin_alexa_skill?style=for-the-badge)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/jellyfin_alexa_skill?style=for-the-badge)](https://pypi.org/project/jellyfin-alexa-skill/) ![GitHub](https://img.shields.io/github/license/infinityofspace/jellyfin_alexa_skill?style=for-the-badge)
 
-![PyPI](https://img.shields.io/pypi/v/jellyfin_alexa_skill?style=for-the-badge) ![PyPI - Downloads](https://img.shields.io/pypi/dm/jellyfin_alexa_skill?style=for-the-badge) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/infinityofspace/jellyfin_alexa_skill/pypi%20release?style=for-the-badge)
+[![PyPI](https://img.shields.io/pypi/v/jellyfin_alexa_skill?style=for-the-badge)](https://pypi.org/project/jellyfin-alexa-skill/) ![PyPI - Downloads](https://img.shields.io/pypi/dm/jellyfin_alexa_skill?style=for-the-badge) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/infinityofspace/jellyfin_alexa_skill/pypi%20release?style=for-the-badge)
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/infinityofspace/jellyfin_alexa_skill/docker%20release?label=Docker&style=for-the-badge)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/infinityofspace/jellyfin_alexa_skill/docker%20release?label=Docker&style=for-the-badge)](https://github.com/infinityofspace/jellyfin_alexa_skill/pkgs/container/jellyfin_alexa_skill)
 
 ---
 
@@ -111,7 +111,7 @@ Now you are ready to perform the actual installation and startup, you have two o
         - if you want to build the Docker image locally, use this commands (this clones the last release, you can also
           adjust the version to use older releases):
           ```commandline
-          git clone -b 0.3 https://github.com/infinityofspace/jellyfin_alexa_skill
+          git clone -b 0.3.1 https://github.com/infinityofspace/jellyfin_alexa_skill
           cd jellyfin_alexa_skill
           docker build -t jellyfin_alexa_skill:latest .
           ```
@@ -130,7 +130,7 @@ OR
         - from pypi:`pip3 install jellyfin_alexa_skill`
         - you can also install from source:
           ```commandline
-          git clone -b 0.3 https://github.com/infinityofspace/jellyfin_alexa_skill
+          git clone -b 0.3.1 https://github.com/infinityofspace/jellyfin_alexa_skill
           cd jellyfin_alexa_skill
           python3 setup.py install
           ```

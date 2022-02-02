@@ -5,7 +5,7 @@ from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
 
 from jellyfin_alexa_skill.alexa.handler import BaseHandler
-from jellyfin_alexa_skill.alexa.util import build_stream_response, translate, get_similarity
+from jellyfin_alexa_skill.alexa.util import build_stream_response, get_similarity
 from jellyfin_alexa_skill.database.db import set_playback_queue
 from jellyfin_alexa_skill.database.model.playback import PlaybackItem
 from jellyfin_alexa_skill.database.model.user import User
@@ -19,7 +19,7 @@ class PlayPlaylistIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("PlayPlaylistIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,
@@ -61,6 +61,7 @@ class PlayPlaylistIntentHandler(BaseHandler):
                                       playback=playback,
                                       idx=0)
 
-                handler_input.response_builder.speak(_("Ok, I play the playlist {}.".format(best_playlist["Name"])))
+                response_text = translation.gettext("Ok, I play the playlist {}.").format(best_playlist["Name"])
+                handler_input.response_builder.speak(response_text)
 
         return handler_input.response_builder.response

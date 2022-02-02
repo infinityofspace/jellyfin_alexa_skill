@@ -5,7 +5,7 @@ from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
 
 from jellyfin_alexa_skill.alexa.handler import BaseHandler
-from jellyfin_alexa_skill.alexa.util import build_stream_response, MediaTypeSlot, translate
+from jellyfin_alexa_skill.alexa.util import build_stream_response, MediaTypeSlot
 from jellyfin_alexa_skill.database.db import get_playback, set_playback_queue
 from jellyfin_alexa_skill.database.model.playback import PlaybackItem
 from jellyfin_alexa_skill.database.model.user import User
@@ -19,7 +19,7 @@ class PlayFavoritesIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("PlayFavoritesIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,
@@ -67,7 +67,7 @@ class MarkFavoriteIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("MarkFavoriteIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,
@@ -97,7 +97,7 @@ class UnmarkFavoriteIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("UnmarkFavoriteIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,

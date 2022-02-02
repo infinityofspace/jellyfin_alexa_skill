@@ -5,7 +5,6 @@ from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
 
 from jellyfin_alexa_skill.alexa.handler.base import BaseHandler
-from jellyfin_alexa_skill.alexa.util import translate
 from jellyfin_alexa_skill.database.model.user import User
 
 
@@ -13,7 +12,7 @@ class HelpIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("AMAZON.HelpIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,

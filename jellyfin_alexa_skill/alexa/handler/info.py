@@ -5,7 +5,6 @@ from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
 
 from jellyfin_alexa_skill.alexa.handler.base import BaseHandler
-from jellyfin_alexa_skill.alexa.util import translate
 from jellyfin_alexa_skill.database.db import get_current_played_item
 from jellyfin_alexa_skill.database.model.user import User
 
@@ -14,7 +13,7 @@ class MediaInfoIntentHandler(BaseHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("MediaInfoIntent")(handler_input)
 
-    @translate
+    @BaseHandler.translate
     def handle_func(self,
                     user: User,
                     handler_input: HandlerInput,
@@ -26,8 +25,8 @@ class MediaInfoIntentHandler(BaseHandler):
 
         if item:
             speech_text = translation.gettext("Currently playing {title} from {artists}.".format(title=item["title"],
-                                                                                                artists=" ,".join(
-                                                                                                    item["artists"])))
+                                                                                                 artists=" ,".join(
+                                                                                                     item["artists"])))
         else:
             speech_text = translation.gettext("Currently no media is played.")
 
