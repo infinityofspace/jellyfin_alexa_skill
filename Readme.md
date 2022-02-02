@@ -110,7 +110,7 @@ Now you are ready to perform the actual installation and startup, you have two o
         - if you want to build the Docker image locally, use this commands (this clones the last release, you can also
           adjust the version to use older releases):
           ```commandline
-          git clone -b 0.3 https://github.com/infinityofspace/jellyfin_alexa_skill
+          git clone -b 0.3.1 https://github.com/infinityofspace/jellyfin_alexa_skill
           cd jellyfin_alexa_skill
           docker build -t jellyfin_alexa_skill:latest .
           ```
@@ -129,7 +129,7 @@ OR
         - from pypi:`pip3 install jellyfin_alexa_skill`
         - you can also install from source:
           ```commandline
-          git clone -b 0.3 https://github.com/infinityofspace/jellyfin_alexa_skill
+          git clone -b 0.3.1 https://github.com/infinityofspace/jellyfin_alexa_skill
           cd jellyfin_alexa_skill
           python3 setup.py install
           ```
