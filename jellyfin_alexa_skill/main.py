@@ -186,9 +186,9 @@ def update_skill_manifest(config: ConfigParser,
     update_manifest_required = False
     for locale in INTERACTION_MODELS.keys():
         default_display_name = SKILL_MANIFEST.manifest.publishing_information.locales[locale].name
-        new_display_name = config.get(locale,
-                                      "display_name",
-                                      fallback=default_display_name)
+        new_display_name = config.get(locale, "display_name", fallback=default_display_name)
+        # the default invocation name is the display name
+        new_invocation_name = config.get(locale, "invocation_name", fallback=default_display_name)
 
         new_manifest.manifest.publishing_information.locales[locale].name = new_display_name
 
@@ -199,7 +199,7 @@ def update_skill_manifest(config: ConfigParser,
             for idx, phrase in enumerate(
                     SKILL_MANIFEST.manifest.publishing_information.locales[locale].example_phrases):
                 new_manifest.manifest.publishing_information.locales[locale].example_phrases[idx] = phrase.replace(
-                    default_display_name, new_display_name)
+                    default_display_name, new_invocation_name)
 
             update_manifest_required = True
 
