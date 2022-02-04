@@ -107,7 +107,7 @@
                         }
                     ],
                     "samples": [
-                        "Riproduci {song}",
+                        "Riproduci canzone {song}",
                         "Riproduci la canzone {song}",
                         "Riproduci la canzone {song} dell artista {musician}",
                         "Riproduci la canzone {song} di {musician}",
@@ -229,6 +229,10 @@
                         "Qual è il titolo",
                         "Che cosa sto ascoltando"
                     ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
                 }
             ],
             "types": [
