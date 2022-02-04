@@ -13,12 +13,12 @@ INTERACTION_MODEL_DE_DE = DefaultSerializer().deserialize(
     pkg_resources.read_text(interaction, "interaction_model_de_DE.json"),
     InteractionModelData)
 
-INTERACTION_MODEL_DE_DE = DefaultSerializer().deserialize(
+INTERACTION_MODEL_IT_IT = DefaultSerializer().deserialize(
     pkg_resources.read_text(interaction, "interaction_model_it_IT.json"),
     InteractionModelData)
 
 INTERACTION_MODELS = {
     "en-US": INTERACTION_MODEL_EN_US,
     "de-DE": INTERACTION_MODEL_DE_DE,
-    "it-IT": INTERACTION_MODEL_EN_US
+    "it-IT": INTERACTION_MODEL_IT_IT
 }
