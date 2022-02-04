@@ -1,0 +1,264 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "jelly fin",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PauseIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ResumeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NextIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PreviousIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.YesIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NoIntent",
+                    "samples": []
+                },
+                {
+                    "name": "LoopAllOffIntent",
+                    "slots": [],
+                    "samples": [
+                        "Loop off"
+                    ]
+                },
+                {
+                    "name": "LoopAllOnIntent",
+                    "slots": [],
+                    "samples": [
+                        "Loop on"
+                    ]
+                },
+                {
+                    "name": "RepeatSingleOnIntent",
+                    "slots": [],
+                    "samples": [
+                        "Ripeti la canzone",
+                        "Ripeti il video",
+                        "Ripeti"
+                    ]
+                },
+                {
+                    "name": "AMAZON.ShuffleOnIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ShuffleOffIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StartOverIntent",
+                    "samples": [
+                        "Ripeti dall inizio",
+                        "Ricomincia"
+                    ]
+                },
+                {
+                    "name": "PlayChannelIntent",
+                    "slots": [
+                        {
+                            "name": "channel",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "Riproduci il canale {channel}",
+                        "Riproduci la radio {channel}"
+                    ]
+                },
+                {
+                    "name": "PlaySongIntent",
+                    "slots": [
+                        {
+                            "name": "song",
+                            "type": "AMAZON.MusicRecording"
+                        },
+                        {
+                            "name": "musician",
+                            "type": "AMAZON.Musician"
+                        }
+                    ],
+                    "samples": [
+                        "Riproduci {song}",
+                        "Riproduci la canzone {song}",
+                        "Riproduci la canzone {song} dell artista {musician}",
+                        "Riproduci la canzone {song} di {musician}",
+                        "Riproduci la canzone {song} dei {musician}",
+                        "Riproduci la canzone {song} degli {musician}"
+                    ]
+                },
+                {
+                    "name": "PlayAlbumIntent",
+                    "slots": [
+                        {
+                            "name": "album",
+                            "type": "AMAZON.MusicRecording"
+                        },
+                        {
+                            "name": "musician",
+                            "type": "AMAZON.Musician"
+                        }
+                    ],
+                    "samples": [
+                        "Riproduci {album}",
+                        "Riproduci {album} dell artista {musician}",
+                        "Riproduci {album} di {musician}",
+                        "Riproduci {album} degli {musician}"
+                    ]
+                },
+                {
+                    "name": "PlayVideoIntent",
+                    "slots": [
+                        {
+                            "name": "title",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "Riproduci il video {title}"
+                    ]
+                },
+                {
+                    "name": "PlayArtistSongsIntent",
+                    "slots": [
+                        {
+                            "name": "musician",
+                            "type": "AMAZON.Musician"
+                        }
+                    ],
+                    "samples": [
+                        "Riproduci canzoni di {musician}",
+                        "Riproduci musica di {musician}",
+                        "Riproduci canzoni dei {musician}",
+                        "Riproduci musica dei {musician}",
+                        "Riproduci canzoni degli {musician}",
+                        "Riproduci musica degli {musician}"
+                    ]
+                },
+                {
+                    "name": "PlayLastAddedIntent",
+                    "slots": [
+                        {
+                            "name": "media_type",
+                            "type": "MediaType"
+                        }
+                    ],
+                    "samples": [
+                        "Riproduci le ultime {media_type} aggiunte"
+                    ]
+                },
+                {
+                    "name": "PlayPlaylistIntent",
+                    "slots": [
+                        {
+                            "name": "playlist",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "Riproduci la playlist {playlist}",
+                        "Riproduci playlist {playlist}"
+                    ]
+                },
+                {
+                    "name": "PlayFavoritesIntent",
+                    "slots": [
+                        {
+                            "name": "media_type",
+                            "type": "MediaType"
+                        }
+                    ],
+                    "samples": [
+                        "Riproduci la mia {media_type} favorita",
+                        "Riproduci musica {media_type} favorita",
+                        "Riproduci miei favoriti"
+                    ]
+                },
+                {
+                    "name": "MarkFavoriteIntent",
+                    "slots": [],
+                    "samples": [
+                        "Mettere un like",
+                        "Aggiungere ai preferiti",
+                        "Mi piace questa canzone"
+                    ]
+                },
+                {
+                    "name": "UnmarkFavoriteIntent",
+                    "slots": [],
+                    "samples": [
+                        "Non mi piace",
+                        "Rimuovere dai preferiti"
+                    ]
+                },
+                {
+                    "name": "MediaInfoIntent",
+                    "slots": [],
+                    "samples": [
+                        "Che canzone è questa",
+                        "Che video è questo",
+                        "Qual è il titolo di questa canzone",
+                        "Qual è il titolo",
+                        "Che cosa sto ascoltando"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "MediaType",
+                    "values": [
+                        {
+                            "id": "media",
+                            "name": {
+                                "value": "media"
+                            }
+                        },
+                        {
+                            "id": "video",
+                            "name": {
+                                "value": "video"
+                            }
+                        },
+                        {
+                            "id": "audio",
+                            "name": {
+                                "value": "Audio",
+                                "synonyms": [
+                                    "music, song"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

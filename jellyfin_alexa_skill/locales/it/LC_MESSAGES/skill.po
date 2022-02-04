@@ -1,0 +1,130 @@
+#: jellyfin_alexa_skill/alexa/handler/channel.py:31
+msgid "Non trovo nessun canale con questo nome. Per favore riprova."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/channel.py:83
+msgid "Ti piacerebbe ascoltare {name} ?"
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:35
+msgid "Non ho trovato nessuna canzone. Per favore riprova."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:96
+#: jellyfin_alexa_skill/alexa/handler/control.py:176
+#: jellyfin_alexa_skill/alexa/handler/yesno.py:70
+msgid "di {artist}"
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:98
+msgid "Ti piacerebbe ascoltare <break/> {title} {by_artist} ?"
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:120
+msgid "Non ho trovato nessun video. Per favore riprova."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:129
+msgid "Non posso riprodurre video su questo dispositivo."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:178
+msgid "Ti piacerebbe guardare <break/> {title} {by_artist} ?"
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:200
+msgid "Non ho trovato nessuna canzone di questo artista. Per favore riprova."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:282
+msgid "Non ho trovato nessun media recente."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:349
+msgid "Che cosa posso riprodurre?"
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:414
+msgid "La lista di riproduzione è terminata."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:452
+msgid "La lista di riproduzione è ricominciata."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:531
+msgid "La lista di riproduzione è vuota. Prova ad aggiungere qualche media e riprova."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/error.py:28
+msgid "Mi dispiace, qualcosa è andato storto. Riprova."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/event.py:114
+msgid "Qualcosa è andato storto con la riproduzione. Riprova."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/fallback.py:22
+msgid "Mi dispiace, non ho capito. Riprova."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/favorite.py:57
+msgid "Non ho trovato nessun media nei preferiti."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/favorite.py:86
+msgid "Aggiunti ai tuoi preferiti."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/favorite.py:88
+#: jellyfin_alexa_skill/alexa/handler/favorite.py:118
+msgid "Non c'è nessun media in riproduzione."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/favorite.py:116
+msgid "Rimosso dai tuoi preferiti."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/help.py:23
+msgid ""
+"Con questa skill puoi riprodurre contenuti dal tuo Server Jellyfin. Usa 'Riproduci "
+"Game of Live from Earth' ooppure 'Riproduci playlist Best Rocks' per ascoltare "
+"qualche canzone."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/info.py:29
+msgid "Attualmente in riproduzione {title} di {artists}."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/info.py:32
+msgid "Non c'è nessun media in riproduzione."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/launch.py:39
+msgid "Benevenuto su Jellyfin Player skill, che cosa posso riprodurre?"
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/launch.py:60
+msgid "Mi dispiace, questo dispositivo non supporta la riproduzione dei media."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/playlist.py:37
+msgid "Non ho trovato nessuna playlist con quel nome."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/playlist.py:49
+msgid "Questa playlist non esiste."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/playlist.py:64
+msgid "Ok, Riproduco la playlist {}."
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/yesno.py:72
+msgid "Hmm. Cosa ne pensi di <break/> {title} {by_artist} ?"
+msgstr ""
+
+#: jellyfin_alexa_skill/alexa/handler/yesno.py:78
+msgid "Non ho altre idee.  Prova a chiedermelo in un altro modo."
+msgstr ""
+
