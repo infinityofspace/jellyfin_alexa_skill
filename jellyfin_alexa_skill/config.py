@@ -45,7 +45,8 @@ DE_TRANSLATION = gettext.translation("skill", localedir=Path(__file__).resolve()
 
 TRANSLATIONS = {
     "en-US": EN_TRANSLATION,
-    "de-DE": DE_TRANSLATION
+    "de-DE": DE_TRANSLATION,
+    "it-IT": DE_TRANSLATION
 }
 
 
