@@ -46,7 +46,7 @@
           ],
           "description": "Spiele Medien von deinem Jellyfin Server.\n\nQuellcode: https://github.com/infinityofspace/jellyfin_alexa_skill"
         },
-        "en-US": {
+        "it-IT": {
           "name": "Jellyfin Player",
           "summary": "Riproduci media dalla tuo Server Jellyfin",
           "examplePhrases": [
