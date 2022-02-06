@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "server jelly",
+            "invocationName": "jellyfin player",
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
