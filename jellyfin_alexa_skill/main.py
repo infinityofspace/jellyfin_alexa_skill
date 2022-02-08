@@ -3,6 +3,7 @@ import binascii
 import logging
 import os
 import textwrap
+import time
 import uuid
 from configparser import ConfigParser
 from copy import deepcopy
@@ -11,6 +12,7 @@ from typing import Union, Tuple
 
 import ask_sdk_model_runtime
 from ask_smapi_model.services.skill_management import SkillManagementServiceClient
+from ask_smapi_model.v1.skill import Status
 from ask_smapi_model.v1.skill.account_linking import AccountLinkingRequest, AccountLinkingRequestPayload, \
     AccountLinkingType
 from ask_smapi_model.v1.skill.manifest import SSLCertificateType, SkillManifestEndpoint, SkillManifestEnvelope
@@ -148,7 +150,20 @@ def update_interaction_models(config: ConfigParser,
                                                   locale=locale,
                                                   interaction_model=interaction_model)
 
-        logging.info("Skill interaction model updated")
+        # wait until the skill interaction models are updated
+        updating = True
+        while updating:
+            status = smapi_client.get_skill_status_v1(skill_id)
+            updating = False
+            for locale, info in status.interaction_model.items():
+                if info.last_update_request.status == Status.SUCCEEDED:
+                    logging.info(f"Skill interaction model for locale {locale} is updated")
+                else:
+                    updating = True
+
+            time.sleep(5)
+
+        logging.info("All skill interaction models updated")
 
 
 def update_skill_manifest(config: ConfigParser,
@@ -186,9 +201,9 @@ def update_skill_manifest(config: ConfigParser,
     update_manifest_required = False
     for locale in INTERACTION_MODELS.keys():
         default_display_name = SKILL_MANIFEST.manifest.publishing_information.locales[locale].name
-        new_display_name = config.get(locale,
-                                      "display_name",
-                                      fallback=default_display_name)
+        new_display_name = config.get(locale, "display_name", fallback=default_display_name)
+        # the default invocation name is the display name
+        new_invocation_name = config.get(locale, "invocation_name", fallback=default_display_name)
 
         new_manifest.manifest.publishing_information.locales[locale].name = new_display_name
 
@@ -199,7 +214,7 @@ def update_skill_manifest(config: ConfigParser,
             for idx, phrase in enumerate(
                     SKILL_MANIFEST.manifest.publishing_information.locales[locale].example_phrases):
                 new_manifest.manifest.publishing_information.locales[locale].example_phrases[idx] = phrase.replace(
-                    default_display_name, new_display_name)
+                    default_display_name, new_invocation_name)
 
             update_manifest_required = True
 
@@ -218,6 +233,14 @@ def update_skill_manifest(config: ConfigParser,
         smapi_client.update_skill_manifest_v1(skill_id=skill_id,
                                               stage_v2=stage,
                                               update_skill_request=new_manifest)
+
+        # wait until the skill manifest is updated
+        while True:
+            status = smapi_client.get_skill_status_v1(skill_id)
+            if status.manifest.last_update_request.status == Status.SUCCEEDED:
+                break
+
+            time.sleep(5)
 
         logging.info("Skill manifest updated")
 
