@@ -67,81 +67,7 @@ to suggest your idea for implementation.
 
 ## Installation
 
-Before you begin, make sure you meet the following requirements:
-
-- up-to-date Jellyfin Server with public or local access
-- free Amazon developer account
-- python 3.6+ or docker + docker-compose installed
-- optional:
-    - free ngrok account if you're running a local access server
-
-The initial setup requires several steps:
-
-1. create a Alexa skill:
-    1. go to the [Amazon Developer Console webpage](https://developer.amazon.com/alexa/console/ask) for Alexa and create
-       a new skill
-    2. now fill out the skill setup settings:
-        1. the skill name can be custom, there are no requirements
-        2. choose one of the [supported languages of this skill](#supported-languages) for the `Primary locale`
-        3. choose `Custom` for the model type
-        4. choose `Provision your own` for the skill's backend resources
-        5. on the next page choose `Start from Scratch`
-2. generate SMAPI tokens:
-    1. create a new security profile for the SMAPI access
-       described [here](https://developer.amazon.com/en-US/docs/alexa/smapi/get-access-token-smapi.html#configure-lwa-security-profile)
-       to get a `CLIENT-ID` and `CLIENT-SECRET`
-    2. install npm if you have not already installed it and install the ask-cli package: `npm install ask-cli -g`
-    4. now setup the ask cli: `ask configure`
-    5. use the client id and client secret from step i. to generate the refresh
-       token: `ask util generate-lwa-tokens --client-id <CLIENT-ID> --client-confirmation <CLIENT-SECRET>`
-
-_Note: The Skill id is needed for the interaction with the Alexa Skill. The SMAPI access is needed for the automatic
-setup of the skill._
-
-Use this [config file](skill.conf) and adjust the values which are commented as `required` in the config file. Save the
-file in a safe place, because the file contains sensitive credentials. Also remember the save path, because the config
-file will be used again later.
-
-Now you are ready to perform the actual installation and startup, you have two options to use the project:
-
-1. use docker:
-    - you can build the image locally or use the prebuild images
-      on [Github container registry](ghcr.io/infinityofspace/jellyfin_alexa_skill)
-        - if you want to build the Docker image locally, use this commands (this clones the last release, you can also
-          adjust the version to use older releases):
-          ```commandline
-          git clone -b 0.3.1 https://github.com/infinityofspace/jellyfin_alexa_skill
-          cd jellyfin_alexa_skill
-          docker build -t jellyfin_alexa_skill:latest .
-          ```
-    - start the skill:
-      ```commandline
-      docker run \
-      -v /path/to/the/skill.conf:/var/lib/jellyfin_alexa_skill/config/skill.conf \
-      -v /path/to/persistence/skill/data:/var/lib/jellyfin_alexa_skill/data \
-      ghcr.io/infinityofspace/jellyfin_alexa_skill:latest
-      ```
-
-OR
-
-2. with pip:
-    - install:
-        - from pypi:`pip3 install jellyfin_alexa_skill`
-        - you can also install from source:
-          ```commandline
-          git clone -b 0.3.1 https://github.com/infinityofspace/jellyfin_alexa_skill
-          cd jellyfin_alexa_skill
-          python3 setup.py install
-          ```
-    - start the skill: `jellyfin_alexa_skill --config /path/to/skill.conf --data /path/to/skill/data/`
-
-_Note: The default path for the skill.conf file is `/home/user/.jellyfin_alexa_skill/config/skill.conf` and for the
-skill data path it is `/home/user/.jellyfin_alexa_skill/data`._ You can adjust the paths with the `config` and `data` or
-as environment variables `JELLYFIN_ALEXA_SKILL_CONFIG` and `JELLYFIN_ALEXA_SKILL_DATA`. Make sure the `skill.conf` is
-writeable.
-
-Now activate the skill in your Alexa app and link your Jellyfin account. Now you can use the skill with your Alexa
-enabled devices.
+You can find the installation steps in the [wiki](https://github.com/infinityofspace/jellyfin_alexa_skill/wiki/Installation).
 
 ## Supported languages
 
@@ -149,6 +75,7 @@ The skill has support for the following languages:
 
 - English
 - German
+- Italian
 
 ## Skill speech examples
 
