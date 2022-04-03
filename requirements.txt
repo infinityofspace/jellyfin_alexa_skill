@@ -5,5 +5,5 @@ ask-smapi-model~=1.14.2
 peewee~=3.14.10
 gunicorn~=20.1.0
 Flask-WTF~=1.0.1
-requests~=2.26.0
+requests~=2.27.1
 Babel~=2.9.1
