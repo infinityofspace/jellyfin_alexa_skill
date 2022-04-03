@@ -9,7 +9,6 @@ with open("Readme.md") as f:
 
 install_requires = [
     "flask-ask-sdk~=1.0.0",
-    "pyngrok~=5.1.0",
     "ask-smapi-sdk~=1.0.0",
     "ask_smapi_model>=1.13.1,<1.15.0",
     "peewee~=3.14.4",
@@ -76,7 +75,7 @@ setup(
         "Topic :: Multimedia :: Video"
     ],
     packages=find_packages(),
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=install_requires,
     setup_requires=setup_requires,
     package_data={
