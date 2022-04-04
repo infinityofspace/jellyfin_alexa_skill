@@ -286,7 +286,7 @@ def main():
                                 """)
     )
 
-    parser.add_argument("config", help="Path to the config file")
+    parser.add_argument("--config", help="Path to the config file", metavar="PATH")
     parser.add_argument("--data", help="Path to the data folder", metavar="PATH")
     parser.add_argument("--verbose", help="Enable verbose logging", action="store_true")
 

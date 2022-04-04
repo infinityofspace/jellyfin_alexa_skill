@@ -90,7 +90,7 @@ setup(
     include_package_data=True,
     entry_points={
         "console_scripts": [
-            "jellyfin_alexa_skill = jellyfin_alexa_skill.main:main",
+            "jellyfin-alexa-skill = jellyfin_alexa_skill.main:main",
         ]
     },
     cmdclass={
