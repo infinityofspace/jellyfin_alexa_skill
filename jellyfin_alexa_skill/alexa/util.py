@@ -1,93 +1,59 @@
-import logging
 from difflib import SequenceMatcher
-from enum import Enum
-from random import shuffle
 
 from ask_sdk_model.interfaces.audioplayer import PlayDirective, PlayBehavior, AudioItem, Stream, AudioItemMetadata
 from ask_sdk_model.interfaces.display import Image, ImageInstance
 from ask_sdk_model.interfaces.videoapp import LaunchDirective, VideoItem, Metadata
 
-from jellyfin_alexa_skill.database.model.playback import Playback
-from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient
-
-
-class MediaTypeSlot(Enum):
-    MEDIA = "media"
-    VIDEO = "video"
-    AUDIO = "audio"
-    LIVETV = "livetv"
-
-
-class ReturnCode(Enum):
-    OK = 0
-    ERROR_NOT_VIDEO_DEVICE = 1
-
-
-def set_shuffle_queue_idxs(playback: Playback) -> None:
-    playback.shuffle_idxs = list(range(len(playback.queue)))
-    shuffle(playback.shuffle_idxs)
-    idx = playback.shuffle_idxs.index(playback.current_idx)
-
-    playback.shuffle_idxs.insert(playback.current_idx, playback.shuffle_idxs.pop(idx))
+from jellyfin_alexa_skill.database.model.playback import QueueItem
+from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient, MediaType
 
 
 def build_stream_response(jellyfin_client: JellyfinClient,
                           jellyfin_user_id: str,
                           jellyfin_token: str,
                           handler_input,
-                          playback: Playback,
-                          idx: int) -> ReturnCode:
-    if playback.shuffle:
-        item = playback.queue[playback.shuffle_idxs[idx]]
-    else:
-        item = playback.queue[idx]
+                          queue_item: QueueItem,
+                          offset: int = 0) -> None:
+    url, play_info = jellyfin_client.get_stream_url(item_id=queue_item.item_id,
+                                                    user_id=jellyfin_user_id,
+                                                    token=jellyfin_token)
 
-    stream = jellyfin_client.get_stream_url(item_id=item["id"], user_id=jellyfin_user_id, token=jellyfin_token)
-    stream_type = stream[0]
-    stream_url = stream[1]
-
-    if stream_type == "audio":
-        art_image = None
-        art_url = jellyfin_client.get_art_url(item_id=item["id"], token=jellyfin_token)
-        if art_url:
-            art_image = Image(sources=[ImageInstance(url=art_url)])
+    if queue_item.media_type == MediaType.AUDIO:
+        primary_image_url = jellyfin_client.server_endpoint + f"/Items/{queue_item.item_id}/Images/Primary"
+        art_image = Image(sources=[ImageInstance(url=primary_image_url)])
 
         handler_input.response_builder.add_directive(
             PlayDirective(
                 play_behavior=PlayBehavior.REPLACE_ALL,
                 audio_item=AudioItem(
                     stream=Stream(
-                        token=item["id"],
-                        url=stream_url,
-                        offset_in_milliseconds=0),
+                        token=queue_item.item_id,
+                        url=url,
+                        offset_in_milliseconds=offset),
                     metadata=AudioItemMetadata(
-                        title=item["title"],
-                        subtitle=" ,".join(item["artists"]),
+                        title=play_info.get("name", "Unknown Title"),
+                        subtitle=" ,".join(play_info.get("artists", [])),
                         art=art_image
                     )
                 )
             )
         )
-    elif (stream_type == "video") or (stream_type == "livetv"):
-
+    else:
         # confirm that device supports video
         if not handler_input.request_envelope.context.system.device.supported_interfaces.video_app:
-            return ReturnCode.ERROR_NOT_VIDEO_DEVICE
+            handler_input.response_builder.speak("Sorry, this device does not support video playback.")
+            return
 
         handler_input.response_builder.add_directive(
             LaunchDirective(
                 video_item=VideoItem(
-                    source=stream_url,
+                    source=url,
                     metadata=Metadata(
-                        title=item["title"]
+                        title=play_info.get("name", "Unknown Title")
                     )
                 )
             )
         )
-    else:
-        logging.warning("Unknown stream_type [%s]", stream_type)
-
-    return ReturnCode.OK
 
 
 def get_similarity(s1: str, s2: str) -> float:
@@ -134,3 +100,14 @@ def best_matches_by_idx(match_scores, max_matches=3):
             break
 
     return indexed_list
+
+
+def get_media_type_enum(item_info: dict) -> MediaType:
+    if item_info["MediaType"] == "Audio":
+        return MediaType.AUDIO
+    elif item_info["MediaType"] == "Video":
+        return MediaType.VIDEO
+    elif item_info["MediaType"] == "LiveTv":
+        return MediaType.CHANNEL
+    else:
+        raise ValueError(f"Unknown media type: {item_info['MediaType']}")

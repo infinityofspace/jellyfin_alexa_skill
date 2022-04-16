@@ -5,12 +5,12 @@ from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
 from ask_sdk_model.interfaces.audioplayer import StopDirective
 
+from database.db import get_playback, set_playback_queue
 from jellyfin_alexa_skill.alexa.handler.base import BaseHandler
-from jellyfin_alexa_skill.alexa.util import set_shuffle_queue_idxs, build_stream_response, MediaTypeSlot, \
-    get_similarity, best_matches_by_idx
+from jellyfin_alexa_skill.alexa.util import build_stream_response, get_similarity, best_matches_by_idx, \
+    get_media_type_enum
 from jellyfin_alexa_skill.config import ARTISTS_PARTIAL_RATIO_THRESHOLD
-from jellyfin_alexa_skill.database.db import set_playback_queue, get_playback
-from jellyfin_alexa_skill.database.model.playback import PlaybackItem
+from jellyfin_alexa_skill.database.model.playback import QueueItem
 from jellyfin_alexa_skill.database.model.user import User
 from jellyfin_alexa_skill.jellyfin.api.client import MediaType, JellyfinClient
 
@@ -67,14 +67,17 @@ class PlaySongIntentHandler(BaseHandler):
             # there is only one search result, so just play it
             item = song_search_results[0]
             user_id = handler_input.request_envelope.context.system.user.user_id
-            playback = set_playback_queue(user_id, [PlaybackItem(item["Id"], item["Name"], item["Artists"])])
+
+            item = QueueItem(idx=0,
+                             media_type=get_media_type_enum(item),
+                             media_item_id=item["Id"])
+            playback = set_playback_queue(user_id, [item])
 
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
                                   jellyfin_token=user.jellyfin_token,
                                   handler_input=handler_input,
-                                  playback=playback,
-                                  idx=0)
+                                  queue_item=playback.current_item)
 
             return handler_input.response_builder.response
 
@@ -151,6 +154,8 @@ class PlayAlbumIntentHandler(BaseHandler):
             return handler_input.response_builder.response
 
         if len(album_search_results) == 1:
+            user_id = handler_input.request_envelope.context.system.user.user_id
+
             # there is only one search result, so just play it
             album = album_search_results[0]
 
@@ -162,18 +167,17 @@ class PlayAlbumIntentHandler(BaseHandler):
                 handler_input.response_builder.speak(no_result_response_text)
                 return handler_input.response_builder.response
 
-            playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
-                              for item in items]
+            queue_items = [QueueItem(idx=i,
+                                     media_type=get_media_type_enum(item_info),
+                                     media_item_id=item_info["Id"]) for i, item_info in enumerate(items)]
 
-            user_id = handler_input.request_envelope.context.system.user.user_id
-            playback = set_playback_queue(user_id, playback_items, reset=True)
+            playback = set_playback_queue(user_id, queue_items)
 
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
                                   jellyfin_token=user.jellyfin_token,
                                   handler_input=handler_input,
-                                  playback=playback,
-                                  idx=0)
+                                  queue_item=playback.current_item)
 
             return handler_input.response_builder.response
 
@@ -253,14 +257,17 @@ class PlayVideoIntentHandler(BaseHandler):
             # there is just one search result, so just play it
             item = video_search_results[0]
             user_id = handler_input.request_envelope.context.system.user.user_id
-            playback = set_playback_queue(user_id, [PlaybackItem(item["Id"], item["Name"], [])])
+
+            item = QueueItem(idx=0,
+                             media_type=get_media_type_enum(item),
+                             media_item_id=item["Id"])
+            playback = set_playback_queue(user_id, [item])
 
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
                                   jellyfin_token=user.jellyfin_token,
                                   handler_input=handler_input,
-                                  playback=playback,
-                                  idx=0)
+                                  queue_item=playback.current_item)
 
             return handler_input.response_builder.response
 
@@ -341,18 +348,19 @@ class PlayArtistSongsIntentHandler(BaseHandler):
             handler_input.response_builder.speak(no_result_response_text)
             return handler_input.response_builder.response
 
-        playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
-                          for item in items]
-
         user_id = handler_input.request_envelope.context.system.user.user_id
-        playback = set_playback_queue(user_id, playback_items)
+
+        queue_items = [QueueItem(idx=i,
+                                 media_type=get_media_type_enum(item_info),
+                                 media_item_id=item_info["Id"]) for i, item_info in enumerate(items)]
+
+        playback = set_playback_queue(user_id, queue_items)
 
         build_stream_response(jellyfin_client=self.jellyfin_client,
                               jellyfin_user_id=user.jellyfin_user_id,
                               jellyfin_token=user.jellyfin_token,
                               handler_input=handler_input,
-                              playback=playback,
-                              idx=0)
+                              queue_item=playback.current_item)
 
         return handler_input.response_builder.response
 
@@ -374,9 +382,9 @@ class PlayLastAddedIntentHandler(BaseHandler):
         media_type = handler_input.request_envelope.request.intent.slots["media_type"] \
             .resolutions.resolutions_per_authority[0].values[0].value.id
 
-        if media_type == MediaTypeSlot.AUDIO:
+        if media_type == MediaType.AUDIO:
             filter_media_type = MediaType.AUDIO
-        elif media_type == MediaTypeSlot.VIDEO:
+        elif media_type == MediaType.VIDEO:
             filter_media_type = MediaType.VIDEO
         else:
             filter_media_type = None
@@ -390,17 +398,19 @@ class PlayLastAddedIntentHandler(BaseHandler):
             text = translation.gettext("Sorry, I couldn't find any recently added media.")
             handler_input.response_builder.speak(text)
         else:
-            playback_items = [PlaybackItem(item["Id"], item["Name"], item.get("Artists", []))
-                              for item in recently_added_items]
+            user_id = handler_input.request_envelope.context.system.user.user_id
 
-            playback = set_playback_queue(handler_input.request_envelope.session.user.user_id, playback_items)
+            queue_items = [QueueItem(idx=i,
+                                     media_type=get_media_type_enum(item_info),
+                                     media_item_id=item_info["Id"]) for i, item_info in enumerate(recently_added_items)]
+
+            playback = set_playback_queue(user_id, queue_items)
 
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
                                   jellyfin_token=user.jellyfin_token,
                                   handler_input=handler_input,
-                                  playback=playback,
-                                  idx=0)
+                                  queue_item=playback.current_item)
 
         return handler_input.response_builder.response
 
@@ -447,13 +457,13 @@ class ResumeIntentHandler(BaseHandler):
         user_id = handler_input.request_envelope.context.system.user.user_id
 
         playback = get_playback(user_id)
-        if playback.current_idx < len(playback.queue):
+        if playback.current_item is not None:
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
                                   jellyfin_token=user.jellyfin_token,
                                   handler_input=handler_input,
-                                  playback=playback,
-                                  idx=playback.current_idx)
+                                  queue_item=playback.current_item,
+                                  offset=playback.offset)
         else:
             text = translation.gettext("What can I play?")
             handler_input.response_builder.add_directive(StopDirective()).speak(text)
@@ -485,6 +495,7 @@ class LoopAllOnIntent(BaseHandler):
 
         playback = get_playback(user_id)
         playback.loop_all = True
+        playback.loop_single = False
         playback.save()
 
         return handler_input.response_builder.response
@@ -507,23 +518,19 @@ class NextIntentHandler(BaseHandler):
         user_id = handler_input.request_envelope.context.system.user.user_id
 
         playback = get_playback(user_id)
+        next_item = playback.next()
+        playback.current_item = next_item
+        playback.save()
 
-        if playback.queue and (playback.current_idx + 1 < len(playback.queue) or playback.loop_all):
-            playback.current_idx = (playback.current_idx + 1) % len(playback.queue)
-            playback.save()
-
+        if next_item:
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
                                   jellyfin_token=user.jellyfin_token,
                                   handler_input=handler_input,
-                                  playback=playback,
-                                  idx=playback.current_idx)
+                                  queue_item=next_item,
+                                  offset=0)
         else:
-            if playback.current_idx + 1 >= len(playback.queue):
-                text = translation.gettext("You reached the end of the playback queue.")
-                handler_input.response_builder.add_directive(StopDirective()).speak(text)
-            else:
-                handler_input.response_builder.add_directive(StopDirective())
+            handler_input.response_builder.add_directive(StopDirective())
 
         return handler_input.response_builder.response
 
@@ -545,23 +552,19 @@ class PreviousIntentHandler(BaseHandler):
         user_id = handler_input.request_envelope.context.system.user.user_id
 
         playback = get_playback(user_id)
+        prev_item = playback.previous()
+        playback.current_item = prev_item
+        playback.save()
 
-        if playback.queue and (playback.current_idx > 0 or playback.loop_all):
-            playback.current_idx = (playback.current_idx - 1) % len(playback.queue)
-            playback.save()
-
+        if prev_item:
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
                                   jellyfin_token=user.jellyfin_token,
                                   handler_input=handler_input,
-                                  playback=playback,
-                                  idx=playback.current_idx)
+                                  queue_item=prev_item,
+                                  offset=0)
         else:
-            if playback.current_idx == 0:
-                text = translation.gettext("You reached the start of the playback queue.")
-                handler_input.response_builder.add_directive(StopDirective()).speak(text)
-            else:
-                handler_input.response_builder.add_directive(StopDirective())
+            handler_input.response_builder.add_directive(StopDirective())
 
         return handler_input.response_builder.response
 
@@ -575,6 +578,7 @@ class RepeatSingleOnIntent(BaseHandler):
 
         playback = get_playback(user_id)
         playback.loop_single = True
+        playback.loop_all = False
         playback.save()
 
         return handler_input.response_builder.response
@@ -589,7 +593,6 @@ class ShuffleOffIntentHandler(BaseHandler):
 
         playback = get_playback(user_id)
         playback.shuffle = False
-        playback.shuffle_idxs = []
         playback.save()
 
         return handler_input.response_builder.response
@@ -603,9 +606,7 @@ class ShuffleOnIntentHandler(BaseHandler):
         user_id = handler_input.request_envelope.context.system.user.user_id
 
         playback = get_playback(user_id)
-
         playback.shuffle = True
-        set_shuffle_queue_idxs(playback)
         playback.save()
 
         return handler_input.response_builder.response
@@ -629,13 +630,12 @@ class StartOverIntentHandler(BaseHandler):
 
         playback = get_playback(user_id)
 
-        if playback.queue:
+        if playback.current_item:
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
                                   jellyfin_token=user.jellyfin_token,
                                   handler_input=handler_input,
-                                  playback=playback,
-                                  idx=playback.current_idx)
+                                  queue_item=playback.current_item)
         else:
             text = translation.gettext("The playback queue is empty. Please try to add some media and try again.")
             handler_input.response_builder.add_directive(StopDirective()).speak(text)
