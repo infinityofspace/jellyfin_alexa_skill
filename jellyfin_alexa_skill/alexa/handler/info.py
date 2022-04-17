@@ -4,7 +4,7 @@ from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
 
-from jellyfin.api.client import JellyfinClient
+from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient
 from jellyfin_alexa_skill.alexa.handler.base import BaseHandler
 from jellyfin_alexa_skill.database.db import get_playback
 from jellyfin_alexa_skill.database.model.user import User

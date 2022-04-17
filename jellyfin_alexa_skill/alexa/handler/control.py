@@ -5,7 +5,7 @@ from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
 from ask_sdk_model.interfaces.audioplayer import StopDirective
 
-from database.db import get_playback, set_playback_queue
+from jellyfin_alexa_skill.database.db import get_playback, set_playback_queue
 from jellyfin_alexa_skill.alexa.handler.base import BaseHandler
 from jellyfin_alexa_skill.alexa.util import build_stream_response, get_similarity, best_matches_by_idx, \
     get_media_type_enum

@@ -4,7 +4,7 @@ from typing import Optional
 import peewee
 from peewee import CharField, IntegerField, BooleanField, DeferredForeignKey, ForeignKeyField
 
-from jellyfin.api.client import MediaType
+from jellyfin_alexa_skill.jellyfin.api.client import MediaType
 from jellyfin_alexa_skill.database.model.base import BaseModel, CharEnumField
 
 SHUFFLE_RANDOM_RANGE = (-424242, 424242)
