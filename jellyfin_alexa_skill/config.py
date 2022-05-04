@@ -43,11 +43,13 @@ VALID_ALEXA_REDIRECT_URLS_REGEX = re.compile(
 EN_TRANSLATION = gettext.translation("skill", localedir=Path(__file__).resolve().parent / "locales", languages=("en",))
 DE_TRANSLATION = gettext.translation("skill", localedir=Path(__file__).resolve().parent / "locales", languages=("de",))
 IT_TRANSLATION = gettext.translation("skill", localedir=Path(__file__).resolve().parent / "locales", languages=("it",))
+ES_TRANSLATION = gettext.translation("skill", localedir=Path(__file__).resolve().parent / "locales", languages=("es",))
 
 TRANSLATIONS = {
     "en-US": EN_TRANSLATION,
     "de-DE": DE_TRANSLATION,
-    "it-IT": IT_TRANSLATION
+    "it-IT": IT_TRANSLATION,
+    "es-ES": ES_TRANSLATION
 }
 
 

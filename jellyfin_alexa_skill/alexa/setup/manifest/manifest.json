@@ -17,7 +17,8 @@
       "locales": {
         "en-US": {},
         "de-DE": {},
-        "it-IT": {}
+        "it-IT": {},
+        "es-ES": {}
       }
     },
     "publishingInformation": {
@@ -55,6 +56,16 @@
             "Alexa chiedi a Jellyfin Player di riprodurre la playlist 'Musica Migliore'"
           ],
           "description": "Riproduci media dal tuo Server Jellyfin.\n\nSource: https://github.com/infinityofspace/jellyfin_alexa_skill"
+        },
+        "es-ES": {
+          "name": "Jellyfin Player",
+          "summary": "Reproduce música de tu servidor Jellyfin",
+          "examplePhrases": [
+            "Alexa pide a Jellyfin Player que reproduzca mi música favorita",
+            "Alexa pide a Jellyfin Player que reproduzca canciones de 'Artista'",
+            "Alexa pide a Jellyfin Player que reproduzca mi lista de reproducción 'Mejores Canciones'"
+          ],
+          "description": "Reproduce música de tu servidor Jellyfin.\n\nSource: https://github.com/infinityofspace/jellyfin_alexa_skill"
         }
       },
       "automaticClonedLocale": {
