@@ -78,7 +78,7 @@ class MarkFavoriteIntentHandler(BaseHandler):
         playback = get_playback(user_id)
 
         if playback.playing and playback.current_idx is not None:
-            current_media_id = playback.queue[playback.current_idx]
+            current_media_id = playback.queue[playback.current_idx]["id"]
             self.jellyfin_client.favorite(user_id=user.jellyfin_user_id,
                                           token=user.jellyfin_token,
                                           media_id=current_media_id)
@@ -108,7 +108,7 @@ class UnmarkFavoriteIntentHandler(BaseHandler):
         playback = get_playback(user_id)
 
         if playback.playing and playback.current_idx is not None:
-            current_media_id = playback.queue[playback.current_idx]
+            current_media_id = playback.queue[playback.current_idx]["id"]
             self.jellyfin_client.unfavorite(user_id=user.jellyfin_user_id,
                                             token=user.jellyfin_token,
                                             media_id=current_media_id)
