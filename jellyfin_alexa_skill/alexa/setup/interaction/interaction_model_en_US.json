@@ -213,7 +213,22 @@
             "What is the title of the music",
             "What is currently playing"
           ]
-        }
+        },
+        {
+					"name": "ShuffleIntent",
+					"samples": [
+						"Play my {media_type}",
+						"Play {media_type}",
+						"Play random {media_type}",
+						"Shuffle {media_type}"
+					],
+					"slots": [
+						{
+							"name": "media_type",
+							"type": "MediaType"
+						}
+					]
+				}
       ],
       "types": [
         {

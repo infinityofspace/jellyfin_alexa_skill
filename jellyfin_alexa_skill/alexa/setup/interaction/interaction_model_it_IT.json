@@ -231,6 +231,20 @@
                     ]
                 },
                 {
+					"name": "ShuffleIntent",
+					"samples": [
+						"Riproduci la mia {media_type}",
+						"Riproduci {media_type}",
+						"Shuffle {media_type}"
+					],
+					"slots": [
+						{
+							"name": "media_type",
+							"type": "MediaType"
+						}
+					]
+				},
+                {
                     "name": "AMAZON.NavigateHomeIntent",
                     "samples": []
                 }

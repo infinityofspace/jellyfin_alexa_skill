@@ -41,7 +41,7 @@ class PlayFavoritesIntentHandler(BaseHandler):
                                                        media_type=filter_media_type)
 
         if favorites:
-            playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
+            playback_items = [PlaybackItem(item.get("Id"), item.get("Name"), item.get("Artists"))
                               for item in favorites]
 
             user_id = handler_input.request_envelope.session.user.user_id

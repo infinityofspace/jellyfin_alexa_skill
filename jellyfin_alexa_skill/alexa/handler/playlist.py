@@ -49,7 +49,7 @@ class PlayPlaylistIntentHandler(BaseHandler):
                 text = translation.gettext("Sorry, this playlist does not exists anymore.")
                 handler_input.response_builder.speak(text)
             else:
-                playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
+                playback_items = [PlaybackItem(item.get("Id"), item.get("Name"), item.get("Artists"))
                                   for item in playlist_items]
 
                 playback = set_playback_queue(user_id, playback_items)

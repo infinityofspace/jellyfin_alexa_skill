@@ -217,7 +217,21 @@
             "Was ist der Titel des Videos",
             "Was spielt gerade"
           ]
-        }
+        },
+        {
+					"name": "ShuffleIntent",
+					"samples": [
+						"Spiele meine {media_type}",
+						"Spiele {media_type}",
+						"Shuffle {media_type}"
+					],
+					"slots": [
+						{
+							"name": "media_type",
+							"type": "MediaType"
+						}
+					]
+				}
       ],
       "types": [
         {

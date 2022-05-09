@@ -259,7 +259,25 @@
 						"Cual es el titulo de esta música",
 						"Que está sonando"
 					]
+				},
+				{
+					"name": "ShuffleIntent",
+					"samples": [
+						"Reproduce mis {media_type}",
+						"Reproduce mi {media_type}",
+						"Pon {media_type}",
+						"Reproduce {media_type} aleatoria",
+						"Pon {media_type} aleatoria",
+						"Shuffle"
+					],
+					"slots": [
+						{
+							"name": "media_type",
+							"type": "MediaType"
+						}
+					]
 				}
+
 			],
 			"types": [
 				{
@@ -269,7 +287,7 @@
 							"id": "media",
 							"name": {
 								"value": "medio",
-								"synonyms": ["archivo, archivos"]
+								"synonyms": ["archivo", "archivos"]
 							}
 						},
 						{
@@ -282,7 +300,7 @@
 							"id": "audio",
 							"name": {
 								"value": "canción",
-								"synonyms": ["música, canciones, audio"]
+								"synonyms": ["música", "canciones", "audio"]
 							}
 						}
 					]

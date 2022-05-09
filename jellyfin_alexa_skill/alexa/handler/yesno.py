@@ -62,10 +62,10 @@ class YesNoIntentHandler(BaseHandler):
                     handler_input.response_builder.speak(no_result_response_text)
                     return handler_input.response_builder.response
 
-                playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
+                playback_items = [PlaybackItem(item.get("Id"), item.get("Name"), item.get("Artists"))
                                   for item in items]
             else:
-                playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artist"])]
+                playback_items = [PlaybackItem(item.get("Id"), item.get("Name"), item.get("Artist"))]
 
             user_id = handler_input.request_envelope.context.system.user.user_id
             playback = set_playback_queue(user_id, playback_items, reset=True)
