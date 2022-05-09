@@ -64,7 +64,9 @@
 					"name": "PlayChannelIntent",
 					"samples": [
 						"Reproduce el canal {channel}",
-						"Reproduce la radio {channel}"
+						"Reproduce la radio {channel}",
+						"Pon el canal {channel}",
+						"Pon la radio {channel}"
 					],
 					"slots": [
 						{
@@ -78,7 +80,10 @@
 					"samples": [
 						"Reproduce la canción {song}",
 						"Reproduce la canción {song} de {musician}",
-						"Reproduce la canción {song} por {musician}"
+						"Reproduce la canción {song} por {musician}",
+						"Pon la canción {song}",
+						"Pon la canción {song} de {musician}",
+						"Pon la canción {song} por {musician}"
 					],
 					"slots": [
 						{
@@ -96,7 +101,10 @@
 					"samples": [
 						"Reproduce el álbum {album}",
 						"Reproduce el álbum {album} de {musician}",
-						"Reproduce el álbum {album} por {musician}"
+						"Reproduce el álbum {album} por {musician}",
+						"Pon el álbum {album}",
+						"Pon el álbum {album} de {musician}",
+						"Pon el álbum {album} por {musician}"
 					],
 					"slots": [
 						{
@@ -123,7 +131,9 @@
 					"name": "PlayArtistSongsIntent",
 					"samples": [
 						"Reproduce canciones de {musician}",
-						"Reproduce música de {musician}"
+						"Reproduce música de {musician}",
+						"Pon canciones de {musician}",
+						"Pon música de {musician}"
 					],
 					"slots": [
 						{
@@ -136,10 +146,23 @@
 					"name": "PlayLastAddedIntent",
 					"samples": [
 						"Reproduce las últimas {media_type}",
+						"Reproduce la última {media_type}",
+						"Reproduce las últimas {media_type} añadidas",
+						"Reproduce la última {media_type} añadida",
 						"Reproduce los últimos {media_type}",
-						"Reproduce últimos añadidos {media_type}",
-						"Reproduce últimas añadidas {media_type}",
-						"Reproduce nuevos medios"
+						"Reproduce el último {media_type}",
+						"Reproduce los últimos {media_type} añadidos",
+						"Reproduce el último {media_type} añadido",
+						"Reproduce nuevos medios",
+						"Pon las últimas {media_type}",
+						"Pon la última {media_type}",
+						"Pon las últimas {media_type} añadidas",
+						"Pon la última {media_type} añadida",
+						"Pon los últimos {media_type}",
+						"Pon el último {media_type}",
+						"Pon los últimos {media_type} añadidos",
+						"Pon el último {media_type} añadido",
+						"Pon nuevos medios"
 					],
 					"slots": [
 						{
@@ -154,7 +177,11 @@
 						"Reproduce la lista {playlist}",
 						"Reproduce la lista de reproducción {playlist}",
 						"Reproduce mi lista {playlist}",
-						"Reproduce mi lista de reproducción {playlist}"
+						"Reproduce mi lista de reproducción {playlist}",
+						"Pon la lista {playlist}",
+						"Pon la lista de reproducción {playlist}",
+						"Pon mi lista {playlist}",
+						"Pon mi lista de reproducción {playlist}"
 					],
 					"slots": [
 						{
@@ -167,10 +194,19 @@
 					"name": "PlayFavoritesIntent",
 					"samples": [
 						"Reproduce mis {media_type} favoritos",
+						"Reproduce mi {media_type} favorita",
 						"Reproduce mis {media_type} favoritas",
 						"Reproduce mis {media_type} preferidos",
 						"Reproduce mis {media_type} preferidas",
-						"Reproduce mis favoritos"
+						"Reproduce mi {media_type} preferida",
+						"Reproduce mis favoritos",
+						"Pon mis {media_type} favoritos",
+						"Pon mi {media_type} favorita",
+						"Pon mis {media_type} favoritas",
+						"Pon mis {media_type} preferidos",
+						"Pon mis {media_type} preferidas",
+						"Pon mi {media_type} preferida",
+						"Pon mis favoritos"
 					],
 					"slots": [
 						{
@@ -232,7 +268,8 @@
 						{
 							"id": "media",
 							"name": {
-								"value": "medio"
+								"value": "medio",
+								"synonyms": ["archivo, archivos"]
 							}
 						},
 						{
@@ -244,8 +281,8 @@
 						{
 							"id": "audio",
 							"name": {
-								"value": "Audio",
-								"synonyms": ["música, canción"]
+								"value": "canción",
+								"synonyms": ["música, canciones, audio"]
 							}
 						}
 					]
