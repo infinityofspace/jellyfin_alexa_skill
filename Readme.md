@@ -57,6 +57,8 @@ from the outside, in this case the two services are exposed with a tunnel.
 - metadata:
     - show the metadata of the media (title and artist)
     - show cover art of the media
+- random shuffle:
+    - creates a random playlist from your media
 - other:
     - multi-language support (see [Supported languages](#supported-languages))
     - multi-user support (any user on the Jellyfin server can use the skill)
@@ -76,6 +78,7 @@ The skill has support for the following languages:
 - English
 - German
 - Italian
+- Spanish
 
 ## Skill speech examples
 
