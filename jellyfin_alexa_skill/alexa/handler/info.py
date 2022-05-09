@@ -24,9 +24,9 @@ class MediaInfoIntentHandler(BaseHandler):
         item = get_current_played_item(user_id)
 
         if item:
-            speech_text = translation.gettext("Currently playing {title} from {artists}.".format(title=item["title"],
+            speech_text = translation.gettext("Currently playing {title} from {artists}.").format(title=item["title"],
                                                                                                  artists=" ,".join(
-                                                                                                     item["artists"])))
+                                                                                                     item["artists"]))
         else:
             speech_text = translation.gettext("Currently no media is played.")
 
