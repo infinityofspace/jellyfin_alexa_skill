@@ -101,7 +101,7 @@ msgstr "Está sonando {title} de {artists}."
 
 #: jellyfin_alexa_skill/alexa/handler/info.py:32
 msgid "Currently no media is played."
-msgstr "Actualmente no ha nada reproduciéndose."
+msgstr "Actualmente no hay nada reproduciéndose."
 
 #: jellyfin_alexa_skill/alexa/handler/launch.py:39
 msgid "Welcome to Jellyfin Player skill, what can I play?"
