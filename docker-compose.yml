@@ -26,7 +26,7 @@ services:
       test: ["CMD", "wget", "--spider", "--tries=1", "http://localhost:1456/healthy"]
 
   skill_db:
-    image: 14.2-alpine3.15
+    image: postgres:14.2-alpine3.15
     container_name: skill-db
     restart: unless-stopped
     volumes:
