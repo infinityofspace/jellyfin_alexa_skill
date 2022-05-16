@@ -18,7 +18,7 @@ install_requires = [
 ]
 
 setup_requires = [
-    "Babel~=2.9.1",
+    "Babel>=2.9.1,<2.11.0",
 ]
 
 

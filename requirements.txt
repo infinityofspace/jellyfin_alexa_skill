@@ -6,4 +6,4 @@ peewee~=3.14.10
 gunicorn~=20.1.0
 Flask-WTF~=1.0.1
 requests~=2.27.1
-Babel~=2.9.1
+Babel~=2.10.1
