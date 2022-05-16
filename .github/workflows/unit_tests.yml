@@ -22,6 +22,7 @@ jobs:
       - name: Install requirements
         run: |
           pip install --upgrade pip
+          pip install psycopg2-binary
           pip install -r requirements.txt
           pip install flake8 pylint
 
@@ -51,6 +52,7 @@ jobs:
       - name: Install requirements
         run: |
           pip3 install --upgrade pip
+          pip install psycopg2-binary
           pip3 install -r requirements.txt
 
       - name: Build translations
@@ -81,6 +83,7 @@ jobs:
       - name: Install requirements
         run: |
           pip3 install --upgrade pip
+          pip install psycopg2-binary
           pip3 install -r requirements.txt
 
       - name: Build translations
