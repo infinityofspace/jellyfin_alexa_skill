@@ -1,9 +1,9 @@
 from enum import Enum
 from typing import Type
 
-from peewee import Model, SqliteDatabase, Field
+from peewee import Model, Field, DatabaseProxy
 
-db = SqliteDatabase(None)
+db = DatabaseProxy()
 
 
 class BaseModel(Model):

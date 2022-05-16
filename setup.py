@@ -13,7 +13,8 @@ install_requires = [
     "ask_smapi_model>=1.13.1,<1.15.0",
     "peewee~=3.14.4",
     "gunicorn~=20.1.0",
-    "Flask-WTF>=0.15.1,<1.1.0"
+    "Flask-WTF>=0.15.1,<1.1.0",
+    "psycopg2~=2.9.3"
 ]
 
 setup_requires = [

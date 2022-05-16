@@ -1,19 +1,29 @@
 import itertools
 import unittest
 
-from database.model.playback import Playback, QueueItem
-from jellyfin.api.client import MediaType
-from jellyfin_alexa_skill.database.db import connect_db, close_db, get_playback, clear_playback_queue, \
+from peewee import SqliteDatabase
+
+from jellyfin_alexa_skill.database.db import close_db, get_playback, clear_playback_queue, \
     set_playback_queue
 from jellyfin_alexa_skill.database.model.base import db
+from jellyfin_alexa_skill.database.model.playback import Playback, QueueItem
+from jellyfin_alexa_skill.database.model.user import User
+from jellyfin_alexa_skill.jellyfin.api.client import MediaType
 
 USER_ID = "123456id"
 
 
+def connect_db():
+    db.initialize(SqliteDatabase(":memory:"))
+
+    db.connect(reuse_if_open=True)
+
+    db.create_tables([User, Playback, QueueItem], safe=True)
+
+
 class TestDB(unittest.TestCase):
     def test_db_connection(self):
-        db_path = ":memory:"
-        connect_db(db_path)
+        connect_db()
 
         self.assertFalse(db.is_closed())
 
@@ -24,11 +34,9 @@ class TestDB(unittest.TestCase):
 
 class TestPlaybackModel(unittest.TestCase):
     def setUp(self) -> None:
-        db_path = ":memory:"
-        connect_db(db_path)
+        connect_db()
 
         self.playback = Playback.create(user_id=USER_ID)
-        self.playback.save()
         self.items = [QueueItem.create(playback=self.playback, idx=i, media_type=MediaType.AUDIO, item_id=f"abc{i}")
                       for i in range(10)]
 
@@ -125,42 +133,28 @@ class TestPlaybackModel(unittest.TestCase):
 
 
 class TestDBMethods(unittest.TestCase):
+    def setUp(self) -> None:
+        connect_db()
+
+        self.playback = Playback.create(user_id=USER_ID)
+        self.items = [QueueItem.create(playback=self.playback, idx=i, media_type=MediaType.AUDIO, item_id=f"abc{i}")
+                      for i in range(10)]
+
+    def tearDown(self) -> None:
+        db.close()
+
     def test_get_playback(self):
-        db_path = ":memory:"
-        connect_db(db_path)
-
-        playback = Playback.create(user_id=USER_ID)
-        playback.save()
-        items = [QueueItem.create(playback=playback, idx=i, media_type=MediaType.AUDIO, item_id=f"abc{i}")
-                 for i in range(10)]
-
         playback = get_playback(USER_ID)
         self.assertEqual(playback.user_id, playback.user_id)
 
-        db.close()
-
     def test_clear_playback(self):
-        db_path = ":memory:"
-        connect_db(db_path)
-
-        playback = Playback.create(user_id=USER_ID)
-        playback.save()
-        items = [QueueItem.create(playback=playback, idx=i, media_type=MediaType.AUDIO, item_id=f"abc{i}")
-                 for i in range(10)]
-
         clear_playback_queue(USER_ID)
 
-        items = list(QueueItem.select(QueueItem.playback == playback))
+        items = list(QueueItem.select(QueueItem.playback == self.playback))
         self.assertEqual(items, [])
 
-        db.close()
-
     def test_set_playback_queue(self):
-        db_path = ":memory:"
-        connect_db(db_path)
-
-        playback = Playback.create(user_id=USER_ID)
-        playback.save()
+        get_playback(USER_ID)
         items = [QueueItem(idx=i, media_type=MediaType.AUDIO, item_id=f"abc{i}")
                  for i in range(10)]
 
@@ -170,17 +164,7 @@ class TestDBMethods(unittest.TestCase):
         self.assertEqual(playback.offset, 0)
         self.assertEqual(playback.playing, False)
 
-        db.close()
-
     def test_set_playback_queue_empty(self):
-        db_path = ":memory:"
-        connect_db(db_path)
-
-        playback = Playback.create(user_id=USER_ID)
-        playback.save()
-        items = [QueueItem.create(playback=playback, idx=i, media_type=MediaType.AUDIO, item_id=f"abc{i}")
-                 for i in range(10)]
-
         playback = set_playback_queue(USER_ID, [])
 
         self.assertEqual(playback.current_item, None)
@@ -188,8 +172,6 @@ class TestDBMethods(unittest.TestCase):
         self.assertEqual(playback.playing, False)
         # there should be no items in the queue
         self.assertEqual(QueueItem.select().where(QueueItem.playback == playback).count(), 0)
-
-        db.close()
 
 
 if __name__ == "__main__":

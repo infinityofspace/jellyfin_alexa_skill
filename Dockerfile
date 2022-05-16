@@ -1,4 +1,4 @@
-FROM python:3.10-alpine3.14 AS build-image
+FROM python:3.10-alpine3.15 AS build-image
 
 RUN apk add --no-cache \
     gcc \
@@ -7,7 +7,8 @@ RUN apk add --no-cache \
     libffi-dev \
     openssl-dev \
     cargo \
-    g++
+    g++ \
+    libpq-dev
 
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
@@ -21,7 +22,7 @@ COPY . .
 RUN python3 setup.py install
 
 
-FROM python:3.10-alpine3.14
+FROM python:3.10-alpine3.15
 
 COPY --from=build-image /opt/venv /opt/venv
 
@@ -32,10 +33,8 @@ RUN apk add --no-cache binutils openssl-dev
 RUN mkdir -p /skill/config \
     && mkdir -p /skill/data
 
-ENV JELLYFIN_ALEXA_SKILL_CONFIG=/skill/config/skill.conf
-ENV JELLYFIN_ALEXA_SKILL_DATA=/skill/data
-
 ENTRYPOINT ["jellyfin_alexa_skill"]
+CMD ["/skill/config/skill.conf"]
 
 LABEL org.opencontainers.image.source="https://github.com/infinityofspace/jellyfin_alexa_skill"
 LABEL org.opencontainers.image.licenses="GPL-3.0"
