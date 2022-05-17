@@ -1,62 +1,75 @@
-#: jellyfin_alexa_skill/alexa/handler/channel.py:31
+#: jellyfin_alexa_skill/alexa/handler/channel.py:32
 msgid "Sorry, I can't find any channels with that name. Please try again."
 msgstr "Non trovo nessun canale con questo nome. Per favore riprova."
 
-#: jellyfin_alexa_skill/alexa/handler/channel.py:83
+#: jellyfin_alexa_skill/alexa/handler/channel.py:67
+#: jellyfin_alexa_skill/alexa/handler/control.py:235
+#: jellyfin_alexa_skill/alexa/handler/yesno.py:82
+msgid "I'm sorry, I can't play videos on this device."
+msgstr "Mi dispiace, non posso riprodurre video su questo dispositivo."
+
+#: jellyfin_alexa_skill/alexa/handler/channel.py:90
 msgid "Would you like to listen to {name} ?"
 msgstr "Ti piacerebbe ascoltare {name} ?"
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:35
+#: jellyfin_alexa_skill/alexa/handler/control.py:123
 msgid "Sorry, I can't find any songs for this search. Please try again."
-msgstr "Mi dispiace, on ho trovato nessuna canzone per questa ricerca. Per favore riprova."
+msgstr ""
+"Mi dispiace, on ho trovato nessuna canzone per questa ricerca. Per favore"
+" riprova."
 
-#: jellyfin_alexa_skill/alexa/handler/control.py:96
-#: jellyfin_alexa_skill/alexa/handler/control.py:176
-#: jellyfin_alexa_skill/alexa/handler/yesno.py:70
+#: jellyfin_alexa_skill/alexa/handler/control.py:97
+#: jellyfin_alexa_skill/alexa/handler/control.py:201
+#: jellyfin_alexa_skill/alexa/handler/control.py:283
+#: jellyfin_alexa_skill/alexa/handler/yesno.py:97
 msgid "by {artist}"
 msgstr "di {artist}"
 
-#: jellyfin_alexa_skill/alexa/handler/control.py:98
+#: jellyfin_alexa_skill/alexa/handler/control.py:99
+#: jellyfin_alexa_skill/alexa/handler/control.py:203
 msgid "Would you like to hear <break/> {title} {by_artist} ?"
 msgstr "Ti piacerebbe ascoltare <break/> {title} {by_artist} ?"
 
-#: jellyfin_alexa_skill/alexa/handler/control.py:120
+#: jellyfin_alexa_skill/alexa/handler/control.py:226
 msgid "Sorry, I can't find any videos for this search. Please try again."
-msgstr "Mi dispiace, non ho trovato nessun video per questa ricerca. Per favore riprova."
+msgstr ""
+"Mi dispiace, non ho trovato nessun video per questa ricerca. Per favore "
+"riprova."
 
-#: jellyfin_alexa_skill/alexa/handler/control.py:129
-msgid "I'm sorry, I can't play videos on this device."
-msgstr "Mi dispiace, non posso riprodurre video su questo dispositivo."
-
-#: jellyfin_alexa_skill/alexa/handler/control.py:178
+#: jellyfin_alexa_skill/alexa/handler/control.py:285
 msgid "Would you like to watch <break/> {title} {by_artist} ?"
 msgstr "Ti piacerebbe guardare <break/> {title} {by_artist} ?"
 
-#: jellyfin_alexa_skill/alexa/handler/control.py:200
+#: jellyfin_alexa_skill/alexa/handler/control.py:308
 msgid "Sorry, I can't find any songs with this artist. Please try again."
-msgstr "Mi dispiace, non ho trovato nessuna canzone di questo artista. Per favore riprova."
+msgstr ""
+"Mi dispiace, non ho trovato nessuna canzone di questo artista. Per favore"
+" riprova."
 
-#: jellyfin_alexa_skill/alexa/handler/control.py:282
+#: jellyfin_alexa_skill/alexa/handler/control.py:390
 msgid "Sorry, I couldn't find any recently added media."
 msgstr "Mi dispiace, non ho trovato nessun media recente."
 
-#: jellyfin_alexa_skill/alexa/handler/control.py:349
+#: jellyfin_alexa_skill/alexa/handler/control.py:458
 msgid "What can I play?"
 msgstr "Che cosa posso riprodurre?"
 
-#: jellyfin_alexa_skill/alexa/handler/control.py:414
+#: jellyfin_alexa_skill/alexa/handler/control.py:523
 msgid "You reached the end of the playback queue."
 msgstr "La lista di riproduzione è terminata."
 
-#: jellyfin_alexa_skill/alexa/handler/control.py:452
+#: jellyfin_alexa_skill/alexa/handler/control.py:561
 msgid "You reached the start of the playback queue."
 msgstr "La lista di riproduzione è ricominciata."
 
-#: jellyfin_alexa_skill/alexa/handler/control.py:531
+#: jellyfin_alexa_skill/alexa/handler/control.py:640
 msgid "The playback queue is empty. Please try to add some media and try again."
-msgstr "La lista di riproduzione è vuota. Prova ad aggiungere qualche media e riprova."
+msgstr ""
+"La lista di riproduzione è vuota. Prova ad aggiungere qualche media e "
+"riprova."
 
-#: jellyfin_alexa_skill/alexa/handler/error.py:28
+#: jellyfin_alexa_skill/alexa/handler/error.py:27
 msgid "Sorry, something went wrong. Please try again."
 msgstr "Mi dispiace, qualcosa è andato storto. Perfavore riprova."
 
@@ -85,31 +98,31 @@ msgstr "Non c'è nessun media in riproduzione."
 msgid "Removed from your favorites."
 msgstr "Rimosso dai tuoi preferiti."
 
-#: jellyfin_alexa_skill/alexa/handler/help.py:23
+#: jellyfin_alexa_skill/alexa/handler/help.py:22
 msgid ""
 "With this skill your can play media from your Jellyfin Server. Use 'Play "
 "Game of Live from Earth' or 'Play playlist this is number 42' to play "
 "some songs."
 msgstr ""
-"Con questa skill puoi riprodurre contenuti dal tuo Server Jellyfin. Usa 'Riproduci "
-"Game of Live from Earth' ooppure 'Riproduci playlist Best Rocks' per ascoltare "
-"qualche canzone."
+"Con questa skill puoi riprodurre contenuti dal tuo Server Jellyfin. Usa "
+"'Riproduci Game of Live from Earth' ooppure 'Riproduci playlist Best "
+"Rocks' per ascoltare qualche canzone."
 
-#: jellyfin_alexa_skill/alexa/handler/info.py:29
+#: jellyfin_alexa_skill/alexa/handler/info.py:28
 msgid "Currently playing {title} from {artists}."
 msgstr "Attualmente in riproduzione {title} di {artists}."
 
-#: jellyfin_alexa_skill/alexa/handler/info.py:32
+#: jellyfin_alexa_skill/alexa/handler/info.py:31
 msgid "Currently no media is played."
 msgstr "Non c'è nessun media in riproduzione."
+
+#: jellyfin_alexa_skill/alexa/handler/interface.py:24
+msgid "Sorry, this device does not support media playback."
+msgstr "Mi dispiace, questo dispositivo non supporta la riproduzione dei media."
 
 #: jellyfin_alexa_skill/alexa/handler/launch.py:39
 msgid "Welcome to Jellyfin Player skill, what can I play?"
 msgstr "Benevenuto su Jellyfin Player skill, che cosa posso riprodurre?"
-
-#: jellyfin_alexa_skill/alexa/handler/launch.py:60
-msgid "Sorry, this device does not support media playback."
-msgstr "Mi dispiace, questo dispositivo non supporta la riproduzione dei media."
 
 #: jellyfin_alexa_skill/alexa/handler/playlist.py:37
 msgid "Sorry, I couldn't find any playlist with this name. Please try again."
@@ -123,11 +136,16 @@ msgstr "Mi dispiace, questa playlist non esiste."
 msgid "Ok, I play the playlist {}."
 msgstr "Ok, Riproduco la playlist {}."
 
-#: jellyfin_alexa_skill/alexa/handler/yesno.py:72
+#: jellyfin_alexa_skill/alexa/handler/yesno.py:53
+#, fuzzy
+msgid "Sorry, I can't find any songs with that name. Please try again."
+msgstr "Non trovo nessun canale con questo nome. Per favore riprova."
+
+#: jellyfin_alexa_skill/alexa/handler/yesno.py:99
 msgid "Hmm. How about <break/> {title} {by_artist} ?"
 msgstr "Hmm. Cosa ne pensi di <break/> {title} {by_artist} ?"
 
-#: jellyfin_alexa_skill/alexa/handler/yesno.py:78
+#: jellyfin_alexa_skill/alexa/handler/yesno.py:107
 msgid "I'm all out of guesses.  Please try asking a different way."
 msgstr "Non ho altre idee.  Prova a chiedermelo in un altro modo."
 
