@@ -38,7 +38,7 @@ msgstr "Mi dispiace, non ho trovato nessuna canzone di questo artista. Per favor
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:282
 msgid "Sorry, I couldn't find any recently added media."
-msgstr ""Mi dispiace, non ho trovato nessun media recente."
+msgstr "Mi dispiace, non ho trovato nessun media recente."
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:349
 msgid "What can I play?"
