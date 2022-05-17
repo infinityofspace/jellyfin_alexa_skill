@@ -101,7 +101,7 @@ msgstr "Eliminado de tus favoritos."
 
 #: jellyfin_alexa_skill/alexa/handler/help.py:23
 msgid "With this skill your can play media from your Jellyfin Server. Use 'Play Game of Live from Earth' or 'Play playlist this is number 42' to play some songs."
-msgstr ""
+msgstr "Con esta skill puedes reproducir elementos de tu servidor Jellyfin. Di 'reproduce la canción Zapatillas de El Canto del Loco' o 'Reproduce la lista de reproducción canciones de los 90' para reproducir alguna canción."
 
 #: jellyfin_alexa_skill/alexa/handler/info.py:29
 msgid "Currently playing {title} from {artists}."
@@ -138,4 +138,3 @@ msgstr "Hmm. ¿Que te parece <break/> {title} {by_artist} ?"
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:78
 msgid "I'm all out of guesses.  Please try asking a different way."
 msgstr "Se me han acabado las ideas. Prueba a preguntármelo de otra manera."
-
