@@ -140,7 +140,7 @@ msgstr "Ok, Riproduco la playlist {}."
 
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:53
 msgid "Sorry, I can't find any songs with that name. Please try again."
-msgstr "Non trovo nessun canale con questo nome. Per favore riprova."
+msgstr ""
 
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:99
 msgid "Hmm. How about <break/> {title} {by_artist}?"
