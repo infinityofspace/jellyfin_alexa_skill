@@ -29,7 +29,9 @@ msgstr "Ti piacerebbe ascoltare {name} ?"
 #: jellyfin_alexa_skill/alexa/handler/control.py:35
 #: jellyfin_alexa_skill/alexa/handler/control.py:123
 msgid "Sorry, I can't find any songs for this search. Please try again."
-msgstr "Mi dispiace, on ho trovato nessuna canzone per questa ricerca. Per favore riprova."
+msgstr ""
+"Mi dispiace, on ho trovato nessuna canzone per questa ricerca. Per favore"
+" riprova."
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:97
 #: jellyfin_alexa_skill/alexa/handler/control.py:201
@@ -53,7 +55,9 @@ msgstr "Ti piacerebbe guardare <break/> {title} {by_artist} ?"
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:308
 msgid "Sorry, I can't find any songs with this artist. Please try again."
-msgstr "Mi dispiace, non ho trovato nessuna canzone di questo artista. Per favore riprova."
+msgstr ""
+"Mi dispiace, non ho trovato nessuna canzone di questo artista. Per favore"
+" riprova."
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:390
 msgid "Sorry, I couldn't find any recently added media."
@@ -73,7 +77,9 @@ msgstr "La lista di riproduzione è ricominciata."
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:640
 msgid "The playback queue is empty. Please try to add some media and try again."
-msgstr "La lista di riproduzione è vuota. Prova ad aggiungere qualche media e riprova."
+msgstr ""
+"La lista di riproduzione è vuota. Prova ad aggiungere qualche media e "
+"riprova."
 
 #: jellyfin_alexa_skill/alexa/handler/error.py:27
 msgid "Sorry, something went wrong. Please try again."
@@ -138,7 +144,7 @@ msgstr "Ok, Riproduco la playlist {}."
 
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:53
 msgid "Sorry, I can't find any songs with that name. Please try again."
-msgstr ""
+msgstr "Non trovo nessun canale con questo nome. Per favore riprova."
 
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:99
 msgid "Hmm. How about <break/> {title} {by_artist} ?"
@@ -147,4 +153,3 @@ msgstr "Hmm. Cosa ne pensi di <break/> {title} {by_artist} ?"
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:107
 msgid "I'm all out of guesses.  Please try asking a different way."
 msgstr "Non ho altre idee.  Prova a chiedermelo in un altro modo."
-

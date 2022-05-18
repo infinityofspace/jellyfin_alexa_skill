@@ -138,7 +138,7 @@ msgstr "Ok, ich spiele die Playlist {}"
 
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:53
 msgid "Sorry, I can't find any songs with that name. Please try again."
-msgstr ""
+msgstr "Leider kann ich keinen Kanal oder Radio mit diesem Namen finden. Bitte versuche es erneut."
 
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:99
 msgid "Hmm. How about <break/> {title} {by_artist} ?"
@@ -147,4 +147,3 @@ msgstr "Hmm, wie wäre es mit <break/> {title} {by_artist} ?"
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:107
 msgid "I'm all out of guesses.  Please try asking a different way."
 msgstr "Ich habe keine Vermutungen mehr. Bitte versuchen Sie, auf eine andere Art und Weise zu fragen."
-

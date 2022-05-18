@@ -22,6 +22,12 @@ msgstr "Disculpa, no puedo encontrar ningún canal con ese nombre. Inténtalo de
 msgid "I'm sorry, I can't play videos on this device."
 msgstr "Lo siento, no puedo reproducir vídeos en este dispositivo."
 
+#: jellyfin_alexa_skill/alexa/handler/channel.py:67
+#: jellyfin_alexa_skill/alexa/handler/control.py:235
+#: jellyfin_alexa_skill/alexa/handler/yesno.py:82
+msgid "I'm sorry, I can't play videos on this device."
+msgstr "Lo siento, no puedo reproducir vídeos en este dispositivo."
+
 #: jellyfin_alexa_skill/alexa/handler/channel.py:90
 msgid "Would you like to listen to {name} ?"
 msgstr "¿Querrías escuchar a {name} ?"
@@ -138,7 +144,7 @@ msgstr "De acuerdo, reproduzco la lista {}."
 
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:53
 msgid "Sorry, I can't find any songs with that name. Please try again."
-msgstr ""
+msgstr "Disculpa, no puedo encontrar ningún canal con ese nombre. Inténtalo de nuevo."
 
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:99
 msgid "Hmm. How about <break/> {title} {by_artist} ?"
@@ -147,4 +153,3 @@ msgstr "Hmm. ¿Que te parece <break/> {title} {by_artist} ?"
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:107
 msgid "I'm all out of guesses.  Please try asking a different way."
 msgstr "Se me han acabado las ideas. Prueba a preguntármelo de otra manera."
-
