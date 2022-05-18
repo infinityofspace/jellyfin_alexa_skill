@@ -39,7 +39,6 @@ class CompileCatalogCommand(compile_catalog):
 class ExtractMessagesCommand(extract_messages):
     def initialize_options(self):
         extract_messages.initialize_options(self)
-        self.omit_header = True
         self.input_dirs = "jellyfin_alexa_skill"
         self.output_file = "jellyfin_alexa_skill/locales/base.pot"
 
@@ -47,7 +46,6 @@ class ExtractMessagesCommand(extract_messages):
 class UpdateCatalogCommand(update_catalog):
     def initialize_options(self):
         update_catalog.initialize_options(self)
-        self.omit_header = True
         self.output_dir = "jellyfin_alexa_skill/locales"
         self.domain = "skill"
         self.input_file = "jellyfin_alexa_skill/locales/base.pot"

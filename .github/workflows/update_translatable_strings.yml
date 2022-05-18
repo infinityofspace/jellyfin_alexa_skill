@@ -27,7 +27,7 @@ jobs:
 
       - name: Update language specific po files
         run: |
-          python3 setup.py update_catalog
+          python3 setup.py update_catalog --no-wrap
 
       - name: Make pull request
         uses: peter-evans/create-pull-request@v4
