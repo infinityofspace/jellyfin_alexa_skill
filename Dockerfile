@@ -3,11 +3,11 @@ FROM python:3.10-alpine3.14 AS build-image
 RUN apk add --no-cache \
     gcc \
     musl-dev \
-    python3-dev \
     libffi-dev \
     openssl-dev \
     cargo \
     g++ \
+    git \
     && if [[ $(uname -m) == armv6* ||  $(uname -m) == armv7* ]]; then \
           mkdir -p ~/.cargo/registry/index \
           && cd ~/.cargo/registry/index \
