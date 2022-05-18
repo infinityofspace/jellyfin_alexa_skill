@@ -1,3 +1,17 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: jellyfin-alexa-skill\n"
+"X-Crowdin-Project-ID: 515640\n"
+"X-Crowdin-Language: it\n"
+"X-Crowdin-File: /[infinityofspace.jellyfin_alexa_skill] main/jellyfin_alexa_skill/locales/en/LC_MESSAGES/skill.po\n"
+"X-Crowdin-File-ID: 12\n"
+"Project-Id-Version: jellyfin-alexa-skill\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Italian\n"
+"Language: it_IT\n"
+"PO-Revision-Date: 2022-05-18 11:16\n"
+
 #: jellyfin_alexa_skill/alexa/handler/channel.py:32
 msgid "Sorry, I can't find any channels with that name. Please try again."
 msgstr "Non trovo nessun canale con questo nome. Per favore riprova."
@@ -33,9 +47,7 @@ msgstr "Ti piacerebbe ascoltare <break/> {title} {by_artist} ?"
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:226
 msgid "Sorry, I can't find any videos for this search. Please try again."
-msgstr ""
-"Mi dispiace, non ho trovato nessun video per questa ricerca. Per favore "
-"riprova."
+msgstr "Mi dispiace, non ho trovato nessun video per questa ricerca. Per favore riprova."
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:285
 msgid "Would you like to watch <break/> {title} {by_artist} ?"
@@ -99,14 +111,8 @@ msgid "Removed from your favorites."
 msgstr "Rimosso dai tuoi preferiti."
 
 #: jellyfin_alexa_skill/alexa/handler/help.py:22
-msgid ""
-"With this skill your can play media from your Jellyfin Server. Use 'Play "
-"Game of Live from Earth' or 'Play playlist this is number 42' to play "
-"some songs."
-msgstr ""
-"Con questa skill puoi riprodurre contenuti dal tuo Server Jellyfin. Usa "
-"'Riproduci Game of Live from Earth' ooppure 'Riproduci playlist Best "
-"Rocks' per ascoltare qualche canzone."
+msgid "With this skill your can play media from your Jellyfin Server. Use 'Play Game of Live from Earth' or 'Play playlist this is number 42' to play some songs."
+msgstr "Con questa skill puoi riprodurre contenuti dal tuo Server Jellyfin. Usa 'Riproduci Game of Live from Earth' ooppure 'Riproduci playlist Best Rocks' per ascoltare qualche canzone."
 
 #: jellyfin_alexa_skill/alexa/handler/info.py:28
 msgid "Currently playing {title} from {artists}."
@@ -137,7 +143,6 @@ msgid "Ok, I play the playlist {}."
 msgstr "Ok, Riproduco la playlist {}."
 
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:53
-#, fuzzy
 msgid "Sorry, I can't find any songs with that name. Please try again."
 msgstr "Non trovo nessun canale con questo nome. Per favore riprova."
 
@@ -148,4 +153,3 @@ msgstr "Hmm. Cosa ne pensi di <break/> {title} {by_artist} ?"
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:107
 msgid "I'm all out of guesses.  Please try asking a different way."
 msgstr "Non ho altre idee.  Prova a chiedermelo in un altro modo."
-
