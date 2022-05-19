@@ -19,7 +19,7 @@ jobs:
 
       - name: Install setup requirements
         run: |
-          pip install Babel
+          pip install -r requirements.txt
 
       - name: Extract translatable strings
         run: |

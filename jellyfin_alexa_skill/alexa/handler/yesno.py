@@ -94,7 +94,7 @@ class YesNoIntentHandler(BaseHandler):
             if len(artists) > 0:
                 by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
 
-            request_text = translation.gettext("Hmm. How about <break/> {title} {by_artist} ?".format(
+            request_text = translation.gettext("Hmm. How about <break/> {title} {by_artist}?".format(
                 title=item['Name'],
                 by_artist=by_artist))
 

@@ -1,5 +1,4 @@
 import configparser
-import gettext
 import ipaddress
 import re
 from pathlib import Path
@@ -40,30 +39,24 @@ VALID_ALEXA_REDIRECT_URLS_REGEX = re.compile(
     r"https://((pitangui|layla)\.amazon\.com|alexa\.amazon\.co\.jp)/spa/skill/account-linking-status\.html\?vendorId=.+"
 )
 
-EN_TRANSLATION = gettext.translation("skill", localedir=Path(__file__).resolve().parent / "locales", languages=("en",))
-DE_TRANSLATION = gettext.translation("skill", localedir=Path(__file__).resolve().parent / "locales", languages=("de",))
-IT_TRANSLATION = gettext.translation("skill", localedir=Path(__file__).resolve().parent / "locales", languages=("it",))
-ES_TRANSLATION = gettext.translation("skill", localedir=Path(__file__).resolve().parent / "locales", languages=("es",))
-
-TRANSLATIONS = {
-    "en-US": EN_TRANSLATION,
-    "de-DE": DE_TRANSLATION,
-    "it-IT": IT_TRANSLATION,
-    "es-ES": ES_TRANSLATION,
-}
-
-
-def get_translation(language_code: str) -> gettext.GNUTranslations:
-    """
-    Get the translation for the given language code. If the language code is not supported, the default translation
-    for locale en-US is returned.
-
-    :param language_code: the language code
-
-    :return: the translation
-    """
-
-    return TRANSLATIONS.get(language_code, EN_TRANSLATION)
+SUPPORTED_LANGUAGES = [
+    "ar-SA",
+    "de-DE",
+    "en-AU",
+    "en-CA",
+    "en-GB",
+    "en-IN",
+    "en-US",
+    "es-ES",
+    "es-MX",
+    "es-US",
+    "fr-CA",
+    "fr-FR",
+    "hi-IN",
+    "it-IT",
+    "ja-JP",
+    "pt-BR"
+]
 
 
 def get_config(path: Path) -> configparser.ConfigParser:

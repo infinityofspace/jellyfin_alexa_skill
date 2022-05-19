@@ -8,7 +8,14 @@ RUN apk add --no-cache \
     openssl-dev \
     cargo \
     g++ \
-    libpq-dev
+    libpq-dev \
+    git \
+    && if [[ $(uname -m) == armv6* ||  $(uname -m) == armv7* ]]; then \
+          mkdir -p ~/.cargo/registry/index \
+          && cd ~/.cargo/registry/index \
+          && git clone --bare https://github.com/rust-lang/crates.io-index.git github.com-1285ae84e5963aae; \
+        fi
+        # workaround for cryptography arm build issue: see https://github.com/pyca/cryptography/issues/6673
 
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"

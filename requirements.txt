@@ -1,6 +1,6 @@
 flask-ask-sdk~=1.0.0
 ask-smapi-sdk~=1.0.0
-ask-smapi-model~=1.14.4
+ask-smapi-model~=1.14.5
 peewee~=3.14.10
 gunicorn~=20.1.0
 Flask-WTF~=1.0.1

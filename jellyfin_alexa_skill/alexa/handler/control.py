@@ -99,7 +99,7 @@ class PlaySongIntentHandler(BaseHandler):
         if len(artists) > 0:
             by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
 
-        request_text = translation.gettext("Would you like to hear <break/> {title} {by_artist} ?".format(
+        request_text = translation.gettext("Would you like to hear <break/> {title} {by_artist}?".format(
             title=top_matches[0]['Name'],
             by_artist=by_artist))
 
@@ -204,7 +204,7 @@ class PlayAlbumIntentHandler(BaseHandler):
         if len(artists) > 0:
             by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
 
-        request_text = translation.gettext("Would you like to hear <break/> {title} {by_artist} ?".format(
+        request_text = translation.gettext("Would you like to hear <break/> {title} {by_artist}?".format(
             title=top_matches[0]['Name'],
             by_artist=by_artist))
 
@@ -289,7 +289,7 @@ class PlayVideoIntentHandler(BaseHandler):
         if len(artists) > 0:
             by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
 
-        request_text = translation.gettext("Would you like to watch <break/> {title} {by_artist} ?".format(
+        request_text = translation.gettext("Would you like to watch <break/> {title} {by_artist}?".format(
             title=top_matches[0]['Name'],
             by_artist=by_artist))
 

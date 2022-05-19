@@ -13,14 +13,6 @@
 			}
 		},
 		"manifestVersion": "1.0",
-		"privacyAndCompliance": {
-			"locales": {
-				"en-US": {},
-				"de-DE": {},
-				"it-IT": {},
-				"es-ES": {}
-			}
-		},
 		"publishingInformation": {
 			"name": "jellyfin",
 			"category": "STREAMING_SERVICE",
@@ -36,45 +28,7 @@
 						"Alexa ask Jellyfin Player play my playlist 'Best Music'"
 					],
 					"description": "Play media from your Jellyfin server.\n\nSource: https://github.com/infinityofspace/jellyfin_alexa_skill"
-				},
-				"de-DE": {
-					"name": "Jellyfin Player",
-					"summary": "Spiele Medien von deinem Jellyfin Server",
-					"examplePhrases": [
-						"Alexa sage Jellyfin Player spiele meine Lieblingsmusik",
-						"Alexa sage Jellyfin Player spiele Songs von 'Interpret'",
-						"Alexa sage Jellyfin Player spiele meine Playlist 'Beste Musik'"
-					],
-					"description": "Spiele Medien von deinem Jellyfin Server.\n\nQuellcode: https://github.com/infinityofspace/jellyfin_alexa_skill"
-				},
-				"it-IT": {
-					"name": "Jellyfin Player",
-					"summary": "Riproduci media dal tuo Jellyfin Server",
-					"examplePhrases": [
-						"Alexa chiedi a Jellyfin Player di riprodurre la mia musica",
-						"Alexa chiedi a Jellyfin Player di riprodurre la mia canzoni di 'Artist'",
-						"Alexa chiedi a Jellyfin Player di riprodurre la playlist 'Musica Migliore'"
-					],
-					"description": "Riproduci media dal tuo Server Jellyfin.\n\nSource: https://github.com/infinityofspace/jellyfin_alexa_skill"
-				},
-				"es-ES": {
-					"name": "Jellyfin Player",
-					"summary": "Reproduce medios de tu servidor Jellyfin",
-					"examplePhrases": [
-						"Alexa pide a Jellyfin Player reproduce mi música favorita",
-						"Alexa pide a Jellyfin Player reproduce canciones de 'Artista'",
-						"Alexa pide a Jellyfin Player reproduce mi lista de reproducción 'Mejores Canciones'"
-					],
-					"description": "Reproduce medios de tu servidor Jellyfin .\n\nFuente: https://github.com/infinityofspace/jellyfin_alexa_skill"
 				}
-			},
-			"automaticClonedLocale": {
-				"locales": [
-					{
-						"source": "en-US",
-						"targets": ["en-AU", "en-CA", "en-IN", "en-GB"]
-					}
-				]
 			},
 			"testingInstructions": ""
 		}
