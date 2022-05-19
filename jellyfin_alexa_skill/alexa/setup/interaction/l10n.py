@@ -40,7 +40,7 @@ def internationalize_interaction_model(interaction_model: InteractionModelData) 
     locales_path = Path(str(pkg_resources.path(jellyfin_alexa_skill, ""))) / "locales"
 
     for language in SUPPORTED_LANGUAGES:
-        translations[language] = gettext.translation("manifest",
+        translations[language] = gettext.translation("interaction_model",
                                                      localedir=locales_path,
                                                      languages=(language.replace("-", "_"),))
 
