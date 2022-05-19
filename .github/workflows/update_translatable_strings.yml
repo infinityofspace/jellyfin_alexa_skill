@@ -19,7 +19,7 @@ jobs:
 
       - name: Install setup requirements
         run: |
-          pip install Babel
+          pip install -r requirements.txt
 
       - name: Extract translatable strings
         run: |
@@ -27,7 +27,7 @@ jobs:
 
       - name: Update language specific po files
         run: |
-          python3 setup.py update_catalog --no-wrap
+          python3 setup.py update_catalog
 
       - name: Make pull request
         uses: peter-evans/create-pull-request@v4
