@@ -1,0 +1,152 @@
+
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-05-19 20:54+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en_GB\n"
+"Language-Team: en_GB <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: jellyfin_alexa_skill/alexa/handler/channel.py:32
+msgid "Sorry, I can't find any channels with that name. Please try again."
+msgstr "Sorry, I can't find any channels with that name. Please try again."
+
+#: jellyfin_alexa_skill/alexa/handler/channel.py:67
+#: jellyfin_alexa_skill/alexa/handler/control.py:235
+#: jellyfin_alexa_skill/alexa/handler/yesno.py:82
+msgid "I'm sorry, I can't play videos on this device."
+msgstr "I'm sorry, I can't play videos on this device."
+
+#: jellyfin_alexa_skill/alexa/handler/channel.py:90
+msgid "Would you like to listen to {name}?"
+msgstr "Would you like to listen to {name}?"
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:35
+#: jellyfin_alexa_skill/alexa/handler/control.py:123
+msgid "Sorry, I can't find any songs for this search. Please try again."
+msgstr "Sorry, I can't find any songs for this search. Please try again."
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:97
+#: jellyfin_alexa_skill/alexa/handler/control.py:201
+#: jellyfin_alexa_skill/alexa/handler/control.py:283
+#: jellyfin_alexa_skill/alexa/handler/yesno.py:97
+msgid "by {artist}"
+msgstr "by {artist}"
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:99
+#: jellyfin_alexa_skill/alexa/handler/control.py:203
+msgid "Would you like to hear <break/> {title} {by_artist}?"
+msgstr "Would you like to hear <break/> {title} {by_artist}?"
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:226
+msgid "Sorry, I can't find any videos for this search. Please try again."
+msgstr "Sorry, I can't find any videos for this search. Please try again."
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:285
+msgid "Would you like to watch <break/> {title} {by_artist}?"
+msgstr "Would you like to watch <break/> {title} {by_artist}?"
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:308
+msgid "Sorry, I can't find any songs with this artist. Please try again."
+msgstr "Sorry, I can't find any songs with this artist. Please try again."
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:390
+msgid "Sorry, I couldn't find any recently added media."
+msgstr "Sorry, I couldn't find any recently added media."
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:458
+msgid "What can I play?"
+msgstr "What can I play?"
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:523
+msgid "You reached the end of the playback queue."
+msgstr "You reached the end of the playback queue."
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:561
+msgid "You reached the start of the playback queue."
+msgstr "You reached the start of the playback queue."
+
+#: jellyfin_alexa_skill/alexa/handler/control.py:640
+msgid "The playback queue is empty. Please try to add some media and try again."
+msgstr "The playback queue is empty. Please try to add some media and try again."
+
+#: jellyfin_alexa_skill/alexa/handler/error.py:27
+msgid "Sorry, something went wrong. Please try again."
+msgstr "Sorry, something went wrong. Please try again."
+
+#: jellyfin_alexa_skill/alexa/handler/event.py:114
+msgid "Something went wrong during media playback. Please try again."
+msgstr "Something went wrong during media playback. Please try again."
+
+#: jellyfin_alexa_skill/alexa/handler/fallback.py:22
+msgid "Sorry, I could not understand that. Please try again."
+msgstr "Sorry, I could not understand that. Please try again."
+
+#: jellyfin_alexa_skill/alexa/handler/favorite.py:57
+msgid "Sorry, you don't have any favorite media."
+msgstr "Sorry, you don't have any favorite media."
+
+#: jellyfin_alexa_skill/alexa/handler/favorite.py:86
+msgid "Added to your favorites."
+msgstr "Added to your favorites."
+
+#: jellyfin_alexa_skill/alexa/handler/favorite.py:88
+#: jellyfin_alexa_skill/alexa/handler/favorite.py:118
+msgid "There is currently no media playing."
+msgstr "There is currently no media playing."
+
+#: jellyfin_alexa_skill/alexa/handler/favorite.py:116
+msgid "Removed from your favorites."
+msgstr "Removed from your favorites."
+
+#: jellyfin_alexa_skill/alexa/handler/help.py:22
+msgid "With this skill your can play media from your Jellyfin Server. Use 'Play Game of Live from Earth' or 'Play playlist this is number 42' to play some songs."
+msgstr "With this skill your can play media from your Jellyfin Server. Use 'Play Game of Live from Earth' or 'Play playlist this is number 42' to play some songs."
+
+#: jellyfin_alexa_skill/alexa/handler/info.py:28
+msgid "Currently playing {title} from {artists}."
+msgstr "Currently playing {title} from {artists}."
+
+#: jellyfin_alexa_skill/alexa/handler/info.py:31
+msgid "Currently no media is played."
+msgstr "Currently no media is played."
+
+#: jellyfin_alexa_skill/alexa/handler/interface.py:24
+msgid "Sorry, this device does not support media playback."
+msgstr "Sorry, this device does not support media playback."
+
+#: jellyfin_alexa_skill/alexa/handler/launch.py:39
+msgid "Welcome to Jellyfin Player skill, what can I play?"
+msgstr "Welcome to Jellyfin Player skill, what can I play?"
+
+#: jellyfin_alexa_skill/alexa/handler/playlist.py:37
+msgid "Sorry, I couldn't find any playlist with this name. Please try again."
+msgstr "Sorry, I couldn't find any playlist with this name. Please try again."
+
+#: jellyfin_alexa_skill/alexa/handler/playlist.py:49
+msgid "Sorry, this playlist does not exists anymore."
+msgstr "Sorry, this playlist does not exists anymore."
+
+#: jellyfin_alexa_skill/alexa/handler/playlist.py:64
+msgid "Ok, I play the playlist {}."
+msgstr "Ok, I play the playlist {}."
+
+#: jellyfin_alexa_skill/alexa/handler/yesno.py:53
+msgid "Sorry, I can't find any songs with that name. Please try again."
+msgstr "Sorry, I can't find any songs with that name. Please try again."
+
+#: jellyfin_alexa_skill/alexa/handler/yesno.py:99
+msgid "Hmm. How about <break/> {title} {by_artist}?"
+msgstr "Hmm. How about <break/> {title} {by_artist}?"
+
+#: jellyfin_alexa_skill/alexa/handler/yesno.py:107
+msgid "I'm all out of guesses.  Please try asking a different way."
+msgstr "I'm all out of guesses.  Please try asking a different way."
+
