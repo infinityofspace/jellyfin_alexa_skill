@@ -1,13 +1,16 @@
 import gettext
 from pathlib import Path
 
+from jellyfin_alexa_skill import __file__ as package_root
 from jellyfin_alexa_skill.config import SUPPORTED_LANGUAGES
 
 TRANSLATIONS = {}
 
+locales_path = Path(package_root).parent / "locales"
+
 for language in SUPPORTED_LANGUAGES:
     TRANSLATIONS[language] = gettext.translation("skill",
-                                                 localedir=Path(__file__).resolve().parent / "locales",
+                                                 localedir=locales_path,
                                                  languages=(language.replace("-", "_"),))
 
 DEFAULT_LANGUAGE = "en-US"

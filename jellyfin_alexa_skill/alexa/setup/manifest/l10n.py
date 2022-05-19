@@ -5,7 +5,7 @@ from pathlib import Path
 from ask_sdk_core.serialize import DefaultSerializer
 from ask_smapi_model.v1.skill.manifest import SkillManifestEnvelope
 
-import jellyfin_alexa_skill
+from jellyfin_alexa_skill import __file__ as package_root
 from jellyfin_alexa_skill.alexa.setup import manifest as manifest_module
 from jellyfin_alexa_skill.config import SUPPORTED_LANGUAGES
 
@@ -47,7 +47,7 @@ def build_pot_file_str() -> str:
 def internationalize_manifest(manifest: SkillManifestEnvelope) -> SkillManifestEnvelope:
     translations = {}
 
-    locales_path = Path(str(pkg_resources.path(jellyfin_alexa_skill, ""))) / "locales"
+    locales_path = Path(package_root).parent / "locales"
 
     for language in SUPPORTED_LANGUAGES:
         translations[language] = gettext.translation("manifest",

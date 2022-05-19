@@ -7,7 +7,7 @@ from typing import List
 from ask_sdk_model_runtime import DefaultSerializer
 from ask_smapi_model.v1.skill.interaction_model import InteractionModelData
 
-import jellyfin_alexa_skill
+from jellyfin_alexa_skill import __file__ as package_root
 from jellyfin_alexa_skill.alexa.setup import interaction
 from jellyfin_alexa_skill.config import SUPPORTED_LANGUAGES
 
@@ -37,7 +37,7 @@ def internationalize_interaction_model(interaction_model: InteractionModelData) 
     interaction_models = []
     translations = {}
 
-    locales_path = Path(str(pkg_resources.path(jellyfin_alexa_skill, ""))) / "locales"
+    locales_path = Path(package_root).parent / "locales"
 
     for language in SUPPORTED_LANGUAGES:
         translations[language] = gettext.translation("interaction_model",
