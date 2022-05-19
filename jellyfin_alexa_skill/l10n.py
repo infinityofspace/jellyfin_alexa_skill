@@ -1,7 +1,7 @@
 import gettext
 from pathlib import Path
 
-from config import SUPPORTED_LANGUAGES
+from jellyfin_alexa_skill.config import SUPPORTED_LANGUAGES
 
 TRANSLATIONS = {}
 
