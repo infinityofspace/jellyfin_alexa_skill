@@ -1,0 +1,192 @@
+
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-05-19 20:55+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de_DE\n"
+"Language-Team: de_DE <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
+
+#: LoopAllOffIntent
+msgid "Loop off"
+msgstr "Wiederholung aus"
+
+#: LoopAllOnIntent
+msgid "Loop on"
+msgstr "Wiederholung an"
+
+#: RepeatSingleOnIntent
+msgid "Repeat the song"
+msgstr "Wiederhole den Song"
+
+#: RepeatSingleOnIntent
+msgid "Repeat the video"
+msgstr "Wiederhole das Video"
+
+#: RepeatSingleOnIntent
+msgid "Repeat that"
+msgstr "Wiederhole das"
+
+#: AMAZON.StartOverIntent
+msgid "Repeat from beginning"
+msgstr "Starte von vorne"
+
+#: AMAZON.StartOverIntent
+msgid "Start over"
+msgstr "Beginne erneut"
+
+#: PlayChannelIntent
+msgid "Play channel {channel}"
+msgstr "Spiele den Kanal {channel}"
+
+#: PlayChannelIntent
+msgid "Play radio {channel}"
+msgstr "Spiele das Radio {channel}"
+
+#: PlaySongIntent
+msgid "Play the song {song}"
+msgstr "Spiele den Song {song}"
+
+#: PlaySongIntent
+msgid "Play the song {song} from {musician}"
+msgstr "Spiele den Song {song} von {musician}"
+
+#: PlayAlbumIntent
+msgid "Play the album {album}"
+msgstr "Spiele das Album {album}"
+
+#: PlayAlbumIntent
+msgid "Play the album {album} by {musician}"
+msgstr "Spiele das Album {album} von {musician}"
+
+#: PlayVideoIntent
+msgid "Play the video {title}"
+msgstr "Spiele das Video {title}"
+
+#: PlayArtistSongsIntent
+msgid "Play songs from {musician}"
+msgstr "Spiele Songs von {musician}"
+
+#: PlayArtistSongsIntent
+msgid "Play music from {musician}"
+msgstr "Spiele Musik von {musician}"
+
+#: PlayLastAddedIntent
+msgid "Play last added {media_type}"
+msgstr "Spiele zuletzt hinzugefügte {media_type}"
+
+#: PlayLastAddedIntent
+msgid "Play recently added {media_type}"
+msgstr "Spiele neu hinzugefügte {media_type}"
+
+#: PlayLastAddedIntent
+msgid "Play newly added {media_type}"
+msgstr "Spiele neue {media_type}"
+
+#: PlayLastAddedIntent
+msgid "Play new media"
+msgstr "Spiele neue Medien"
+
+#: PlayPlaylistIntent
+msgid "Play the playlist {playlist}"
+msgstr "Spiele die Playlist {playlist}"
+
+#: PlayPlaylistIntent
+msgid "Play my playlist {playlist}"
+msgstr "Spiele meine Playlist {playlist}"
+
+#: PlayFavoritesIntent
+msgid "Play my favorite {media_type}"
+msgstr "Spiele meine lieblings {media_type}"
+
+#: PlayFavoritesIntent
+msgid "Play my {media_type} favorite"
+msgstr "Spiele meine {media_type} Favoriten"
+
+#: PlayFavoritesIntent
+msgid "Play my favorites"
+msgstr "Spiele meine Favoriten"
+
+#: MarkFavoriteIntent
+msgid "I like that"
+msgstr "Ich mag das"
+
+#: MarkFavoriteIntent
+msgid "I like the video"
+msgstr "Ich mag das Video"
+
+#: MarkFavoriteIntent
+msgid "I like the song"
+msgstr "Ich mag den Song"
+
+#: MarkFavoriteIntent
+msgid "I like the music"
+msgstr "Ich mag die Musik"
+
+#: MarkFavoriteIntent
+msgid "Add the video to my favorites"
+msgstr "Füge das Video zu meinen Favoriten hinzu"
+
+#: MarkFavoriteIntent
+msgid "Add the song to my favorites"
+msgstr "Füge den Song zu meinen Favoriten hinzu"
+
+#: UnmarkFavoriteIntent
+msgid "I don't like this"
+msgstr "Ich mag das nicht"
+
+#: UnmarkFavoriteIntent
+msgid "I don't like the video"
+msgstr "Ich mag das Video nicht"
+
+#: UnmarkFavoriteIntent
+msgid "I don't like song"
+msgstr "Ich mag den Song nicht"
+
+#: UnmarkFavoriteIntent
+msgid "I don't like music"
+msgstr "Ich mag die Musik nicht"
+
+#: UnmarkFavoriteIntent
+msgid "Remove the video from my favorites"
+msgstr "Entferne das Video von meinen Favoriten"
+
+#: UnmarkFavoriteIntent
+msgid "Remove the song from my favorites"
+msgstr "Entferne den Song von meinen Favoriten"
+
+#: MediaInfoIntent
+msgid "What is the name of the song"
+msgstr "Wie heißt der Song"
+
+#: MediaInfoIntent
+msgid "What is the name of the video"
+msgstr "Wie heißt das Video"
+
+#: MediaInfoIntent
+msgid "What is the name of the music"
+msgstr "Wie heißt die Musik"
+
+#: MediaInfoIntent
+msgid "What is the title of the song"
+msgstr "Was ist der Titel des Songs"
+
+#: MediaInfoIntent
+msgid "What is the title of the video"
+msgstr "Was ist der Titel des Videos"
+
+#: MediaInfoIntent
+msgid "What is the title of the music"
+msgstr "Was ist der Titel der Musik"
+
+#: MediaInfoIntent
+msgid "What is currently playing"
+msgstr "Was spielt gerade"
+
