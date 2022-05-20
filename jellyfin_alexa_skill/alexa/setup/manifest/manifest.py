@@ -9,11 +9,12 @@ from jellyfin_alexa_skill.alexa.setup.manifest.l10n import internationalize_mani
 
 BASE_NAME = "jellyfin"
 
-manifest = DefaultSerializer().deserialize(pkg_resources.read_text(manifest_module, "manifest.json"),
-                                           SkillManifestEnvelope)
-manifest.manifest.publishing_information.name = manifest.manifest.publishing_information.name + "_" + __version__
+SKILL_MANIFEST = DefaultSerializer().deserialize(pkg_resources.read_text(manifest_module, "manifest.json"),
+                                                 SkillManifestEnvelope)
+SKILL_MANIFEST.manifest.publishing_information.name = SKILL_MANIFEST.manifest.publishing_information.name \
+                                                      + "_" + __version__
 
-SKILL_MANIFEST = internationalize_manifest(manifest)
+internationalize_manifest(SKILL_MANIFEST)
 
 
 def get_skill_version(manifest: SkillManifestEnvelope) -> str:
