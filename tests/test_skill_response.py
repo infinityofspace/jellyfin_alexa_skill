@@ -8,11 +8,12 @@ from urllib.parse import urlparse, parse_qs
 import requests
 from flask import Flask
 from flask_ask_sdk.skill_adapter import SkillAdapter
+from peewee import SqliteDatabase
 
+from database.model.base import db
 from jellyfin_alexa_skill.alexa.handler import get_skill_builder
 from jellyfin_alexa_skill.alexa.web.skill import get_skill_blueprint
-from jellyfin_alexa_skill.database.db import connect_db
-from jellyfin_alexa_skill.database.model.playback import Playback
+from jellyfin_alexa_skill.database.model.playback import Playback, QueueItem
 from jellyfin_alexa_skill.database.model.user import User
 from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient
 from jellyfin_alexa_skill.main import GunicornApplication
@@ -126,6 +127,14 @@ SKILL_WEB_APP_PORT = 1456
 jellyfin_endpoint = "http://localhost:8096"
 
 
+def connect_db():
+    db.initialize(SqliteDatabase(":memory:"))
+
+    db.connect(reuse_if_open=True)
+
+    db.create_tables([User, Playback, QueueItem], safe=True)
+
+
 class TestSkillResponseControl(unittest.TestCase):
     skill_process = None
 
@@ -163,7 +172,7 @@ class TestSkillResponseControl(unittest.TestCase):
 
             app = Flask(__name__)
 
-            connect_db(DB_PATH)
+            connect_db()
 
             # insert dummy authenticated test user
             User.create(alexa_auth_token=ALEXA_AUTH_TOKEN,
@@ -193,7 +202,7 @@ class TestSkillResponseControl(unittest.TestCase):
         cls.skill_process.start()
 
         # connect this process to the db too
-        connect_db(DB_PATH)
+        connect_db()
 
         print("Start skill app on port {}".format(SKILL_WEB_APP_PORT))
 
