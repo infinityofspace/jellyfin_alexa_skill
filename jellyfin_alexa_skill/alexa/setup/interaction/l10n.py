@@ -33,7 +33,7 @@ def build_pot_file_str() -> str:
     return pot_file_str
 
 
-def internationalize_interaction_model(interaction_model: InteractionModelData) -> Dict[InteractionModelData]:
+def internationalize_interaction_model(interaction_model: InteractionModelData) -> Dict[str, InteractionModelData]:
     interaction_models = {}
     translations = {}
 
