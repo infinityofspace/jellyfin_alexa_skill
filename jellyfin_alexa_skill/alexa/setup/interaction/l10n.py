@@ -2,6 +2,7 @@ import gettext
 import importlib.resources as pkg_resources
 from copy import deepcopy
 from pathlib import Path
+from typing import Dict
 
 from ask_sdk_model_runtime import DefaultSerializer
 from ask_smapi_model.v1.skill.interaction_model import InteractionModelData
@@ -32,7 +33,7 @@ def build_pot_file_str() -> str:
     return pot_file_str
 
 
-def internationalize_interaction_model(interaction_model: InteractionModelData) -> dict[InteractionModelData]:
+def internationalize_interaction_model(interaction_model: InteractionModelData) -> Dict[InteractionModelData]:
     interaction_models = {}
     translations = {}
 
