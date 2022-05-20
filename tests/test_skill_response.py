@@ -10,7 +10,7 @@ from flask import Flask
 from flask_ask_sdk.skill_adapter import SkillAdapter
 from peewee import SqliteDatabase
 
-from database.model.base import db
+from jellyfin_alexa_skill.database.model.base import db
 from jellyfin_alexa_skill.alexa.handler import get_skill_builder
 from jellyfin_alexa_skill.alexa.web.skill import get_skill_blueprint
 from jellyfin_alexa_skill.database.model.playback import Playback, QueueItem
