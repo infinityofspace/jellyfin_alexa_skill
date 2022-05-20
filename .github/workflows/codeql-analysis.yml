@@ -9,6 +9,7 @@ on:
     branches: 
       - main
       - '!l10n_main'
+      - '!translatable_strings'
   schedule:
     - cron: '0 12 * * *'
 
