@@ -21,6 +21,7 @@ jobs:
 
       - name: Install requirements
         run: |
+          apt install libpq-dev
           pip install --upgrade pip
           pip install psycopg2-binary
           pip install -r requirements.txt
@@ -51,6 +52,7 @@ jobs:
 
       - name: Install requirements
         run: |
+          apt install libpq-dev
           pip3 install --upgrade pip
           pip install psycopg2-binary
           pip3 install -r requirements.txt
@@ -82,6 +84,7 @@ jobs:
 
       - name: Install requirements
         run: |
+          apt install libpq-dev
           pip3 install --upgrade pip
           pip install psycopg2-binary
           pip3 install -r requirements.txt
