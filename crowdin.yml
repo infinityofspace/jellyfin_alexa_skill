@@ -1,3 +1,3 @@
 files:
-  - source: /jellyfin_alexa_skill/locales/en/LC_MESSAGES/*
-    translation: /jellyfin_alexa_skill/locales/%two_letters_code%/LC_MESSAGES/%original_file_name%
+  - source: /jellyfin_alexa_skill/locales/en_US/LC_MESSAGES/*.po
+    translation: /jellyfin_alexa_skill/locales/%locale_with_underscore%/LC_MESSAGES/%original_file_name%
