@@ -25,8 +25,8 @@ jobs:
 
         commit_message: '[no ci] New Crowdin translations by Github Action'
 
-        source: /jellyfin_alexa_skill/locales/en_US/LC_MESSAGES/*.po
-        translation: /jellyfin_alexa_skill/locales/%locale_with_underscore%/LC_MESSAGES/%original_file_name%
+        source: jellyfin_alexa_skill/locales/en_US/LC_MESSAGES/*.po
+        translation: jellyfin_alexa_skill/locales/%locale_with_underscore%/LC_MESSAGES/%original_file_name%
 
         project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
         token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
