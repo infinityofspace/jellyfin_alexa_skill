@@ -44,7 +44,7 @@ jobs:
       - name: Make pull request
         uses: peter-evans/create-pull-request@v4
         with:
-          title: "[Translation] New translatable strings available"
+          title: "[Translation] [no ci] New translatable strings available"
           commit-message: Extracted new translatable strings and added them to the catalog
           delete-branch: true
           branch: translatable_strings

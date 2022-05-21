@@ -2,11 +2,9 @@ name: unit tests
 
 on:
   push:
-    branches:
-      - '!l10n_main'
   pull_request:
     branches:
-      - '!l10n_main'
+      - main
 
 jobs:
   tests:
