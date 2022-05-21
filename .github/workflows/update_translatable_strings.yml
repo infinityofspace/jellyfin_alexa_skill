@@ -44,8 +44,8 @@ jobs:
       - name: Make pull request
         uses: peter-evans/create-pull-request@v4
         with:
-          title: "[Translation] [no ci] New translatable strings available"
-          commit-message: Extracted new translatable strings and added them to the catalog
+          title: "[Translation] New translatable strings available"
+          commit-message: [no ci] Extracted new translatable strings and added them to the catalog
           delete-branch: true
           branch: translatable_strings
           add-paths: jellyfin_alexa_skill/locales/**/*.po
