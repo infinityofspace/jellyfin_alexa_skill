@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: jellyfin-alexa-skill\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2022-05-19 20:55+0200\n"
-"PO-Revision-Date: 2022-05-20 23:14\n"
+"PO-Revision-Date: 2022-05-21 00:16\n"
 "Last-Translator: \n"
 "Language: es_MX\n"
 "Language-Team: Spanish, Mexico\n"
@@ -20,177 +20,177 @@ msgstr ""
 
 #: LoopAllOffIntent
 msgid "Loop off"
-msgstr ""
+msgstr "Bucle desactivado"
 
 #: LoopAllOnIntent
 msgid "Loop on"
-msgstr ""
+msgstr "Activado bucle"
 
 #: RepeatSingleOnIntent
 msgid "Repeat the song"
-msgstr ""
+msgstr "Repite la canción"
 
 #: RepeatSingleOnIntent
 msgid "Repeat the video"
-msgstr ""
+msgstr "Repite el vídeo"
 
 #: RepeatSingleOnIntent
 msgid "Repeat that"
-msgstr ""
+msgstr "Repítelo"
 
 #: AMAZON.StartOverIntent
 msgid "Repeat from beginning"
-msgstr ""
+msgstr "Repite desde el principio"
 
 #: AMAZON.StartOverIntent
 msgid "Start over"
-msgstr ""
+msgstr "Empieza de nuevo"
 
 #: PlayChannelIntent
 msgid "Play channel {channel}"
-msgstr ""
+msgstr "Reproduce el canal {channel}"
 
 #: PlayChannelIntent
 msgid "Play radio {channel}"
-msgstr ""
+msgstr "Reproduce la radio {channel}"
 
 #: PlaySongIntent
 msgid "Play the song {song}"
-msgstr ""
+msgstr "Reproduce la canción {song}"
 
 #: PlaySongIntent
 msgid "Play the song {song} from {musician}"
-msgstr ""
+msgstr "Reproduce la canción {song} de {musician}"
 
 #: PlayAlbumIntent
 msgid "Play the album {album}"
-msgstr ""
+msgstr "Reproduce el álbum {album}"
 
 #: PlayAlbumIntent
 msgid "Play the album {album} by {musician}"
-msgstr ""
+msgstr "Reproduce el álbum {album} de {musician}"
 
 #: PlayVideoIntent
 msgid "Play the video {title}"
-msgstr ""
+msgstr "Reproduce el vídeo {title}"
 
 #: PlayArtistSongsIntent
 msgid "Play songs from {musician}"
-msgstr ""
+msgstr "Reproduce canciones de {musician}"
 
 #: PlayArtistSongsIntent
 msgid "Play music from {musician}"
-msgstr ""
+msgstr "Reproduce música de {musician}"
 
 #: PlayLastAddedIntent
 msgid "Play last added {media_type}"
-msgstr ""
+msgstr "Reproduce las últimas {media_type}"
 
 #: PlayLastAddedIntent
 msgid "Play recently added {media_type}"
-msgstr ""
+msgstr "Reproduce los últimos {media_type}"
 
 #: PlayLastAddedIntent
 msgid "Play newly added {media_type}"
-msgstr ""
+msgstr "Reproduce últimos añadidos {media_type}"
 
 #: PlayLastAddedIntent
 msgid "Play new media"
-msgstr ""
+msgstr "Reproduce nuevos medios"
 
 #: PlayPlaylistIntent
 msgid "Play the playlist {playlist}"
-msgstr ""
+msgstr "Reproduce la lista de reproducción {playlist}"
 
 #: PlayPlaylistIntent
 msgid "Play my playlist {playlist}"
-msgstr ""
+msgstr "Reproduce mi lista de reproducción {playlist}"
 
 #: PlayFavoritesIntent
 msgid "Play my favorite {media_type}"
-msgstr ""
+msgstr "Reproduce mis {media_type} favoritos"
 
 #: PlayFavoritesIntent
 msgid "Play my {media_type} favorite"
-msgstr ""
+msgstr "Reproduce mis {media_type} favorita"
 
 #: PlayFavoritesIntent
 msgid "Play my favorites"
-msgstr ""
+msgstr "Reproduce mis favoritos"
 
 #: MarkFavoriteIntent
 msgid "I like that"
-msgstr ""
+msgstr "Me gusta"
 
 #: MarkFavoriteIntent
 msgid "I like the video"
-msgstr ""
+msgstr "Me gusta el vídeo"
 
 #: MarkFavoriteIntent
 msgid "I like the song"
-msgstr ""
+msgstr "Me gusta la canción"
 
 #: MarkFavoriteIntent
 msgid "I like the music"
-msgstr ""
+msgstr "Me gusta la música"
 
 #: MarkFavoriteIntent
 msgid "Add the video to my favorites"
-msgstr ""
+msgstr "Añade el vídeo a mis favoritos"
 
 #: MarkFavoriteIntent
 msgid "Add the song to my favorites"
-msgstr ""
+msgstr "Añade la canción a mis favoritos"
 
 #: UnmarkFavoriteIntent
 msgid "I don't like this"
-msgstr ""
+msgstr "No me gusta"
 
 #: UnmarkFavoriteIntent
 msgid "I don't like the video"
-msgstr ""
+msgstr "No me gusta el video"
 
 #: UnmarkFavoriteIntent
 msgid "I don't like song"
-msgstr ""
+msgstr "No me gusta la canción"
 
 #: UnmarkFavoriteIntent
 msgid "I don't like music"
-msgstr ""
+msgstr "No me gusta la música"
 
 #: UnmarkFavoriteIntent
 msgid "Remove the video from my favorites"
-msgstr ""
+msgstr "Elimina el vídeo de mis favoritos"
 
 #: UnmarkFavoriteIntent
 msgid "Remove the song from my favorites"
-msgstr ""
+msgstr "Elimina la canción de mis favoritos"
 
 #: MediaInfoIntent
 msgid "What is the name of the song"
-msgstr ""
+msgstr "Como se llama esta canción"
 
 #: MediaInfoIntent
 msgid "What is the name of the video"
-msgstr ""
+msgstr "Como se llama este vídeo"
 
 #: MediaInfoIntent
 msgid "What is the name of the music"
-msgstr ""
+msgstr "Como se llama esta música"
 
 #: MediaInfoIntent
 msgid "What is the title of the song"
-msgstr ""
+msgstr "Cual es el titulo de esta canción"
 
 #: MediaInfoIntent
 msgid "What is the title of the video"
-msgstr ""
+msgstr "Cual es el titulo de este vídeo"
 
 #: MediaInfoIntent
 msgid "What is the title of the music"
-msgstr ""
+msgstr "Cual es el titulo de esta música"
 
 #: MediaInfoIntent
 msgid "What is currently playing"
-msgstr ""
+msgstr "Que está sonando"
 
