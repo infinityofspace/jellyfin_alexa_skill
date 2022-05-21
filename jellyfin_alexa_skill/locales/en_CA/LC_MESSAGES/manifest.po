@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: jellyfin-alexa-skill\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2022-05-19 20:55+0200\n"
-"PO-Revision-Date: 2022-05-20 23:13\n"
+"PO-Revision-Date: 2022-05-21 00:16\n"
 "Last-Translator: \n"
 "Language: en_CA\n"
 "Language-Team: English, Canada\n"
@@ -20,21 +20,21 @@ msgstr ""
 
 #: summary
 msgid "Play media from your Jellyfin server"
-msgstr ""
+msgstr "Play media from your Jellyfin server"
 
 #: description
 msgid "Play media from your Jellyfin server.</br></br>Source: https://github.com/infinityofspace/jellyfin_alexa_skill"
-msgstr ""
+msgstr "Play media from your Jellyfin server.</br></br>Source: https://github.com/infinityofspace/jellyfin_alexa_skill"
 
 #: example phrase
 msgid "Alexa ask Jellyfin Player play my favorite music"
-msgstr ""
+msgstr "Alexa ask Jellyfin Player play my favorite music"
 
 #: example phrase
 msgid "Alexa ask Jellyfin Player play songs from 'Artist'"
-msgstr ""
+msgstr "Alexa ask Jellyfin Player play songs from 'Artist'"
 
 #: example phrase
 msgid "Alexa ask Jellyfin Player play my playlist 'Best Music'"
-msgstr ""
+msgstr "Alexa ask Jellyfin Player play my playlist 'Best Music'"
 
