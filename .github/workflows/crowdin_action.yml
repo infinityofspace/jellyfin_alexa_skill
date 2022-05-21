@@ -23,9 +23,12 @@ jobs:
         localization_branch_name: l10n_main
         create_pull_request: true
 
-        config: crowdin.yml
         commit_message: '[no ci] New Crowdin translations by Github Action'
+
+        source: /jellyfin_alexa_skill/locales/en_US/LC_MESSAGES/*.po
+        translation: /jellyfin_alexa_skill/locales/%locale_with_underscore%/LC_MESSAGES/%original_file_name%
+
+        project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
+        api_token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

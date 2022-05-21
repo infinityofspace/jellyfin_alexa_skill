@@ -1,6 +1,0 @@
-files:
-  - source: /jellyfin_alexa_skill/locales/en_US/LC_MESSAGES/*.po
-    translation: /jellyfin_alexa_skill/locales/%locale_with_underscore%/LC_MESSAGES/%original_file_name%
-
-project_id_env: CROWDIN_PROJECT_ID
-api_token_env: CROWDIN_PERSONAL_TOKEN
