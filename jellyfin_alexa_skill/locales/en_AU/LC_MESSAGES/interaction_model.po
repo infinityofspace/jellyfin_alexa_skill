@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: jellyfin-alexa-skill\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2022-05-19 20:55+0200\n"
-"PO-Revision-Date: 2022-05-20 23:14\n"
+"PO-Revision-Date: 2022-05-21 00:16\n"
 "Last-Translator: \n"
 "Language: en_AU\n"
 "Language-Team: English, Australia\n"
@@ -20,177 +20,177 @@ msgstr ""
 
 #: LoopAllOffIntent
 msgid "Loop off"
-msgstr ""
+msgstr "Loop off"
 
 #: LoopAllOnIntent
 msgid "Loop on"
-msgstr ""
+msgstr "Loop on"
 
 #: RepeatSingleOnIntent
 msgid "Repeat the song"
-msgstr ""
+msgstr "Repeat the song"
 
 #: RepeatSingleOnIntent
 msgid "Repeat the video"
-msgstr ""
+msgstr "Repeat the video"
 
 #: RepeatSingleOnIntent
 msgid "Repeat that"
-msgstr ""
+msgstr "Repeat that"
 
 #: AMAZON.StartOverIntent
 msgid "Repeat from beginning"
-msgstr ""
+msgstr "Repeat from beginning"
 
 #: AMAZON.StartOverIntent
 msgid "Start over"
-msgstr ""
+msgstr "Start over"
 
 #: PlayChannelIntent
 msgid "Play channel {channel}"
-msgstr ""
+msgstr "Play channel {channel}"
 
 #: PlayChannelIntent
 msgid "Play radio {channel}"
-msgstr ""
+msgstr "Play radio {channel}"
 
 #: PlaySongIntent
 msgid "Play the song {song}"
-msgstr ""
+msgstr "Play the song {song}"
 
 #: PlaySongIntent
 msgid "Play the song {song} from {musician}"
-msgstr ""
+msgstr "Play the song {song} from {musician}"
 
 #: PlayAlbumIntent
 msgid "Play the album {album}"
-msgstr ""
+msgstr "Play the album {album}"
 
 #: PlayAlbumIntent
 msgid "Play the album {album} by {musician}"
-msgstr ""
+msgstr "Play the album {album} by {musician}"
 
 #: PlayVideoIntent
 msgid "Play the video {title}"
-msgstr ""
+msgstr "Play the video {title}"
 
 #: PlayArtistSongsIntent
 msgid "Play songs from {musician}"
-msgstr ""
+msgstr "Play songs from {musician}"
 
 #: PlayArtistSongsIntent
 msgid "Play music from {musician}"
-msgstr ""
+msgstr "Play music from {musician}"
 
 #: PlayLastAddedIntent
 msgid "Play last added {media_type}"
-msgstr ""
+msgstr "Play last added {media_type}"
 
 #: PlayLastAddedIntent
 msgid "Play recently added {media_type}"
-msgstr ""
+msgstr "Play recently added {media_type}"
 
 #: PlayLastAddedIntent
 msgid "Play newly added {media_type}"
-msgstr ""
+msgstr "Play newly added {media_type}"
 
 #: PlayLastAddedIntent
 msgid "Play new media"
-msgstr ""
+msgstr "Play new media"
 
 #: PlayPlaylistIntent
 msgid "Play the playlist {playlist}"
-msgstr ""
+msgstr "Play the playlist {playlist}"
 
 #: PlayPlaylistIntent
 msgid "Play my playlist {playlist}"
-msgstr ""
+msgstr "Play my playlist {playlist}"
 
 #: PlayFavoritesIntent
 msgid "Play my favorite {media_type}"
-msgstr ""
+msgstr "Play my favorite {media_type}"
 
 #: PlayFavoritesIntent
 msgid "Play my {media_type} favorite"
-msgstr ""
+msgstr "Play my {media_type} favorite"
 
 #: PlayFavoritesIntent
 msgid "Play my favorites"
-msgstr ""
+msgstr "Play my favorites"
 
 #: MarkFavoriteIntent
 msgid "I like that"
-msgstr ""
+msgstr "I like that"
 
 #: MarkFavoriteIntent
 msgid "I like the video"
-msgstr ""
+msgstr "I like the video"
 
 #: MarkFavoriteIntent
 msgid "I like the song"
-msgstr ""
+msgstr "I like the song"
 
 #: MarkFavoriteIntent
 msgid "I like the music"
-msgstr ""
+msgstr "I like the music"
 
 #: MarkFavoriteIntent
 msgid "Add the video to my favorites"
-msgstr ""
+msgstr "Add the video to my favorites"
 
 #: MarkFavoriteIntent
 msgid "Add the song to my favorites"
-msgstr ""
+msgstr "Add the song to my favorites"
 
 #: UnmarkFavoriteIntent
 msgid "I don't like this"
-msgstr ""
+msgstr "I don't like this"
 
 #: UnmarkFavoriteIntent
 msgid "I don't like the video"
-msgstr ""
+msgstr "I don't like the video"
 
 #: UnmarkFavoriteIntent
 msgid "I don't like song"
-msgstr ""
+msgstr "I don't like song"
 
 #: UnmarkFavoriteIntent
 msgid "I don't like music"
-msgstr ""
+msgstr "I don't like music"
 
 #: UnmarkFavoriteIntent
 msgid "Remove the video from my favorites"
-msgstr ""
+msgstr "Remove the video from my favorites"
 
 #: UnmarkFavoriteIntent
 msgid "Remove the song from my favorites"
-msgstr ""
+msgstr "Remove the song from my favorites"
 
 #: MediaInfoIntent
 msgid "What is the name of the song"
-msgstr ""
+msgstr "What is the name of the song"
 
 #: MediaInfoIntent
 msgid "What is the name of the video"
-msgstr ""
+msgstr "What is the name of the video"
 
 #: MediaInfoIntent
 msgid "What is the name of the music"
-msgstr ""
+msgstr "What is the name of the music"
 
 #: MediaInfoIntent
 msgid "What is the title of the song"
-msgstr ""
+msgstr "What is the title of the song"
 
 #: MediaInfoIntent
 msgid "What is the title of the video"
-msgstr ""
+msgstr "What is the title of the video"
 
 #: MediaInfoIntent
 msgid "What is the title of the music"
-msgstr ""
+msgstr "What is the title of the music"
 
 #: MediaInfoIntent
 msgid "What is currently playing"
-msgstr ""
+msgstr "What is currently playing"
 
