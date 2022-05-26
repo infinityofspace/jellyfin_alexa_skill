@@ -3,8 +3,7 @@ import unittest
 
 from peewee import SqliteDatabase
 
-from jellyfin_alexa_skill.database.db import close_db, get_playback, clear_playback_queue, \
-    set_playback_queue
+from jellyfin_alexa_skill.database.db import close_db, get_playback
 from jellyfin_alexa_skill.database.model.base import db
 from jellyfin_alexa_skill.database.model.playback import Playback, QueueItem
 from jellyfin_alexa_skill.database.model.user import User
@@ -66,7 +65,8 @@ class TestPlaybackModel(unittest.TestCase):
         self.assertIsNone(next_item)
 
     def test_next_empty(self):
-        clear_playback_queue(USER_ID)
+        playback = get_playback(USER_ID)
+        playback.clear_queue()
         # the first item should be None
         next_item = self.playback.next()
         self.assertIsNone(next_item)
@@ -148,24 +148,26 @@ class TestDBMethods(unittest.TestCase):
         self.assertEqual(playback.user_id, playback.user_id)
 
     def test_clear_playback(self):
-        clear_playback_queue(USER_ID)
+        playback = get_playback(USER_ID)
+        playback.clear_queue()
 
         items = list(QueueItem.select(QueueItem.playback == self.playback))
         self.assertEqual(items, [])
 
     def test_set_playback_queue(self):
-        get_playback(USER_ID)
+        playback = get_playback(USER_ID)
         items = [QueueItem(idx=i, media_type=MediaType.AUDIO, item_id=f"abc{i}")
                  for i in range(10)]
 
-        playback = set_playback_queue(USER_ID, items)
+        playback.set_queue(items)
 
         self.assertEqual(playback.current_item.id, items[0].id)
         self.assertEqual(playback.offset, 0)
         self.assertEqual(playback.playing, False)
 
     def test_set_playback_queue_empty(self):
-        playback = set_playback_queue(USER_ID, [])
+        playback = get_playback(USER_ID)
+        playback.set_queue([])
 
         self.assertEqual(playback.current_item, None)
         self.assertEqual(playback.offset, 0)
