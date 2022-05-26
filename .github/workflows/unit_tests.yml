@@ -41,8 +41,12 @@ jobs:
 
   tests-jellyfin-api:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/infinityofspace/jellyfin_alexa_skill:unittests
+
+    services:
+      jellyfin:
+        image: ghcr.io/infinityofspace/jellyfin_alexa_skill:unittests
+        ports:
+          - 8096:8096
 
     steps:
       - uses: actions/checkout@v3
@@ -59,11 +63,6 @@ jobs:
 
       - name: Build translations
         run: python3 setup.py compile_catalog
-
-      - name: Start Jellyfin test server
-        run: |
-          cd /
-          /start_jellyfin.sh > /dev/null 2>&1 &
 
       - name: Wait until server is up or timeout of 60 seconds
         run: timeout 60 sh -c 'until nc -z $0 $1; do sleep 1; done' localhost 8096
@@ -73,8 +72,20 @@ jobs:
 
   tests-skill:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/infinityofspace/jellyfin_alexa_skill:unittests
+
+    services:
+      jellyfin:
+        image: ghcr.io/infinityofspace/jellyfin_alexa_skill:unittests
+        ports:
+          - 8096:8096
+      postgres:
+        image: postgres:alpine
+        env:
+          POSTGRES_USER: skill
+          POSTGRES_PASSWORD: pw
+          POSTGRES_DB: jellyfin_alexa_skill
+        ports:
+          - 5432:5432
 
     steps:
       - uses: actions/checkout@v3
@@ -91,11 +102,6 @@ jobs:
 
       - name: Build translations
         run: python3 setup.py compile_catalog
-
-      - name: Start Jellyfin test server
-        run: |
-          cd /
-          /start_jellyfin.sh > /dev/null 2>&1 &
 
       - name: Wait until server is up or timeout of 60 seconds
         run: timeout 60 sh -c 'until nc -z $0 $1; do sleep 1; done' localhost 8096

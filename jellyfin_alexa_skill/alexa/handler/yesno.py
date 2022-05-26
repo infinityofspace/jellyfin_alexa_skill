@@ -6,7 +6,7 @@ from ask_sdk_model import Response
 
 from jellyfin_alexa_skill.alexa.handler.base import BaseHandler
 from jellyfin_alexa_skill.alexa.util import build_stream_response, get_media_type_enum
-from jellyfin_alexa_skill.database.db import set_playback_queue
+from jellyfin_alexa_skill.database.db import get_playback
 from jellyfin_alexa_skill.database.model.playback import QueueItem
 from jellyfin_alexa_skill.database.model.user import User
 from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient, MediaType
@@ -72,7 +72,8 @@ class YesNoIntentHandler(BaseHandler):
                                          media_item_id=item["Id"])]
 
             user_id = handler_input.request_envelope.context.system.user.user_id
-            playback = set_playback_queue(user_id, queue_items)
+            playback = get_playback(user_id)
+            playback.set_playback_queue(user_id, queue_items)
 
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,

@@ -1,21 +1,21 @@
 import random
-from typing import Optional
+from typing import Optional, List
 
 import peewee
-from peewee import CharField, IntegerField, BooleanField, DeferredForeignKey, ForeignKeyField
+from peewee import CharField, IntegerField, BooleanField, DeferredForeignKey, ForeignKeyField, TextField
 
-from jellyfin_alexa_skill.jellyfin.api.client import MediaType
 from jellyfin_alexa_skill.database.model.base import BaseModel, CharEnumField
+from jellyfin_alexa_skill.jellyfin.api.client import MediaType
 
 SHUFFLE_RANDOM_RANGE = (-424242, 424242)
 
 
 class QueueItem(BaseModel):
     id = IntegerField(primary_key=True)
-    playback = DeferredForeignKey("Playback", backref="items")
+    playback = DeferredForeignKey("Playback", backref="items", on_delete="CASCADE", null=True)
     idx = IntegerField(null=False)
     media_type = CharEnumField(MediaType, null=False)
-    item_id = CharField(null=False)
+    item_id = TextField(null=False)
 
     class Meta:
         table_name = "QueueItem"
@@ -129,3 +129,38 @@ class Playback(BaseModel):
                     prev_item = None
 
         return prev_item
+
+    def set_queue(self, items: List[QueueItem]) -> None:
+        """
+        Sets the queue to the given list of queue items and delete all old queue items in the database.
+        Moreover, the offset is set to 0 and when the item list is not empty the current item is set to the first item
+        of the list. Otherwise, the current item is set to None.
+        """
+
+        # first clear the old queue items
+        QueueItem.delete().where(QueueItem.playback == self).execute()
+
+        for item in items:
+            item.playback = self
+            item.save()
+
+        if len(items) > 0:
+            self.current_item = items[0]
+        else:
+            self.current_item = None
+        self.playing = False
+        self.offset = 0
+        self.save()
+
+    def clear_queue(self) -> None:
+        """
+        Clears the current queue by deleting all queue items in the database and set the current item to None. Moreover,
+        the playstate is set to stopped and the offset to 0.
+        """
+
+        QueueItem.delete().where(QueueItem.playback == self).execute()
+
+        self.playing = False
+        self.current_item = None
+        self.offset = 0
+        self.save()
