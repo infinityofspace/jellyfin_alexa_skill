@@ -42,6 +42,10 @@ jobs:
   tests-jellyfin-api:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        python-version: [ "3.7", "3.8", "3.9", "3.10" ]
+
     services:
       jellyfin:
         image: ghcr.io/infinityofspace/jellyfin_alexa_skill:unittests
@@ -51,8 +55,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Python 3 and test setup requirements
-        run: apt update && apt install -y python3 python3-pip netcat
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3.1.2
+        with:
+          python-version: ${{ matrix.python-version }}
 
       - name: Install requirements
         run: |
@@ -64,14 +70,15 @@ jobs:
       - name: Build translations
         run: python3 setup.py compile_catalog
 
-      - name: Wait until server is up or timeout of 60 seconds
-        run: timeout 60 sh -c 'until nc -z $0 $1; do sleep 1; done' localhost 8096
-
       - name: Run unit tests
         run: python3 -m unittest tests/test_jellyfin_api_client.py
 
   tests-skill:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [ "3.7", "3.8", "3.9", "3.10" ]
 
     services:
       jellyfin:
@@ -90,8 +97,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Python 3 and test setup requirements
-        run: apt update && apt install -y python3 python3-pip netcat
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3.1.2
+        with:
+          python-version: ${{ matrix.python-version }}
 
       - name: Install requirements
         run: |
@@ -102,9 +111,6 @@ jobs:
 
       - name: Build translations
         run: python3 setup.py compile_catalog
-
-      - name: Wait until server is up or timeout of 60 seconds
-        run: timeout 60 sh -c 'until nc -z $0 $1; do sleep 1; done' localhost 8096
 
       - name: Run unit tests
         run: python3 -m unittest tests/test_skill_response.py
