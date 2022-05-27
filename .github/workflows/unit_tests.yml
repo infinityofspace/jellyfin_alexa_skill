@@ -86,7 +86,7 @@ jobs:
         ports:
           - 8096:8096
       postgres:
-        image: postgres:alpine
+        image: postgres:14.2-alpine3.15
         env:
           POSTGRES_USER: skill
           POSTGRES_PASSWORD: pw

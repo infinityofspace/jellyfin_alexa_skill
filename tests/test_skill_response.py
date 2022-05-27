@@ -330,7 +330,7 @@ class TestSkillResponseControl(unittest.TestCase):
 
         playback = get_playback(ALEXA_USER_ID)
 
-        dummy_queue_item = QueueItem.create(item_id=media_id, idx=0, media_type=MediaType.AUDIO)
+        dummy_queue_item = QueueItem.create(id=0, item_id=media_id, idx=0, media_type=MediaType.AUDIO)
         playback.set_queue([dummy_queue_item])
 
         requests_data["request"]["locale"] = "en-US"

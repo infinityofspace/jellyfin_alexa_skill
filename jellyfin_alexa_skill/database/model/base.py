@@ -13,10 +13,10 @@ class BaseModel(Model):
 
 class CharEnumField(Field):
     """
-    Database field for storing enumeration as char field.
+    Database field for storing enumeration as varchar field.
     """
 
-    field_type = "char"
+    field_type = "varchar"
 
     def __init__(self, enum_class: Type[Enum], *args, **kwargs):
         super().__init__(*args, **kwargs)
