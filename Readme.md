@@ -96,17 +96,19 @@ development [here](https://github.com/infinityofspace/jellyfin_alexa_skill/wiki/
 
 ## Third party notices
 
-| Module | License | Project |
-|:------:|:------:|:------:|
-| flask-ask-sdk | [License](https://raw.githubusercontent.com/alexa/alexa-skills-kit-sdk-for-python/master/LICENSE) | [Project](https://github.com/alexa/alexa-skills-kit-sdk-for-python) |
-| ask-smapi-sdk | [License](https://raw.githubusercontent.com/alexa/alexa-skills-kit-sdk-for-python/master/LICENSE) | [Project](https://github.com/alexa/alexa-skills-kit-sdk-for-python) |
-| ask-smapi-model | [License](https://raw.githubusercontent.com/alexa/alexa-apis-for-python/master/LICENSE) | [Project](https://github.com/alexa/alexa-apis-for-python) |
-| rapidfuzz | [License](https://raw.githubusercontent.com/maxbachmann/RapidFuzz/main/LICENSE) | [Project](https://github.com/maxbachmann/RapidFuzz) |
-| peewee | [License](https://raw.githubusercontent.com/coleifer/peewee/master/LICENSE) | [Project](https://github.com/coleifer/peewee) |
-| gunicorn | [License](https://raw.githubusercontent.com/benoitc/gunicorn/master/LICENSE) | [Project](https://github.com/benoitc/gunicorn) |
-| Babel | [License](https://raw.githubusercontent.com/python-babel/babel/master/LICENSE) | [Project](https://github.com/python-babel/babel) |
-| Flask-WTF | [License](https://raw.githubusercontent.com/wtforms/wtforms/master/LICENSE.rst) | [Project](https://github.com/wtforms/wtforms) |
-| requests | [License](https://raw.githubusercontent.com/psf/requests/main/LICENSE) | [Project](https://github.com/psf/requests) |
+|     Module      |                                              License                                              |                               Project                               |
+|:---------------:|:-------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------:|
+|  flask-ask-sdk  | [License](https://raw.githubusercontent.com/alexa/alexa-skills-kit-sdk-for-python/master/LICENSE) | [Project](https://github.com/alexa/alexa-skills-kit-sdk-for-python) |
+|  ask-smapi-sdk  | [License](https://raw.githubusercontent.com/alexa/alexa-skills-kit-sdk-for-python/master/LICENSE) | [Project](https://github.com/alexa/alexa-skills-kit-sdk-for-python) |
+| ask-smapi-model |      [License](https://raw.githubusercontent.com/alexa/alexa-apis-for-python/master/LICENSE)      |      [Project](https://github.com/alexa/alexa-apis-for-python)      |
+|    rapidfuzz    |          [License](https://raw.githubusercontent.com/maxbachmann/RapidFuzz/main/LICENSE)          |         [Project](https://github.com/maxbachmann/RapidFuzz)         |
+|     peewee      |            [License](https://raw.githubusercontent.com/coleifer/peewee/master/LICENSE)            |            [Project](https://github.com/coleifer/peewee)            |
+|    gunicorn     |           [License](https://raw.githubusercontent.com/benoitc/gunicorn/master/LICENSE)            |           [Project](https://github.com/benoitc/gunicorn)            |
+|      Babel      |          [License](https://raw.githubusercontent.com/python-babel/babel/master/LICENSE)           |          [Project](https://github.com/python-babel/babel)           |
+|    Flask-WTF    |          [License](https://raw.githubusercontent.com/wtforms/wtforms/master/LICENSE.rst)          |            [Project](https://github.com/wtforms/wtforms)            |
+|    requests     |              [License](https://raw.githubusercontent.com/psf/requests/main/LICENSE)               |             [Project](https://github.com/psf/requests)              |
+|    psycopg2     |           [License](https://raw.githubusercontent.com/psycopg/psycopg2/master/LICENSE)            |           [Project](https://github.com/psycopg/psycopg2)            |
+
 
 Furthermore, this readme file contains embeddings of [Shields.io](https://github.com/badges/shields).
 

@@ -19,7 +19,10 @@ jobs:
 
       - name: Install setup requirements
         run: |
-          pip install -r requirements.txt
+          sudo apt-get install -y libpq-dev
+          pip3 install --upgrade pip
+          pip install psycopg2-binary
+          pip3 install -r requirements.txt
 
       - name: Extract translatable strings
         run: |

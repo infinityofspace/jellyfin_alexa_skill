@@ -1,6 +1,5 @@
 import argparse
 import binascii
-import ipaddress
 import logging
 import os
 import textwrap
@@ -10,7 +9,6 @@ from configparser import ConfigParser
 from copy import deepcopy
 from pathlib import Path
 from typing import Union
-from urllib.parse import urlparse
 
 import ask_sdk_model_runtime
 from ask_smapi_model.services.skill_management import SkillManagementServiceClient
@@ -29,8 +27,7 @@ from jellyfin_alexa_skill.alexa.handler import get_skill_builder
 from jellyfin_alexa_skill.alexa.setup.interaction.model import INTERACTION_MODELS
 from jellyfin_alexa_skill.alexa.setup.manifest.manifest import get_skill_version, SKILL_MANIFEST
 from jellyfin_alexa_skill.alexa.web.skill import get_skill_blueprint
-from jellyfin_alexa_skill.config import get_config, DEFAULT_ALEXA_SKILL_CONFIG_PATH, DEFAULT_ALEXA_SKILL_DATA_PATH, \
-    APP_NAME, write_config
+from jellyfin_alexa_skill.config import get_config, APP_NAME, write_config
 from jellyfin_alexa_skill.database.db import connect_db
 from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient
 from jellyfin_alexa_skill.jellyfin.web.login import get_jellyfin_login_blueprint
@@ -109,12 +106,15 @@ def update_interaction_models(config: ConfigParser,
 
         # wait until the skill interaction models are updated
         updating = True
+        updated_locales = set()
         while updating:
             status = smapi_client.get_skill_status_v1(skill_id)
             updating = False
             for locale, info in status.interaction_model.items():
                 if info.last_update_request.status == Status.SUCCEEDED:
-                    logging.info(f"Skill interaction model for locale {locale} is updated")
+                    if locale not in updated_locales:
+                        logging.info(f"Skill interaction model for locale {locale} is updated")
+                        updated_locales.add(locale)
                 else:
                     updating = True
 
@@ -258,22 +258,6 @@ def update_account_linking(config: ConfigParser,
     return account_linking_client_id
 
 
-def validate_url(url: str) -> bool:
-    """
-    Validate the URL.
-
-    :param url: URL to validate
-
-    :return: True if the URL is valid, False otherwise
-    """
-
-    try:
-        result = urlparse(url)
-        return all([result.scheme, result.netloc])
-    except ValueError:
-        return False
-
-
 def main():
     parser = argparse.ArgumentParser(
         description="Selfhosted Alexa media player skill for Jellyfin",
@@ -286,8 +270,7 @@ def main():
                                 """)
     )
 
-    parser.add_argument("--config", help="Path to the config file", metavar="PATH")
-    parser.add_argument("--data", help="Path to the data folder", metavar="PATH")
+    parser.add_argument("config", help="Path to the config file", metavar="PATH")
     parser.add_argument("--verbose", help="Enable verbose logging", action="store_true")
 
     args = parser.parse_args()
@@ -297,17 +280,7 @@ def main():
     else:
         logging.basicConfig(format="%(message)s", level=logging.INFO)
 
-    # program arguments take precedence over environment variables
-    if args.config:
-        config_path = Path(args.config)
-    else:
-        config_path = Path(
-            os.environ.get("JELLYFIN_ALEXA_SKILL_CONFIG", DEFAULT_ALEXA_SKILL_CONFIG_PATH))
-
-    if args.data:
-        data_path = Path(args.data)
-    else:
-        data_path = Path(os.environ.get("JELLYFIN_ALEXA_SKILL_DATA", DEFAULT_ALEXA_SKILL_DATA_PATH))
+    config_path = Path(args.config)
 
     if not config_path.exists():
         raise FileNotFoundError(f"Config file {config_path} not found")
@@ -327,42 +300,13 @@ def main():
 
     csrf = CSRFProtect(app)
 
-    skill_endpoint = config.get("general", "skill_endpoint", fallback="")
-    jellyfin_endpoint = config.get("general", "jellyfin_endpoint", fallback="")
-    host = config.get("general", "bind_addr", fallback="0.0.0.0")
-    web_app_port = config.getint("general", "web_app_port", fallback=1456)
-
-    # do some validation
-    if not validate_url(skill_endpoint):
-        raise argparse.ArgumentTypeError(f"Invalid skill endpoint {skill_endpoint}")
-    if not validate_url(jellyfin_endpoint):
-        raise argparse.ArgumentTypeError(f"Invalid jellyfin endpoint {jellyfin_endpoint}")
-    try:
-        ipaddress.ip_address(host)
-    except ValueError:
-        raise argparse.ArgumentTypeError(f"Invalid host address {host}")
-
-    smapi_client_id = config.get("smapi", "client_id", fallback="")
-    smapi_client_secret = config.get("smapi", "client_secret", fallback="")
-    smapi_refresh_token = config.get("smapi", "refresh_token", fallback="")
-
-    if len(smapi_client_id) == 0:
-        raise ValueError("SMAPI client ID is not set")
-    if len(smapi_client_secret) == 0:
-        raise ValueError("SMAPI client secret is not set")
-    if len(smapi_refresh_token) == 0:
-        raise ValueError("SMAPI refresh token is not set")
-
     smapi_client = StandardSmapiClientBuilder(
-        client_id=smapi_client_id,
-        client_secret=smapi_client_secret,
-        refresh_token=smapi_refresh_token).client()
+        client_id=config.get("smapi", "client_id"),
+        client_secret=config.get("smapi", "client_secret"),
+        refresh_token=config.get("smapi", "refresh_token")).client()
 
-    skill_id = config.get("general", "skill_id", fallback="")
+    skill_id = config.get("general", "skill_id")
     stage = "development"
-
-    if len(skill_id) == 0:
-        raise ValueError("Skill ID is not set")
 
     # get current skill manifest
     manifest = smapi_client.get_skill_manifest_v1(skill_id=skill_id, stage_v2=stage)
@@ -378,6 +322,7 @@ def main():
                               smapi_client,
                               stage)
 
+    skill_endpoint = config.get("general", "skill_endpoint")
     update_skill_manifest(config,
                           manifest,
                           skill_endpoint,
@@ -393,9 +338,7 @@ def main():
                                                        skill_version,
                                                        smapi_client, stage)
 
-    data_path.mkdir(parents=True, exist_ok=True)
-    connect_db(data_path / "data.sqlite")
-
+    jellyfin_endpoint = config.get("general", "jellyfin_endpoint")
     jellyfin_client = JellyfinClient(server_endpoint=jellyfin_endpoint, client_name=APP_NAME)
 
     skill_adapter = SkillAdapter(skill=get_skill_builder(jellyfin_client).create(),
@@ -410,6 +353,25 @@ def main():
     # register login routes
     login_blueprint = get_jellyfin_login_blueprint(jellyfin_endpoint, account_linking_client_id)
     app.register_blueprint(login_blueprint)
+
+    # setup database
+    database = connect_db(database=config.get("database", "database", fallback="jellyfin_alexa_skill"),
+                          user=config.get("database", "user", fallback="skill"),
+                          password=config.get("database", "password"),
+                          host=config.get("database", "host", fallback="127.0.0.1"),
+                          port=config.getint("database", "port", fallback=5432))
+
+    @app.before_request
+    def _db_connect():
+        database.connect(reuse_if_open=True)
+
+    @app.teardown_request
+    def _db_close(exc):
+        if not database.is_closed():
+            database.close()
+
+    host = config.get("general", "bind_addr", fallback="0.0.0.0")
+    web_app_port = config.getint("general", "web_app_port", fallback=1456)
 
     options = {
         "bind": f"{host}:{web_app_port}",

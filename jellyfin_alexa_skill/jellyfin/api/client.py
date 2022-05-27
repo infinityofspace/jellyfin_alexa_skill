@@ -118,9 +118,9 @@ class JellyfinClient:
                        audio_codec: str = "mp3",
                        max_streaming_bitrate: int = 140000000,
                        start_time_ticks: int = 0,
-                       **kwargs) -> Tuple[str, str]:
+                       **kwargs) -> str:
         """
-        Generate a url which allows streaming the requested media file.
+        Generate an url which allows streaming the requested media file.
 
         :param user_id: user id
         :param token: authentication token
@@ -131,14 +131,8 @@ class JellyfinClient:
         :param start_time_ticks: start time ticks in ms (default: 0)
         :param kwargs: additional parameters passed to the server for the request
 
-        :return: tuple of type (stream_type, url)
+        :return: url to stream the file
         :raises: requests.exceptions.HTTPError types if the server is not reachable or something went wrong
-
-        stream_type can be one of the following:
-            "audio" - url is a stream url ready for AudioPlayer
-            "video" - url is a url to video to pass on to VideoApp
-            "livetv" - url is a url to stream LiveTV to VideoApp
-            "" - something went wrong
         """
 
         data = {
@@ -161,18 +155,17 @@ class JellyfinClient:
         else:
             res.raise_for_status()
 
-        stream_type = "audio"
+        stream_type = MediaType.AUDIO
         if play_info["MediaSources"][0]:
             for stream in play_info["MediaSources"][0]["MediaStreams"]:
                 if stream["Type"] == "Video":
                     if play_info["MediaSources"][0]["IsInfiniteStream"] == True:
-                        stream_type = "livetv"
+                        stream_type = MediaType.CHANNEL
                     else:
-                        stream_type = "video"
+                        stream_type = MediaType.VIDEO
                     break
 
-        url = self.server_endpoint
-        if stream_type == "audio":
+        if stream_type == MediaType.AUDIO:
             # prepare url for AudioPlayer
             path = f"/Audio/{item_id}/universal"
             params = {
@@ -183,7 +176,7 @@ class JellyfinClient:
                 "api_key": token,
                 "AudioCodec": audio_codec
             }
-        elif stream_type == "video":
+        elif stream_type == MediaType.VIDEO:
             # prepare url for VideoApp
             path = f"/Videos/{item_id}/stream"
             params = {
@@ -192,17 +185,20 @@ class JellyfinClient:
                 'DeviceId': device_id,
                 "api_key": token
             }
-        elif stream_type == "livetv":
+        elif stream_type == MediaType.CHANNEL:
             # just return the direct internet path to the live tv channel (we don't need to use Jellyfin)
-            return stream_type, play_info["MediaSources"][0]["Path"]
+            return play_info["MediaSources"][0]["Path"]
+        else:
+            raise ValueError("Unknown stream type")
 
         params.update(kwargs)
 
         params_url = urllib.parse.urlencode(params)
 
+        url = self.server_endpoint
         url = urllib.parse.urljoin(url, path)
         url += "?" + params_url
-        return stream_type, url
+        return url, play_info
 
     def get_ancestor_with_image(self,
                                 item_id: str,
@@ -660,6 +656,32 @@ class JellyfinClient:
         }
 
         res = requests.delete(url, headers=headers)
+
+        if res:
+            return json.loads(res.content)
+        else:
+            res.raise_for_status()
+
+    def get_item_info(self, user_id: str, token: str, media_id: str, **kwargs) -> dict:
+        """
+        Get information about an item.
+
+        :param user_id: user id of the user whose item should be retrieved
+        :param token: authentication token
+        :param media_id: id of the item to retrieve
+        :param kwargs: additional parameters to pass to the server for the request
+
+        :return: dict of the retrieved item info
+        """
+
+        url = self.server_endpoint + f"/Users/{user_id}/Items/{media_id}"
+
+        headers = {
+            "Content-Type": "application/json",
+            "X-Emby-Authorization": self._build_emby_auth_header(token=token)
+        }
+
+        res = requests.get(url, headers=headers, params=kwargs)
 
         if res:
             return json.loads(res.content)

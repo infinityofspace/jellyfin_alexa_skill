@@ -44,7 +44,7 @@ def build_pot_file_str() -> str:
     return pot_file_str
 
 
-def internationalize_manifest(manifest: SkillManifestEnvelope) -> SkillManifestEnvelope:
+def internationalize_manifest(manifest: SkillManifestEnvelope) -> None:
     translations = {}
 
     locales_path = Path(package_root).parent / "locales"

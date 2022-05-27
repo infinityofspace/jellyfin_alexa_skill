@@ -5,9 +5,9 @@ from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
 
 from jellyfin_alexa_skill.alexa.handler import BaseHandler
-from jellyfin_alexa_skill.alexa.util import build_stream_response, get_similarity
-from jellyfin_alexa_skill.database.db import set_playback_queue
-from jellyfin_alexa_skill.database.model.playback import PlaybackItem
+from jellyfin_alexa_skill.alexa.util import build_stream_response, get_similarity, get_media_type_enum
+from jellyfin_alexa_skill.database.db import get_playback
+from jellyfin_alexa_skill.database.model.playback import QueueItem
 from jellyfin_alexa_skill.database.model.user import User
 from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient
 
@@ -49,17 +49,19 @@ class PlayPlaylistIntentHandler(BaseHandler):
                 text = translation.gettext("Sorry, this playlist does not exists anymore.")
                 handler_input.response_builder.speak(text)
             else:
-                playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
-                                  for item in playlist_items]
+                queue_items = [QueueItem(idx=i,
+                                         media_type=get_media_type_enum(item_info),
+                                         media_item_id=item_info["Id"]) for i, item_info in
+                               enumerate(playlist_items)]
 
-                playback = set_playback_queue(user_id, playback_items)
+                playback = get_playback(user_id)
+                playback.set_playback_queue(user_id, queue_items)
 
                 build_stream_response(jellyfin_client=self.jellyfin_client,
                                       jellyfin_user_id=user.jellyfin_user_id,
                                       jellyfin_token=user.jellyfin_token,
                                       handler_input=handler_input,
-                                      playback=playback,
-                                      idx=0)
+                                      queue_item=playback.current_item)
 
                 response_text = translation.gettext("Ok, I play the playlist {}.").format(best_playlist["Name"])
                 handler_input.response_builder.speak(response_text)

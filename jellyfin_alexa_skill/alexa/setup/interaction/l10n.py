@@ -2,7 +2,7 @@ import gettext
 import importlib.resources as pkg_resources
 from copy import deepcopy
 from pathlib import Path
-from typing import List
+from typing import Dict
 
 from ask_sdk_model_runtime import DefaultSerializer
 from ask_smapi_model.v1.skill.interaction_model import InteractionModelData
@@ -33,8 +33,8 @@ def build_pot_file_str() -> str:
     return pot_file_str
 
 
-def internationalize_interaction_model(interaction_model: InteractionModelData) -> List[InteractionModelData]:
-    interaction_models = []
+def internationalize_interaction_model(interaction_model: InteractionModelData) -> Dict[str, InteractionModelData]:
+    interaction_models = {}
     translations = {}
 
     locales_path = Path(package_root).parent / "locales"
@@ -57,6 +57,6 @@ def internationalize_interaction_model(interaction_model: InteractionModelData) 
                     translated_samples.append(translation.gettext(sample))
                 intent.samples = translated_samples
 
-        interaction_models.append(lang_interaction_model)
+        interaction_models[lang] = lang_interaction_model
 
     return interaction_models

@@ -28,13 +28,13 @@ class LaunchRequestHandler(BaseHandler):
         user_id = handler_input.request_envelope.context.system.user.user_id
         playback = get_playback(user_id)
 
-        if playback.queue:
+        if playback.current_item:
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
                                   jellyfin_token=user.jellyfin_token,
                                   handler_input=handler_input,
-                                  playback=playback,
-                                  idx=playback.current_idx)
+                                  queue_item=playback.current_item,
+                                  offset=playback.offset)
         else:
             speech_text = translation.gettext("Welcome to Jellyfin Player skill, what can I play?")
 

@@ -1,5 +1,4 @@
 import json
-import os
 import time
 import unittest
 from multiprocessing import Process
@@ -11,10 +10,12 @@ from flask_ask_sdk.skill_adapter import SkillAdapter
 
 from jellyfin_alexa_skill.alexa.handler import get_skill_builder
 from jellyfin_alexa_skill.alexa.web.skill import get_skill_blueprint
-from jellyfin_alexa_skill.database.db import connect_db
-from jellyfin_alexa_skill.database.model.playback import Playback
+from jellyfin_alexa_skill.config import SUPPORTED_LANGUAGES
+from jellyfin_alexa_skill.database.db import get_playback, connect_db, clear_db
+from jellyfin_alexa_skill.database.model.playback import QueueItem
 from jellyfin_alexa_skill.database.model.user import User
-from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient
+from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient, MediaType
+from jellyfin_alexa_skill.l10n import get_translation
 from jellyfin_alexa_skill.main import GunicornApplication
 
 ALEXA_USER_ID = "amzn1.ask.account.42424242"
@@ -118,7 +119,10 @@ REQUEST_TEMPLATE = {
 JELLYFIN_USER_ID = "a8e5cac72a3a4ad8a3069f95b4a811ee"
 JELLYFIN_TOKEN = "c98e5a373ff04faebc46daec14572eed"
 
-DB_PATH = "skill_data.sqlite"
+DB_USER = "skill"
+DB_PASSWORD = "pw"
+DB_HOST = "127.0.0.1"
+DB_PORT = 5432
 
 SKILL_WEB_APP_HOST = "127.0.0.1"
 SKILL_WEB_APP_PORT = 1456
@@ -153,22 +157,17 @@ class TestSkillResponseControl(unittest.TestCase):
                 if i == max_attempts - 1:
                     raise Exception("Jellyfin server is not up")
 
-        # remove previous database if exists
-        if os.path.exists(DB_PATH):
-            os.remove(DB_PATH)
-
         def skill_app():
             app_name = "Jellyfin_Alexa_Skill"
             skill_id = "amzn1.ask.skill.11111111-2222-3333-4444-555555555555"
 
             app = Flask(__name__)
 
-            connect_db(DB_PATH)
-
-            # insert dummy authenticated test user
-            User.create(alexa_auth_token=ALEXA_AUTH_TOKEN,
-                        jellyfin_user_id=JELLYFIN_USER_ID,
-                        jellyfin_token=JELLYFIN_TOKEN).save()
+            # connect the skill process to the db
+            connect_db(DB_USER,
+                       DB_PASSWORD,
+                       DB_HOST,
+                       DB_PORT)
 
             jellyfin_client = JellyfinClient(server_endpoint=jellyfin_endpoint, client_name=app_name)
 
@@ -189,11 +188,14 @@ class TestSkillResponseControl(unittest.TestCase):
             }
             GunicornApplication(app, options).run()
 
+        # connect this process to the db too
+        connect_db(DB_USER,
+                   DB_PASSWORD,
+                   DB_HOST,
+                   DB_PORT)
+
         cls.skill_process = Process(target=skill_app)
         cls.skill_process.start()
-
-        # connect this process to the db too
-        connect_db(DB_PATH)
 
         print("Start skill app on port {}".format(SKILL_WEB_APP_PORT))
 
@@ -212,14 +214,21 @@ class TestSkillResponseControl(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         """
-        Stop the skill server process and remove the temporary database file.
+        Stop the skill server process.
         """
         cls.skill_process.terminate()
         cls.skill_process.join()
 
-        # remove db file
-        if os.path.exists(DB_PATH):
-            os.remove(DB_PATH)
+        clear_db()
+
+    @classmethod
+    def setUp(cls) -> None:
+        clear_db()
+
+        # insert dummy authenticated test user
+        User.create(alexa_auth_token=ALEXA_AUTH_TOKEN,
+                    jellyfin_user_id=JELLYFIN_USER_ID,
+                    jellyfin_token=JELLYFIN_TOKEN)
 
     def test_no_audio_interface(self):
         """
@@ -298,41 +307,42 @@ class TestSkillResponseControl(unittest.TestCase):
             "shouldLinkResultBeReturned": "false"
         }
 
-        with self.subTest("LaunchRequest en-US"):
-            requests_data["request"]["locale"] = "en-US"
-            res = self.post_request(requests_data)
-            self.assertEqual(res["response"]["outputSpeech"]["ssml"],
-                             "<speak>Welcome to Jellyfin Player skill, what can I play?</speak>")
+        for locale in SUPPORTED_LANGUAGES:
+            with self.subTest(f"LaunchRequest {locale}"):
+                requests_data["request"]["locale"] = locale
+                res = self.post_request(requests_data)
+                translation = get_translation(requests_data["request"]["locale"])
+                self.assertEqual(res["response"]["outputSpeech"]["ssml"],
+                                 f"<speak>{translation.gettext('Welcome to Jellyfin Player skill, what can I play?')}</speak>")
 
-        with self.subTest("LaunchRequest de-DE"):
-            requests_data["request"]["locale"] = "de-DE"
-            res = self.post_request(requests_data)
-            self.assertEqual(res["response"]["outputSpeech"]["ssml"],
-                             "<speak>Willkommen beim Jellyfin Player Skill, was soll ich spielen?</speak>")
+    def test_launch_request_intent_resume_playback(self):
+        requests_data = REQUEST_TEMPLATE.copy()
 
-        with self.subTest("LaunchRequest resume playback"):
-            # insert a dummy playback for the user
-            media_id = "ccf19d58cf1a38fa18ea0e2dd0da0e5b"
-            dummy_song_info = {
-                "id": media_id,
-                "title": "song title",
-                "artists": ["artist"]
-            }
-            playback = Playback.get(user_id=ALEXA_USER_ID)
-            playback.queue = [dummy_song_info]
-            playback.save()
+        requests_data["request"] = {
+            "type": "LaunchRequest",
+            "requestId": "amzn1.echo-api.request.99999999-8888-7777-6666-555555555555",
+            "timestamp": "2022-01-01T12:42:42Z",
+            "shouldLinkResultBeReturned": "false"
+        }
 
-            requests_data["request"]["locale"] = "en-US"
-            res = self.post_request(requests_data)
+        # insert a dummy playback for the user
+        media_id = "ccf19d58cf1a38fa18ea0e2dd0da0e5b"
 
-            if "directives" in res["response"] \
-                    and len(res["response"]["directives"]) == 1 \
-                    and "AudioPlayer.Play" in res["response"]["directives"][0]["type"]:
-                parsed_url = urlparse(res["response"]["directives"][0]["audioItem"]["stream"]["url"])
-                self.assertEqual(parsed_url.path, "/Audio/{}/universal".format(media_id))
-                self.assertEqual(parse_qs(parsed_url.query)["api_key"][0], JELLYFIN_TOKEN)
-            else:
-                self.fail("Resume playback failed")
+        playback = get_playback(ALEXA_USER_ID)
+
+        dummy_queue_item = QueueItem.create(id=0, item_id=media_id, idx=0, media_type=MediaType.AUDIO)
+        playback.set_queue([dummy_queue_item])
+
+        requests_data["request"]["locale"] = "en-US"
+        res = self.post_request(requests_data)
+
+        self.assertIn("directives", res["response"])
+        self.assertTrue(len(res["response"]["directives"]) == 1)
+        self.assertIn("AudioPlayer.Play", res["response"]["directives"][0]["type"])
+
+        parsed_url = urlparse(res["response"]["directives"][0]["audioItem"]["stream"]["url"])
+        self.assertEqual(parsed_url.path, "/Audio/{}/universal".format(media_id))
+        self.assertEqual(parse_qs(parsed_url.query)["api_key"][0], JELLYFIN_TOKEN)
 
 
 if __name__ == "__main__":
