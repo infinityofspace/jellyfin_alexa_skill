@@ -194,3 +194,10 @@ msgstr "Qual è il titolo della musica"
 msgid "What is currently playing"
 msgstr "Che cosa sto ascoltando"
 
+#: ShuffleIntent
+msgid "Play random {media_type}"
+msgstr ""
+
+#: ShuffleIntent
+msgid "Shuffle {media_type}"
+msgstr ""

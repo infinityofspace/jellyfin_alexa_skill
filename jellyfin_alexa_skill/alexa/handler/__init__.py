@@ -12,6 +12,7 @@ from jellyfin_alexa_skill.alexa.handler.interface import *
 from jellyfin_alexa_skill.alexa.handler.launch import *
 from jellyfin_alexa_skill.alexa.handler.playlist import *
 from jellyfin_alexa_skill.alexa.handler.yesno import *
+from jellyfin_alexa_skill.alexa.handler.shuffle import *
 
 
 def get_skill_builder(jellyfin_client: JellyfinClient):
@@ -61,5 +62,7 @@ def get_skill_builder(jellyfin_client: JellyfinClient):
     skill_builder.add_request_handler(HelpIntentHandler())
 
     skill_builder.add_request_handler(YesNoIntentHandler(jellyfin_client))
+
+    skill_builder.add_request_handler(ShuffleIntentHandler(jellyfin_client))
 
     return skill_builder

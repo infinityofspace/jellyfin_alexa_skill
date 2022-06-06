@@ -190,3 +190,11 @@ msgstr ""
 msgid "What is currently playing"
 msgstr ""
 
+#: ShuffleIntent
+msgid "Play random {media_type}"
+msgstr ""
+
+#: ShuffleIntent
+msgid "Shuffle {media_type}"
+msgstr ""
+
