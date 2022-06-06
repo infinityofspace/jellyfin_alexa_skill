@@ -67,7 +67,7 @@ class PlaySongIntentHandler(BaseHandler):
             # there is only one search result, so just play it
             item = song_search_results[0]
             user_id = handler_input.request_envelope.context.system.user.user_id
-            playback = set_playback_queue(user_id, [PlaybackItem(item.get("Id"), item.get("Name"), item.get("Artists"))])
+            playback = set_playback_queue(user_id, [PlaybackItem(item["Id"], item["Name"], item["Artists"])])
 
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
@@ -96,7 +96,7 @@ class PlaySongIntentHandler(BaseHandler):
         if len(artists) > 0:
             by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
 
-        request_text = translation.gettext("Would you like to hear <break/> {title} {by_artist} ?".format(
+        request_text = translation.gettext("Would you like to hear <break/> {title} {by_artist}?".format(
             title=top_matches[0]['Name'],
             by_artist=by_artist))
 
@@ -162,7 +162,7 @@ class PlayAlbumIntentHandler(BaseHandler):
                 handler_input.response_builder.speak(no_result_response_text)
                 return handler_input.response_builder.response
 
-            playback_items = [PlaybackItem(item.get("Id"), item.get("Name"), item.get("Artists"))
+            playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
                               for item in items]
 
             user_id = handler_input.request_envelope.context.system.user.user_id
@@ -200,7 +200,7 @@ class PlayAlbumIntentHandler(BaseHandler):
         if len(artists) > 0:
             by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
 
-        request_text = translation.gettext("Would you like to hear <break/> {title} {by_artist} ?".format(
+        request_text = translation.gettext("Would you like to hear <break/> {title} {by_artist}?".format(
             title=top_matches[0]['Name'],
             by_artist=by_artist))
 
@@ -282,7 +282,7 @@ class PlayVideoIntentHandler(BaseHandler):
         if len(artists) > 0:
             by_artist = translation.gettext("by {artist}".format(artist=artists[0]))
 
-        request_text = translation.gettext("Would you like to watch <break/> {title} {by_artist} ?".format(
+        request_text = translation.gettext("Would you like to watch <break/> {title} {by_artist}?".format(
             title=top_matches[0]['Name'],
             by_artist=by_artist))
 
@@ -341,7 +341,7 @@ class PlayArtistSongsIntentHandler(BaseHandler):
             handler_input.response_builder.speak(no_result_response_text)
             return handler_input.response_builder.response
 
-        playback_items = [PlaybackItem(item.get("Id"), item.get("Name"), item.get("Artists"))
+        playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
                           for item in items]
 
         user_id = handler_input.request_envelope.context.system.user.user_id

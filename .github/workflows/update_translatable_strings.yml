@@ -1,0 +1,52 @@
+name: update translatable strings
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  extract-and-make-pr:
+    name: Extract and make PR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3.1.2
+        with:
+          python-version: "3.10"
+
+      - name: Install setup requirements
+        run: |
+          pip install -r requirements.txt
+
+      - name: Extract translatable strings
+        run: |
+          python3 setup.py extract_messages
+
+      - name: Copy old catalog to keep header
+        run: |
+          cp -r jellyfin_alexa_skill/locales jellyfin_alexa_skill/locales_backup
+
+      - name: Update language specific po files
+        run: |
+          python3 setup.py update_catalog
+
+      - name: Add previous header again
+        run: |
+          python3 .github/workflows/keep_original_catalog_header.py 15 jellyfin_alexa_skill/locales 19 jellyfin_alexa_skill/locales_backup
+
+      - name: Remove backup
+        run: |
+          rm -rf jellyfin_alexa_skill/locales_backup
+
+      - name: Make pull request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          title: "[Translation] New translatable strings available"
+          commit-message: [no ci] Extracted new translatable strings and added them to the catalog
+          delete-branch: true
+          branch: translatable_strings
+          add-paths: jellyfin_alexa_skill/locales/**/*.po
+          token: ${{ secrets.GH_TOKEN }}

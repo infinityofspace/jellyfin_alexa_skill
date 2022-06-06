@@ -1,0 +1,248 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "jellyfin player",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent"
+        },
+        {
+          "name": "AMAZON.HelpIntent"
+        },
+        {
+          "name": "AMAZON.StopIntent"
+        },
+        {
+          "name": "AMAZON.FallbackIntent"
+        },
+        {
+          "name": "AMAZON.PauseIntent"
+        },
+        {
+          "name": "AMAZON.ResumeIntent"
+        },
+        {
+          "name": "AMAZON.NextIntent"
+        },
+        {
+          "name": "AMAZON.PreviousIntent"
+        },
+        {
+          "name": "AMAZON.YesIntent"
+        },
+        {
+          "name": "AMAZON.NoIntent"
+        },
+        {
+          "name": "LoopAllOffIntent",
+          "samples": [
+            "Loop off"
+          ]
+        },
+        {
+          "name": "LoopAllOnIntent",
+          "samples": [
+            "Loop on"
+          ]
+        },
+        {
+          "name": "RepeatSingleOnIntent",
+          "samples": [
+            "Repeat the song",
+            "Repeat the video",
+            "Repeat that"
+          ]
+        },
+        {
+          "name": "AMAZON.ShuffleOnIntent"
+        },
+        {
+          "name": "AMAZON.ShuffleOffIntent"
+        },
+        {
+          "name": "AMAZON.StartOverIntent",
+          "samples": [
+            "Repeat from beginning",
+            "Start over"
+          ]
+        },
+        {
+          "name": "PlayChannelIntent",
+          "samples": [
+            "Play channel {channel}",
+            "Play radio {channel}"
+          ],
+          "slots": [
+            {
+              "name": "channel",
+              "type": "AMAZON.SearchQuery"
+            }
+          ]
+        },
+        {
+          "name": "PlaySongIntent",
+          "samples": [
+            "Play the song {song}",
+            "Play the song {song} from {musician}"
+          ],
+          "slots": [
+            {
+              "name": "song",
+              "type": "AMAZON.MusicRecording"
+            },
+            {
+              "name": "musician",
+              "type": "AMAZON.Musician"
+            }
+          ]
+        },
+        {
+          "name": "PlayAlbumIntent",
+          "samples": [
+            "Play the album {album}",
+            "Play the album {album} by {musician}"
+          ],
+          "slots": [
+            {
+              "name": "album",
+              "type": "AMAZON.MusicRecording"
+            },
+            {
+              "name": "musician",
+              "type": "AMAZON.Musician"
+            }
+          ]
+        },
+        {
+          "name": "PlayVideoIntent",
+          "samples": [
+            "Play the video {title}"
+          ],
+          "slots": [
+            {
+              "name": "title",
+              "type": "AMAZON.SearchQuery"
+            }
+          ]
+        },
+        {
+          "name": "PlayArtistSongsIntent",
+          "samples": [
+            "Play songs from {musician}",
+            "Play music from {musician}"
+          ],
+          "slots": [
+            {
+              "name": "musician",
+              "type": "AMAZON.Musician"
+            }
+          ]
+        },
+        {
+          "name": "PlayLastAddedIntent",
+          "samples": [
+            "Play last added {media_type}",
+            "Play recently added {media_type}",
+            "Play newly added {media_type}",
+            "Play new media"
+          ],
+          "slots": [
+            {
+              "name": "media_type",
+              "type": "MediaType"
+            }
+          ]
+        },
+        {
+          "name": "PlayPlaylistIntent",
+          "samples": [
+            "Play the playlist {playlist}",
+            "Play my playlist {playlist}"
+          ],
+          "slots": [
+            {
+              "name": "playlist",
+              "type": "AMAZON.SearchQuery"
+            }
+          ]
+        },
+        {
+          "name": "PlayFavoritesIntent",
+          "samples": [
+            "Play my favorite {media_type}",
+            "Play my {media_type} favorite",
+            "Play my favorites"
+          ],
+          "slots": [
+            {
+              "name": "media_type",
+              "type": "MediaType"
+            }
+          ]
+        },
+        {
+          "name": "MarkFavoriteIntent",
+          "samples": [
+            "I like that",
+            "I like the video",
+            "I like the song",
+            "I like the music",
+            "Add the video to my favorites",
+            "Add the song to my favorites"
+          ]
+        },
+        {
+          "name": "UnmarkFavoriteIntent",
+          "samples": [
+            "I don't like this",
+            "I don't like the video",
+            "I don't like song",
+            "I don't like music",
+            "Remove the video from my favorites",
+            "Remove the song from my favorites"
+          ]
+        },
+        {
+          "name": "MediaInfoIntent",
+          "samples": [
+            "What is the name of the song",
+            "What is the name of the video",
+            "What is the name of the music",
+            "What is the title of the song",
+            "What is the title of the video",
+            "What is the title of the music",
+            "What is currently playing"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "name": "MediaType",
+          "values": [
+            {
+              "id": "media",
+              "name": {
+                "value": "media"
+              }
+            },
+            {
+              "id": "video",
+              "name": {
+                "value": "video"
+              }
+            },
+            {
+              "id": "audio",
+              "name": {
+                "value": "Audio",
+                "synonyms": [
+                  "music, song"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

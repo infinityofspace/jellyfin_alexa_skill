@@ -1,5 +1,6 @@
 import argparse
 import binascii
+import ipaddress
 import logging
 import os
 import textwrap
@@ -8,7 +9,8 @@ import uuid
 from configparser import ConfigParser
 from copy import deepcopy
 from pathlib import Path
-from typing import Union, Tuple
+from typing import Union
+from urllib.parse import urlparse
 
 import ask_sdk_model_runtime
 from ask_smapi_model.services.skill_management import SkillManagementServiceClient
@@ -21,7 +23,6 @@ from flask import Flask
 from flask_ask_sdk.skill_adapter import SkillAdapter
 from flask_wtf import CSRFProtect
 from gunicorn.app.base import BaseApplication
-from pyngrok import conf, ngrok
 
 from jellyfin_alexa_skill import __version__
 from jellyfin_alexa_skill.alexa.handler import get_skill_builder
@@ -55,50 +56,6 @@ class GunicornApplication(BaseApplication):
 
     def load(self):
         return self.application
-
-
-def get_endpoints(config: ConfigParser,
-                  host: str = "0.0.0.0") -> Tuple[str, str, str]:
-    """
-    Get the endpoints from the config and if required setup ngrok for external tunneled access.
-
-    :param config: skill configuration
-    :param host: host to bind to
-
-    :return: tuple (host, jellyfin endpoint, skill endpoint)
-    """
-
-    skill_endpoint = config["general"]["skill_endpoint"]
-    jellyfin_endpoint = config["general"]["jellyfin_endpoint"]
-
-    if not skill_endpoint or not jellyfin_endpoint:
-        ngrok_auth_token = config["ngrok"]["auth_token"]
-        if ngrok_auth_token is None or len(ngrok_auth_token) == 0:
-            raise Exception("No ngrok auth token. Please add your auth token to the skill.conf file.")
-
-        pyngrok_config = conf.PyngrokConfig(auth_token=ngrok_auth_token,
-                                            region=config["ngrok"].get("region", "us"))
-
-        if not skill_endpoint:
-            skill_ngrok_connection = ngrok.connect(pyngrok_config=pyngrok_config,
-                                                   addr=config["general"]["web_app_port"],
-                                                   name="jellyfin_alexa_skill",
-                                                   bind_tls=True)
-            logging.info("ngrok tunnel for skill: " + str(skill_ngrok_connection))
-            skill_endpoint = skill_ngrok_connection.public_url
-            # we don't need to bind for external access when using a tunnel
-            host = "127.0.0.1"
-
-        jellyfin_addr = config["ngrok"]["jellyfin_addr"]
-        if jellyfin_addr:
-            jellyfin_ngrok_connection = ngrok.connect(pyngrok_config=pyngrok_config,
-                                                      addr=jellyfin_addr,
-                                                      name="jellyfin_server",
-                                                      bind_tls=True)
-            logging.info("ngrok tunnel for jellyfin: " + str(jellyfin_ngrok_connection))
-            jellyfin_endpoint = jellyfin_ngrok_connection.public_url
-
-    return host, jellyfin_endpoint, skill_endpoint
 
 
 def update_interaction_models(config: ConfigParser,
@@ -301,6 +258,22 @@ def update_account_linking(config: ConfigParser,
     return account_linking_client_id
 
 
+def validate_url(url: str) -> bool:
+    """
+    Validate the URL.
+
+    :param url: URL to validate
+
+    :return: True if the URL is valid, False otherwise
+    """
+
+    try:
+        result = urlparse(url)
+        return all([result.scheme, result.netloc])
+    except ValueError:
+        return False
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Selfhosted Alexa media player skill for Jellyfin",
@@ -313,10 +286,16 @@ def main():
                                 """)
     )
 
-    parser.add_argument("--config", help="Path to the config file", required=False)
-    parser.add_argument("--data", help="Path to the data folder", required=False)
+    parser.add_argument("--config", help="Path to the config file", metavar="PATH")
+    parser.add_argument("--data", help="Path to the data folder", metavar="PATH")
+    parser.add_argument("--verbose", help="Enable verbose logging", action="store_true")
 
     args = parser.parse_args()
+
+    if args.verbose:
+        logging.basicConfig(format="%(asctime)s - %(levelname)s: %(message)s", level=logging.DEBUG)
+    else:
+        logging.basicConfig(format="%(message)s", level=logging.INFO)
 
     # program arguments take precedence over environment variables
     if args.config:
@@ -348,23 +327,49 @@ def main():
 
     csrf = CSRFProtect(app)
 
-    host, jellyfin_endpoint, skill_endpoint = get_endpoints(config)
+    skill_endpoint = config.get("general", "skill_endpoint", fallback="")
+    jellyfin_endpoint = config.get("general", "jellyfin_endpoint", fallback="")
+    host = config.get("general", "bind_addr", fallback="0.0.0.0")
+    web_app_port = config.getint("general", "web_app_port", fallback=1456)
 
-    smapi_client_builder = StandardSmapiClientBuilder(
-        client_id=config["smapi"]["client_id"],
-        client_secret=config["smapi"]["client_secret"],
-        refresh_token=config["smapi"]["refresh_token"])
-    smapi_client = smapi_client_builder.client()
+    # do some validation
+    if not validate_url(skill_endpoint):
+        raise argparse.ArgumentTypeError(f"Invalid skill endpoint {skill_endpoint}")
+    if not validate_url(jellyfin_endpoint):
+        raise argparse.ArgumentTypeError(f"Invalid jellyfin endpoint {jellyfin_endpoint}")
+    try:
+        ipaddress.ip_address(host)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"Invalid host address {host}")
 
-    skill_id = config["general"]["skill_id"]
+    smapi_client_id = config.get("smapi", "client_id", fallback="")
+    smapi_client_secret = config.get("smapi", "client_secret", fallback="")
+    smapi_refresh_token = config.get("smapi", "refresh_token", fallback="")
+
+    if len(smapi_client_id) == 0:
+        raise ValueError("SMAPI client ID is not set")
+    if len(smapi_client_secret) == 0:
+        raise ValueError("SMAPI client secret is not set")
+    if len(smapi_refresh_token) == 0:
+        raise ValueError("SMAPI refresh token is not set")
+
+    smapi_client = StandardSmapiClientBuilder(
+        client_id=smapi_client_id,
+        client_secret=smapi_client_secret,
+        refresh_token=smapi_refresh_token).client()
+
+    skill_id = config.get("general", "skill_id", fallback="")
     stage = "development"
+
+    if len(skill_id) == 0:
+        raise ValueError("Skill ID is not set")
 
     # get current skill manifest
     manifest = smapi_client.get_skill_manifest_v1(skill_id=skill_id, stage_v2=stage)
     skill_version = get_skill_version(manifest)
 
     logging.info(f"Cloud skill version: {skill_version}\n"
-                 f"\t Current skill version: {__version__}")
+                 f"Current skill version: {__version__}")
 
     update_interaction_models(config,
                               manifest,
@@ -405,8 +410,6 @@ def main():
     # register login routes
     login_blueprint = get_jellyfin_login_blueprint(jellyfin_endpoint, account_linking_client_id)
     app.register_blueprint(login_blueprint)
-
-    web_app_port = config["general"]["web_app_port"]
 
     options = {
         "bind": f"{host}:{web_app_port}",

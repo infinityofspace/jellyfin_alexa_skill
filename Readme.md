@@ -31,10 +31,8 @@ database._
 
 ## About
 
-This is a self-hosting Alexa skill to play media from your Jellyfin server. Besides simple playback, other additional
-functions like playback of playlists or managing favorites are included. The skill and the Jellyfin player can be used
-behind a NAT or firewall without port opening/forwarding. Since the skill and also the Jellyfin server must be reachable
-from the outside, in this case the two services are exposed with a tunnel.
+This is a self-hosting Alexa skill to play media from your Jellyfin server. Besides, simple playback, other additional
+functions like playback of playlists or managing favorites are included.
 
 ## Features
 
@@ -57,8 +55,6 @@ from the outside, in this case the two services are exposed with a tunnel.
 - metadata:
     - show the metadata of the media (title and artist)
     - show cover art of the media
-- random shuffle:
-    - creates a random playlist from your media
 - other:
     - multi-language support (see [Supported languages](#supported-languages))
     - multi-user support (any user on the Jellyfin server can use the skill)
@@ -78,7 +74,6 @@ The skill has support for the following languages:
 - English
 - German
 - Italian
-- Spanish
 
 ## Skill speech examples
 
@@ -104,7 +99,6 @@ development [here](https://github.com/infinityofspace/jellyfin_alexa_skill/wiki/
 | Module | License | Project |
 |:------:|:------:|:------:|
 | flask-ask-sdk | [License](https://raw.githubusercontent.com/alexa/alexa-skills-kit-sdk-for-python/master/LICENSE) | [Project](https://github.com/alexa/alexa-skills-kit-sdk-for-python) |
-| pyngrok | [License](https://raw.githubusercontent.com/alexdlaird/pyngrok/main/LICENSE) | [Project](https://github.com/alexdlaird/pyngrok) |
 | ask-smapi-sdk | [License](https://raw.githubusercontent.com/alexa/alexa-skills-kit-sdk-for-python/master/LICENSE) | [Project](https://github.com/alexa/alexa-skills-kit-sdk-for-python) |
 | ask-smapi-model | [License](https://raw.githubusercontent.com/alexa/alexa-apis-for-python/master/LICENSE) | [Project](https://github.com/alexa/alexa-apis-for-python) |
 | rapidfuzz | [License](https://raw.githubusercontent.com/maxbachmann/RapidFuzz/main/LICENSE) | [Project](https://github.com/maxbachmann/RapidFuzz) |

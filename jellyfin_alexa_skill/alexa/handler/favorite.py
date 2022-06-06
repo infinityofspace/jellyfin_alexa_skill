@@ -41,7 +41,7 @@ class PlayFavoritesIntentHandler(BaseHandler):
                                                        media_type=filter_media_type)
 
         if favorites:
-            playback_items = [PlaybackItem(item.get("Id"), item.get("Name"), item.get("Artists"))
+            playback_items = [PlaybackItem(item["Id"], item["Name"], item["Artists"])
                               for item in favorites]
 
             user_id = handler_input.request_envelope.session.user.user_id
@@ -78,7 +78,7 @@ class MarkFavoriteIntentHandler(BaseHandler):
         playback = get_playback(user_id)
 
         if playback.playing and playback.current_idx is not None:
-            current_media_id = playback.queue[playback.current_idx]["id"]
+            current_media_id = playback.queue[playback.current_idx]
             self.jellyfin_client.favorite(user_id=user.jellyfin_user_id,
                                           token=user.jellyfin_token,
                                           media_id=current_media_id)
@@ -108,7 +108,7 @@ class UnmarkFavoriteIntentHandler(BaseHandler):
         playback = get_playback(user_id)
 
         if playback.playing and playback.current_idx is not None:
-            current_media_id = playback.queue[playback.current_idx]["id"]
+            current_media_id = playback.queue[playback.current_idx]
             self.jellyfin_client.unfavorite(user_id=user.jellyfin_user_id,
                                             token=user.jellyfin_token,
                                             media_id=current_media_id)
