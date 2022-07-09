@@ -72,6 +72,7 @@ You can find the installation steps in the [wiki](https://github.com/infinityofs
 The skill has support for the following languages:
 
 - English
+- French
 - German
 - Italian
 
