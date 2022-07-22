@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: jellyfin-alexa-skill\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2022-05-19 20:54+0200\n"
-"PO-Revision-Date: 2022-05-20 23:14\n"
+"PO-Revision-Date: 2022-07-22 22:24\n"
 "Last-Translator: \n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
@@ -15,142 +15,142 @@ msgstr ""
 "X-Crowdin-Project: jellyfin-alexa-skill\n"
 "X-Crowdin-Project-ID: 515640\n"
 "X-Crowdin-Language: fr\n"
-"X-Crowdin-File: /[infinityofspace.jellyfin_alexa_skill] main/jellyfin_alexa_skill/locales/en_US/LC_MESSAGES/skill.po\n"
-"X-Crowdin-File-ID: 22\n"
+"X-Crowdin-File: skill.po\n"
+"X-Crowdin-File-ID: 30\n"
 
 #: jellyfin_alexa_skill/alexa/handler/channel.py:32
 msgid "Sorry, I can't find any channels with that name. Please try again."
-msgstr ""
+msgstr "Désolé, je ne trouve aucune chaîne portant ce nom. Veuillez réessayer."
 
 #: jellyfin_alexa_skill/alexa/handler/channel.py:67
 #: jellyfin_alexa_skill/alexa/handler/control.py:235
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:82
 msgid "I'm sorry, I can't play videos on this device."
-msgstr ""
+msgstr "Désolé, je ne peux pas lire de vidéo sur cet appareil."
 
 #: jellyfin_alexa_skill/alexa/handler/channel.py:90
 msgid "Would you like to listen to {name}?"
-msgstr ""
+msgstr "Aimeriez-vous écouter {name} ?"
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:35
 #: jellyfin_alexa_skill/alexa/handler/control.py:123
 msgid "Sorry, I can't find any songs for this search. Please try again."
-msgstr ""
+msgstr "Désolé, je ne trouve aucune piste pour cette recherche. Veuillez réessayer."
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:97
 #: jellyfin_alexa_skill/alexa/handler/control.py:201
 #: jellyfin_alexa_skill/alexa/handler/control.py:283
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:97
 msgid "by {artist}"
-msgstr ""
+msgstr "par {artist}"
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:99
 #: jellyfin_alexa_skill/alexa/handler/control.py:203
 msgid "Would you like to hear <break/> {title} {by_artist}?"
-msgstr ""
+msgstr "Souhaiteriez-vous entendre <break/> {title} {by_artist}?"
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:226
 msgid "Sorry, I can't find any videos for this search. Please try again."
-msgstr ""
+msgstr "Désolé, je ne trouve aucune vidéo pour cette recherche. Veuillez réessayer."
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:285
 msgid "Would you like to watch <break/> {title} {by_artist}?"
-msgstr ""
+msgstr "Souhaiteriez-vous voir <break/> {title} {by_artist}?"
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:308
 msgid "Sorry, I can't find any songs with this artist. Please try again."
-msgstr ""
+msgstr "Désolé, je ne trouve aucune piste pour cet artiste. Veuillez réessayer."
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:390
 msgid "Sorry, I couldn't find any recently added media."
-msgstr ""
+msgstr "Désolé, je ne trouve aucun média ajouté récemment."
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:458
 msgid "What can I play?"
-msgstr ""
+msgstr "Que puis-je jouer ?"
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:523
 msgid "You reached the end of the playback queue."
-msgstr ""
+msgstr "Vous avez atteint la fin de la file d'attente de lecture."
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:561
 msgid "You reached the start of the playback queue."
-msgstr ""
+msgstr "Vous avez atteint le début de la file d'attente de lecture."
 
 #: jellyfin_alexa_skill/alexa/handler/control.py:640
 msgid "The playback queue is empty. Please try to add some media and try again."
-msgstr ""
+msgstr "La file d'attente de lecture est vide. Veuillez essayer d'ajouter des médias et réessayez."
 
 #: jellyfin_alexa_skill/alexa/handler/error.py:27
 msgid "Sorry, something went wrong. Please try again."
-msgstr ""
+msgstr "Désolé, une erreur s'est produite. Veuillez essayer."
 
 #: jellyfin_alexa_skill/alexa/handler/event.py:114
 msgid "Something went wrong during media playback. Please try again."
-msgstr ""
+msgstr "Une erreur s'est produite lors de la lecture du média. Veuillez réessayer."
 
 #: jellyfin_alexa_skill/alexa/handler/fallback.py:22
 msgid "Sorry, I could not understand that. Please try again."
-msgstr ""
+msgstr "Désolé, je n'ai pas compris. Veuillez réessayer."
 
 #: jellyfin_alexa_skill/alexa/handler/favorite.py:57
 msgid "Sorry, you don't have any favorite media."
-msgstr ""
+msgstr "Désolé, vous n'avez pas de favori."
 
 #: jellyfin_alexa_skill/alexa/handler/favorite.py:86
 msgid "Added to your favorites."
-msgstr ""
+msgstr "Ajouté à vos favoris."
 
 #: jellyfin_alexa_skill/alexa/handler/favorite.py:88
 #: jellyfin_alexa_skill/alexa/handler/favorite.py:118
 msgid "There is currently no media playing."
-msgstr ""
+msgstr "Il n'y a pas de média en cours de lecture."
 
 #: jellyfin_alexa_skill/alexa/handler/favorite.py:116
 msgid "Removed from your favorites."
-msgstr ""
+msgstr "Supprimé de vos favoris."
 
 #: jellyfin_alexa_skill/alexa/handler/help.py:22
 msgid "With this skill your can play media from your Jellyfin Server. Use 'Play Game of Live from Earth' or 'Play playlist this is number 42' to play some songs."
-msgstr ""
+msgstr "Avec ce skill, vous pouvez jouer des médias depuis votre serveur Jellyfin. Essayez \"Jouer Game of Live from Earth\" or \"Joue la playlist this is number 42\" pour lancer la lecture."
 
 #: jellyfin_alexa_skill/alexa/handler/info.py:28
 msgid "Currently playing {title} from {artists}."
-msgstr ""
+msgstr "Joue actuellement {title} de {artists}."
 
 #: jellyfin_alexa_skill/alexa/handler/info.py:31
 msgid "Currently no media is played."
-msgstr ""
+msgstr "Ne joue actuellement aucun média."
 
 #: jellyfin_alexa_skill/alexa/handler/interface.py:24
 msgid "Sorry, this device does not support media playback."
-msgstr ""
+msgstr "Désolé, cet appareil ne supporte pas la lecture de médias."
 
 #: jellyfin_alexa_skill/alexa/handler/launch.py:39
 msgid "Welcome to Jellyfin Player skill, what can I play?"
-msgstr ""
+msgstr "Bienvenue sur le skill Jellyfin Player, que puis-je jouer ?"
 
 #: jellyfin_alexa_skill/alexa/handler/playlist.py:37
 msgid "Sorry, I couldn't find any playlist with this name. Please try again."
-msgstr ""
+msgstr "Désolé, je ne trouve aucune playlist portant ce nom. Veuillez réessayer."
 
 #: jellyfin_alexa_skill/alexa/handler/playlist.py:49
 msgid "Sorry, this playlist does not exists anymore."
-msgstr ""
+msgstr "Désolé, cette playlist n'existe plus."
 
 #: jellyfin_alexa_skill/alexa/handler/playlist.py:64
 msgid "Ok, I play the playlist {}."
-msgstr ""
+msgstr "Bien, je joue la playlist {}."
 
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:53
 msgid "Sorry, I can't find any songs with that name. Please try again."
-msgstr ""
+msgstr "Désolé, je ne trouve aucune piste portant ce titre. Veuillez réessayer."
 
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:99
 msgid "Hmm. How about <break/> {title} {by_artist}?"
-msgstr ""
+msgstr "Hmm. Que diriez-vous de <break/> {title} {by_artist} ?"
 
 #: jellyfin_alexa_skill/alexa/handler/yesno.py:107
 msgid "I'm all out of guesses.  Please try asking a different way."
-msgstr ""
+msgstr "Je ne comprends pas. Essayez de demander d'une manière différente s'il vous plait."
 
