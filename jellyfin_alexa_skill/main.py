@@ -157,20 +157,20 @@ def update_skill_manifest(config: ConfigParser,
     # check if there is an override of display name in skill.config, or a change otherwise
     update_manifest_required = False
     for locale in INTERACTION_MODELS.keys():
-        default_display_name = SKILL_MANIFEST.manifest.publishing_information.locales[locale].name
+        default_display_name = SKILL_MANIFEST.manifest.publishing_information.locales[locale]["name"]
         new_display_name = config.get(locale, "display_name", fallback=default_display_name)
         # the default invocation name is the display name
         new_invocation_name = config.get(locale, "invocation_name", fallback=default_display_name)
 
-        new_manifest.manifest.publishing_information.locales[locale].name = new_display_name
+        new_manifest.manifest.publishing_information.locales[locale]["name"] = new_display_name
 
         # Check if there is this locale is in the manifest. If the skill is clean, the locale might be missing.
         # Moreover, check if the display name is different.
         if locale not in manifest.manifest.publishing_information.locales \
                 or new_display_name != manifest.manifest.publishing_information.locales[locale].name:
             for idx, phrase in enumerate(
-                    SKILL_MANIFEST.manifest.publishing_information.locales[locale].example_phrases):
-                new_manifest.manifest.publishing_information.locales[locale].example_phrases[idx] = phrase.replace(
+                    SKILL_MANIFEST.manifest.publishing_information.locales[locale]["examplePhrases"]):
+                new_manifest.manifest.publishing_information.locales[locale]["examplePhrases"][idx] = phrase.replace(
                     default_display_name, new_invocation_name)
 
             update_manifest_required = True
@@ -272,6 +272,7 @@ def main():
 
     parser.add_argument("config", help="Path to the config file", metavar="PATH")
     parser.add_argument("--verbose", help="Enable verbose logging", action="store_true")
+    parser.add_argument("--debug", help="Enable debug mode", action="store_true")
 
     args = parser.parse_args()
 
@@ -312,8 +313,12 @@ def main():
     manifest = smapi_client.get_skill_manifest_v1(skill_id=skill_id, stage_v2=stage)
     skill_version = get_skill_version(manifest)
 
-    logging.info(f"Cloud skill version: {skill_version}\n"
-                 f"Current skill version: {__version__}")
+    if skill_version:
+        logging.info(f"Cloud skill version: {skill_version}")
+    else:
+        logging.info("No cloud skill version not found")
+
+    logging.info(f"Local skill version: {__version__}")
 
     update_interaction_models(config,
                               manifest,
@@ -373,11 +378,14 @@ def main():
     host = config.get("general", "bind_addr", fallback="0.0.0.0")
     web_app_port = config.getint("general", "web_app_port", fallback=1456)
 
-    options = {
-        "bind": f"{host}:{web_app_port}",
-        "workers": 2,
-    }
-    GunicornApplication(app, options).run()
+    if args.debug:
+        app.run(host=host, port=web_app_port, debug=True)
+    else:
+        options = {
+            "bind": f"{host}:{web_app_port}",
+            "workers": 2,
+        }
+        GunicornApplication(app, options).run()
 
 
 if __name__ == "__main__":

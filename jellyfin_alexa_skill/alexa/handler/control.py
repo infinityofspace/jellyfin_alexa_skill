@@ -5,11 +5,11 @@ from ask_sdk_core.utils import is_intent_name
 from ask_sdk_model import Response
 from ask_sdk_model.interfaces.audioplayer import StopDirective
 
-from jellyfin_alexa_skill.database.db import get_playback
 from jellyfin_alexa_skill.alexa.handler.base import BaseHandler
 from jellyfin_alexa_skill.alexa.util import build_stream_response, get_similarity, best_matches_by_idx, \
-    get_media_type_enum
+    get_media_type_enum, AlexaMediaType
 from jellyfin_alexa_skill.config import ARTISTS_PARTIAL_RATIO_THRESHOLD
+from jellyfin_alexa_skill.database.db import get_playback
 from jellyfin_alexa_skill.database.model.playback import QueueItem
 from jellyfin_alexa_skill.database.model.user import User
 from jellyfin_alexa_skill.jellyfin.api.client import MediaType, JellyfinClient
@@ -72,7 +72,7 @@ class PlaySongIntentHandler(BaseHandler):
                              media_type=get_media_type_enum(item),
                              media_item_id=item["Id"])
             playback = get_playback(user_id)
-            playback.set_playback_queue(user_id, [item])
+            playback.set_queue([item])
 
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
@@ -173,7 +173,7 @@ class PlayAlbumIntentHandler(BaseHandler):
                                      media_item_id=item_info["Id"]) for i, item_info in enumerate(items)]
 
             playback = get_playback(user_id)
-            playback.set_playback_queue(user_id, queue_items)
+            playback.set_queue(queue_items)
 
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
@@ -264,7 +264,7 @@ class PlayVideoIntentHandler(BaseHandler):
                              media_type=get_media_type_enum(item),
                              media_item_id=item["Id"])
             playback = get_playback(user_id)
-            playback.set_playback_queue(user_id, [item])
+            playback.set_queue([item])
 
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
@@ -358,7 +358,7 @@ class PlayArtistSongsIntentHandler(BaseHandler):
                                  media_item_id=item_info["Id"]) for i, item_info in enumerate(items)]
 
         playback = get_playback(user_id)
-        playback.set_playback_queue(user_id, queue_items)
+        playback.set_queue(queue_items)
 
         build_stream_response(jellyfin_client=self.jellyfin_client,
                               jellyfin_user_id=user.jellyfin_user_id,
@@ -383,15 +383,19 @@ class PlayLastAddedIntentHandler(BaseHandler):
                     translation: GNUTranslations,
                     *args,
                     **kwargs) -> Response:
-        media_type = handler_input.request_envelope.request.intent.slots["media_type"] \
-            .resolutions.resolutions_per_authority[0].values[0].value.id
+        media_type_resolutions = handler_input.request_envelope.request.intent.slots["media_type"].resolutions
 
-        if media_type == MediaType.AUDIO:
-            filter_media_type = MediaType.AUDIO
-        elif media_type == MediaType.VIDEO:
-            filter_media_type = MediaType.VIDEO
-        else:
+        if media_type_resolutions is None:
             filter_media_type = None
+        else:
+            media_type = media_type_resolutions.resolutions_per_authority[0].values[0].value.id
+
+            if media_type == AlexaMediaType.AUDIO.value:
+                filter_media_type = MediaType.AUDIO
+            elif media_type == AlexaMediaType.VIDEO.value:
+                filter_media_type = MediaType.VIDEO
+            else:
+                filter_media_type = None
 
         recently_added_items = self.jellyfin_client.get_recently_added(user_id=user.jellyfin_user_id,
                                                                        token=user.jellyfin_token,
@@ -409,7 +413,7 @@ class PlayLastAddedIntentHandler(BaseHandler):
                                      media_item_id=item_info["Id"]) for i, item_info in enumerate(recently_added_items)]
 
             playback = get_playback(user_id)
-            playback.set_playback_queue(user_id, queue_items)
+            playback.set_queue(queue_items)
 
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,

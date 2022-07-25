@@ -1,4 +1,5 @@
 import binascii
+import logging
 import os
 import urllib.parse
 from pathlib import Path
@@ -49,7 +50,14 @@ def get_jellyfin_login_blueprint(jellyfin_server_endpoint: str, client_id: str):
                                            redirect_uri=redirect_uri,
                                            state=state,
                                            error="Something went wrong while accessing your Jellyfin server")
-            except:
+            except ConnectionError as e:
+                return render_template("login.html",
+                                       redirect_uri=redirect_uri,
+                                       state=state,
+                                       error="Cant reach your Jellyfin server. Please check your firewall "
+                                             "and allow external access to your Jellyfin server")
+            except Exception as e:
+                logging.error(e)
                 return abort(500)
 
             alexa_auth_token = binascii.hexlify(os.urandom(64)).decode("utf8")

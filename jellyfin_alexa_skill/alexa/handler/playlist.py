@@ -55,7 +55,7 @@ class PlayPlaylistIntentHandler(BaseHandler):
                                enumerate(playlist_items)]
 
                 playback = get_playback(user_id)
-                playback.set_playback_queue(user_id, queue_items)
+                playback.set_queue(queue_items)
 
                 build_stream_response(jellyfin_client=self.jellyfin_client,
                                       jellyfin_user_id=user.jellyfin_user_id,

@@ -1,4 +1,5 @@
 from difflib import SequenceMatcher
+from enum import Enum
 
 from ask_sdk_model.interfaces.audioplayer import PlayDirective, PlayBehavior, AudioItem, Stream, AudioItemMetadata
 from ask_sdk_model.interfaces.display import Image, ImageInstance
@@ -6,6 +7,11 @@ from ask_sdk_model.interfaces.videoapp import LaunchDirective, VideoItem, Metada
 
 from jellyfin_alexa_skill.database.model.playback import QueueItem
 from jellyfin_alexa_skill.jellyfin.api.client import JellyfinClient, MediaType
+
+
+class AlexaMediaType(Enum):
+    AUDIO = "audio"
+    VIDEO = "video"
 
 
 def build_stream_response(jellyfin_client: JellyfinClient,

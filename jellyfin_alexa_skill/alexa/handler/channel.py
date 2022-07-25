@@ -57,7 +57,7 @@ class PlayChannelIntentHandler(BaseHandler):
                              media_type=MediaType.CHANNEL,
                              media_item_id=item["Id"])
             playback = get_playback(user_id)
-            playback.set_playback_queue(user_id, [item])
+            playback.set_queue([item])
 
             build_stream_response(jellyfin_client=self.jellyfin_client,
                                   jellyfin_user_id=user.jellyfin_user_id,
