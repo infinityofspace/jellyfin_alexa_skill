@@ -39,6 +39,7 @@
     <input name="csrf_token" type="hidden" value="{{ csrf_token() }}"/>
     <input name="redirect_uri" type="hidden" value="{{ redirect_uri }}"/>
     <input name="state" type="hidden" value="{{ state }}"/>
+    <input name="client_id" type="hidden" value="{{ client_id }}"/>
     {% if error %}
         <div style="color:white;">{{ error }}!</div>
     {% endif %}
