@@ -64,12 +64,12 @@ class YesNoIntentHandler(BaseHandler):
 
                 queue_items = [QueueItem(idx=i,
                                          media_type=get_media_type_enum(item_info),
-                                         media_item_id=item_info["Id"]) for i, item_info in
+                                         item_id=item_info["Id"]) for i, item_info in
                                enumerate(items)]
             else:
                 queue_items = [QueueItem(idx=0,
                                          media_type=get_media_type_enum(item),
-                                         media_item_id=item["Id"])]
+                                         item_id=item["Id"])]
 
             user_id = handler_input.request_envelope.context.system.user.user_id
             playback = get_playback(user_id)

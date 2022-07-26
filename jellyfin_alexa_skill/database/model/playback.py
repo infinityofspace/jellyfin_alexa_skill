@@ -2,7 +2,7 @@ import random
 from typing import Optional, List
 
 import peewee
-from peewee import CharField, IntegerField, BooleanField, DeferredForeignKey, ForeignKeyField, TextField
+from peewee import CharField, IntegerField, BooleanField, DeferredForeignKey, ForeignKeyField, TextField, AutoField
 
 from jellyfin_alexa_skill.database.model.base import BaseModel, CharEnumField
 from jellyfin_alexa_skill.jellyfin.api.client import MediaType
@@ -11,7 +11,7 @@ SHUFFLE_RANDOM_RANGE = (-424242, 424242)
 
 
 class QueueItem(BaseModel):
-    id = IntegerField(primary_key=True)
+    id = AutoField()
     playback = DeferredForeignKey("Playback", backref="items", on_delete="CASCADE", null=True)
     idx = IntegerField(null=False)
     media_type = CharEnumField(MediaType, null=False)

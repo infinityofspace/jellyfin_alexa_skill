@@ -48,7 +48,7 @@ class PlayFavoritesIntentHandler(BaseHandler):
             user_id = handler_input.request_envelope.session.user.user_id
             queue_items = [QueueItem(idx=i,
                                      media_type=get_media_type_enum(item_info),
-                                     media_item_id=item_info["Id"]) for i, item_info in enumerate(favorites)]
+                                     item_id=item_info["Id"]) for i, item_info in enumerate(favorites)]
 
             playback = get_playback(user_id)
             playback.set_queue(queue_items)

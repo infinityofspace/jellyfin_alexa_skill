@@ -55,7 +55,7 @@ class PlayChannelIntentHandler(BaseHandler):
             user_id = handler_input.request_envelope.context.system.user.user_id
             item = QueueItem(idx=0,
                              media_type=MediaType.CHANNEL,
-                             media_item_id=item["Id"])
+                             item_id=item["Id"])
             playback = get_playback(user_id)
             playback.set_queue([item])
 

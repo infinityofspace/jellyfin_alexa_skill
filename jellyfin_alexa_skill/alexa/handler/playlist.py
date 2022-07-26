@@ -51,7 +51,7 @@ class PlayPlaylistIntentHandler(BaseHandler):
             else:
                 queue_items = [QueueItem(idx=i,
                                          media_type=get_media_type_enum(item_info),
-                                         media_item_id=item_info["Id"]) for i, item_info in
+                                         item_id=item_info["Id"]) for i, item_info in
                                enumerate(playlist_items)]
 
                 playback = get_playback(user_id)

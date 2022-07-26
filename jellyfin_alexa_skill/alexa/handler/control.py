@@ -70,7 +70,7 @@ class PlaySongIntentHandler(BaseHandler):
 
             item = QueueItem(idx=0,
                              media_type=get_media_type_enum(item),
-                             media_item_id=item["Id"])
+                             item_id=item["Id"])
             playback = get_playback(user_id)
             playback.set_queue([item])
 
@@ -170,7 +170,7 @@ class PlayAlbumIntentHandler(BaseHandler):
 
             queue_items = [QueueItem(idx=i,
                                      media_type=get_media_type_enum(item_info),
-                                     media_item_id=item_info["Id"]) for i, item_info in enumerate(items)]
+                                     item_id=item_info["Id"]) for i, item_info in enumerate(items)]
 
             playback = get_playback(user_id)
             playback.set_queue(queue_items)
@@ -262,7 +262,7 @@ class PlayVideoIntentHandler(BaseHandler):
 
             item = QueueItem(idx=0,
                              media_type=get_media_type_enum(item),
-                             media_item_id=item["Id"])
+                             item_id=item["Id"])
             playback = get_playback(user_id)
             playback.set_queue([item])
 
@@ -355,7 +355,7 @@ class PlayArtistSongsIntentHandler(BaseHandler):
 
         queue_items = [QueueItem(idx=i,
                                  media_type=get_media_type_enum(item_info),
-                                 media_item_id=item_info["Id"]) for i, item_info in enumerate(items)]
+                                 item_id=item_info["Id"]) for i, item_info in enumerate(items)]
 
         playback = get_playback(user_id)
         playback.set_queue(queue_items)
@@ -410,7 +410,7 @@ class PlayLastAddedIntentHandler(BaseHandler):
 
             queue_items = [QueueItem(idx=i,
                                      media_type=get_media_type_enum(item_info),
-                                     media_item_id=item_info["Id"]) for i, item_info in enumerate(recently_added_items)]
+                                     item_id=item_info["Id"]) for i, item_info in enumerate(recently_added_items)]
 
             playback = get_playback(user_id)
             playback.set_queue(queue_items)
