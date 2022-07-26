@@ -328,6 +328,7 @@ def main():
                               stage)
 
     skill_endpoint = config.get("general", "skill_endpoint")
+    skill_endpoint = skill_endpoint.rstrip('/')
     update_skill_manifest(config,
                           manifest,
                           skill_endpoint,
@@ -344,6 +345,7 @@ def main():
                                                        smapi_client, stage)
 
     jellyfin_endpoint = config.get("general", "jellyfin_endpoint")
+    jellyfin_endpoint = jellyfin_endpoint.rstrip('/')
     jellyfin_client = JellyfinClient(server_endpoint=jellyfin_endpoint, client_name=APP_NAME)
 
     skill_adapter = SkillAdapter(skill=get_skill_builder(jellyfin_client).create(),
