@@ -34,6 +34,10 @@ database._
 This is a self-hosting Alexa skill to play media from your Jellyfin server. Besides, simple playback, other additional
 functions like playback of playlists or managing favorites are included.
 
+The following graph show an overview of the skill interaction flow:
+
+![Skill Overview Graph](docs/media/skill_overview_graph.svg)
+
 ## Features
 
 - playback control:
