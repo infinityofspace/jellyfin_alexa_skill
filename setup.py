@@ -23,7 +23,7 @@ install_requires = [
 ]
 
 setup_requires = [
-    "Babel>=2.9.1,<2.11.0",
+    "Babel>=2.9.1,<2.12.0",
 ]
 
 LOCAL_BASE_PATH = Path("jellyfin_alexa_skill/locales")
