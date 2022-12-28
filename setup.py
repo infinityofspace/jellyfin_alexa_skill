@@ -15,7 +15,7 @@ with open("Readme.md") as f:
 install_requires = [
     "flask-ask-sdk~=1.0.0",
     "ask-smapi-sdk~=1.0.0",
-    "ask_smapi_model>=1.13.1,<1.15.0",
+    "ask_smapi_model>=1.13.1,<1.18.0",
     "peewee>=3.14.4,<3.16.0",
     "gunicorn~=20.1.0",
     "Flask-WTF>=0.15.1,<1.1.0",
