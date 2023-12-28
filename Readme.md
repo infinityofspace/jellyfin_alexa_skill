@@ -14,7 +14,7 @@ Selfhosted Alexa media player skill for Jellyfin
 
 _Note: This project is still in a very early alpha phase, this means not all features are fully functional yet and
 features or usage can change significantly between releases. Moreover, new releases can result in data loss of the skill
-database._
+database. This plugin is not needed to search inside the jellyfin app as the search bar already works with the integrated "text-to-speech" feature of the fire tv remote controller._
 
 ### Table of Contents
 
